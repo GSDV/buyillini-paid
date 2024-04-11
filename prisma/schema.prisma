@@ -1,0 +1,188 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider    = "postgresql"
+    url         = env("DATABASE_URL")
+}
+
+
+
+enum Role {
+    ADMIN
+    USER
+}
+
+enum ClothingSize {
+    XS
+    S
+    M
+    L
+    XL
+}
+
+enum FreeType {
+    OneMonth
+    ThreeMonths
+    FiveMonths
+    TenMonths
+}
+
+
+
+model User {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    role                Role                @default(USER)
+
+    email               String              @unique
+    displayName         String
+    password            String
+    profilePicture      String?
+
+    bankAccount         BankAccount?        @relation("UserBankAccount")
+
+    // Promo codes that the user has redeemed in the past (stored so he can't repeat them)
+    promoCodes          String[]            @default([])
+
+    // Auth tokens issued to a user. Only the last token in the array is valid/
+    tokens              AuthToken[]         @relation("UserAuthToken")
+
+    // All payments a seller has made, for any and all items
+    payments            PaymentTransaction[]    @relation("UserPayments")
+
+    // Items posted as a seller
+    items               Item[]              @relation("UserItem")
+
+    // All free listings a user has available
+    freeListings        FreeListing[]      @relation("UserFreeListings")
+
+    // Has the account been activated through email?
+    active              Boolean             @default(false)
+    activateTokens      ActivateToken[]     @relation("EmailVerificationToken")
+
+    // Has this account been deleted or banned?
+    deleted             Boolean             @default(false)
+}
+
+
+
+model BankAccount {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    accountHolderName   String
+    accountNumber       String
+    routingNumber       String?
+    bankName            String?
+
+    userAccount         String              @unique
+    user                User                @relation("UserBankAccount", fields: [userAccount], references: [id])
+}
+
+
+
+model Item {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    // Seller who posted the item
+    sellerId            String
+    seller              User                @relation("UserItem", fields: [sellerId], references: [id])
+
+    // The payment for this item
+    payment             PaymentTransaction? @relation("ItemPayment")
+    // If the item used a free listing instead
+    freeListingType     FreeType?
+
+    // How many months is the posting active for
+    duration            Int                 @db.SmallInt
+    expireDate          DateTime
+
+    // Has the item expired or been deleted?
+    deleted             Boolean             @default(true)
+
+
+    // Item info:
+    title               String
+    description         String              @db.VarChar(500)
+
+    category            String
+    price               Decimal             @db.Decimal(6, 2)
+    quantity            Int                 @db.SmallInt
+    size                ClothingSize?
+    shipping            Boolean
+
+    negotiating         Boolean
+
+    images              String[]
+}
+
+
+
+model PaymentTransaction {
+    // Date of transaction
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    // Item the payment is for
+    itemId              String              @unique
+    item                Item?               @relation("ItemPayment", fields: [itemId], references: [id])
+
+    // Seller
+    userId              String
+    user                User                @relation("UserPayments", fields: [userId], references: [id])
+
+    // Useful Stripe API feedback
+    success             Boolean
+    msg                 Boolean
+}
+
+
+ 
+// Account activation tokens, sent by email
+model ActivateToken {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    token               String              @unique
+
+    userId              String
+    user                User                @relation("EmailVerificationToken", fields: [userId], references: [id])
+}
+
+
+
+// Token given to users to authorize account actions
+// Lets us know if the user is who he says he is
+model AuthToken {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    token               String
+
+    userId              String
+    user                User                @relation("UserAuthToken", fields: [userId], references: [id])
+}
+
+
+
+model FreeListing {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    userId              String
+    user                User                @relation("UserFreeListings", fields: [userId], references: [id])
+
+    // One month, three months, etc
+    type                FreeType
+}
