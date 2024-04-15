@@ -54,7 +54,7 @@ model User {
     items               Item[]              @relation("UserItem")
 
     // Amount of free months a user has available
-    freeMonhts          Int                 @db.SmallInt
+    freeMonths          Int                 @db.SmallInt
 
     // Has the account been activated through email?
     active              Boolean             @default(false)
@@ -95,7 +95,7 @@ model Item {
 
     // The payment for this item
     payment             PaymentTransaction? @relation("ItemPayment")
-    // How many free monhts used for the item
+    // How many free months used for the item
     freeMonthsUsed      Int                 @db.SmallInt
 
     // How many months is the posting active for
