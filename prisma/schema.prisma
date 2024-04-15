@@ -22,12 +22,6 @@ enum ClothingSize {
     XL
 }
 
-enum FreeType {
-    OneMonth
-    ThreeMonths
-    FiveMonths
-    TenMonths
-}
 
 
 
@@ -38,9 +32,11 @@ model User {
 
     role                Role                @default(USER)
 
+    // Only hashed password is stored
+    password            String
+
     email               String              @unique
     displayName         String
-    password            String
     profilePicture      String?
 
     bankAccount         BankAccount?        @relation("UserBankAccount")
@@ -57,8 +53,8 @@ model User {
     // Items posted as a seller
     items               Item[]              @relation("UserItem")
 
-    // All free listings a user has available
-    freeListings        FreeListing[]      @relation("UserFreeListings")
+    // Amount of free months a user has available
+    freeMonhts          Int                 @db.SmallInt
 
     // Has the account been activated through email?
     active              Boolean             @default(false)
@@ -67,6 +63,7 @@ model User {
     // Has this account been deleted or banned?
     deleted             Boolean             @default(false)
 }
+
 
 
 
@@ -86,6 +83,7 @@ model BankAccount {
 
 
 
+
 model Item {
     createdAt           DateTime            @default(now())
     updatedAt           DateTime            @updatedAt
@@ -97,8 +95,8 @@ model Item {
 
     // The payment for this item
     payment             PaymentTransaction? @relation("ItemPayment")
-    // If the item used a free listing instead
-    freeListingType     FreeType?
+    // How many free monhts used for the item
+    freeMonthsUsed      Int                 @db.SmallInt
 
     // How many months is the posting active for
     duration            Int                 @db.SmallInt
@@ -125,6 +123,7 @@ model Item {
 
 
 
+
 model PaymentTransaction {
     // Date of transaction
     createdAt           DateTime            @default(now())
@@ -145,6 +144,7 @@ model PaymentTransaction {
 }
 
 
+
  
 // Account activation tokens, sent by email
 model ActivateToken {
@@ -160,6 +160,7 @@ model ActivateToken {
 
 
 
+
 // Token given to users to authorize account actions
 // Lets us know if the user is who he says he is
 model AuthToken {
@@ -171,18 +172,4 @@ model AuthToken {
 
     userId              String
     user                User                @relation("UserAuthToken", fields: [userId], references: [id])
-}
-
-
-
-model FreeListing {
-    createdAt           DateTime            @default(now())
-    updatedAt           DateTime            @updatedAt
-    id                  String              @id @default(cuid())
-
-    userId              String
-    user                User                @relation("UserFreeListings", fields: [userId], references: [id])
-
-    // One month, three months, etc
-    type                FreeType
 }
