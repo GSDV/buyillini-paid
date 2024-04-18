@@ -1,12 +1,11 @@
 import prisma from '@util/prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { isValidEmail, allFieldsPresent, hashPassword, userWithEmailExists, validPassword } from '@util/api/user';
+import { isValidEmail, allFieldsPresent, hashPassword, validPassword } from '@util/api/user';
 
 
 
 export async function POST(req: NextRequest) {
-    console.log('\n\n\n------ User Schema POST route call ------');
     const body = await req.json();
     const { userData } = body;
 
