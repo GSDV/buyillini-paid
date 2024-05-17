@@ -1,0 +1,17 @@
+.msg {
+    padding: 10px;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.error {
+    border: 3px solid #c44d4d;
+    background-color: #ff9c9c;
+}
+.success {
+    border: 3px solid #3ca93b;
+    background-color: #82e682;
+}
