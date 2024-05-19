@@ -35,6 +35,6 @@ export async function POST(req: NextRequest) {
         }
     });
 
-    if (promoCodePrisma.freeMonths==1) return NextResponse.json({ cStatus: 200, msg: `Success, ${promoCodePrisma.freeMonths} free month has been added to your account.` }, { status: 200 });
-    return NextResponse.json({ cStatus: 200, msg: `Success, ${promoCodePrisma.freeMonths} free months have been added to your account.` }, { status: 200 });
+    if (promoCodePrisma.freeMonths==1) return NextResponse.json({ cStatus: 200, msg: `Nice! 1 free month has been added to your account.` }, { status: 200 });
+    return NextResponse.json({ cStatus: 200, msg: `Nice! ${promoCodePrisma.freeMonths} free months have been added to your account.` }, { status: 200 });
 }
