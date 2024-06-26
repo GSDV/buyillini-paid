@@ -12,18 +12,24 @@ export const getUserFromAuth = async (authtoken: string) => {
         }}
     });
     if (!authTokenPrisma) return null;
-    authTokenPrisma.user.password = 'REDACTED';
     return authTokenPrisma.user;
 }
 
-export const getUserFromNetId = async (netid: string) => {
-    const email = netid.concat('@illinois.edu');
+export const getUserFromNetId = async (netid: string) => { return getUserFromEmail(netid.concat('@illinois.edu')); }
+export const getUserFromEmail = async (email: string) => {
     const userPrisma = await prisma.user.findFirst({
         where: { email: email },
         include: { items: true }
     });
-    if (!userPrisma) return null;
-    userPrisma.password = 'REDACTED';
+    return userPrisma;
+}
+
+
+export const getUserWithActivationTokens = async (email: string) => {
+    const userPrisma = await prisma.user.findFirst({
+        where: { email: email },
+        include: { activateTokens: true }
+    });
     return userPrisma;
 }
 
@@ -54,10 +60,35 @@ export const deleteUser = async (id: string) => {
 
 
 
-
 export const createAuthToken = async (userId: string) => {
     const token = uuidv4();
     const tokenCreationRes = await prisma.authToken.create({
+        data: {
+            token: token,
+            user: { connect: { id: userId } }
+        }
+    });
+    return token;
+}
+
+
+
+export const activateAccount = async (id: string) => {
+    const userUpdate = await prisma.user.update({
+        where: { id: id },
+        data: { active: true }
+    });
+}
+export const getActivateToken = async (token: string) => {
+    const tokenPrisma = await prisma.activateToken.findFirst({
+        where: { token: token },
+        include: { user: true }
+    });
+    return tokenPrisma;
+}
+export const createActivateToken = async (userId: string) => {
+    const token = uuidv4();
+    const tokenCreationRes = await prisma.activateToken.create({
         data: {
             token: token,
             user: { connect: { id: userId } }
