@@ -36,6 +36,8 @@ model User {
     password            String
 
     email               String              @unique
+    netId               String              @unique
+    phoneNumber         String              @default("")
     displayName         String
     profilePicture      String?
 
@@ -44,8 +46,16 @@ model User {
     // Promo codes that the user has redeemed in the past (stored so he can't repeat them)
     promoCodes          String[]            @default([])
 
-    // Auth tokens issued to a user. Only the last token in the array is valid/
+    // Auth tokens issued to a user. Only the last token in the array is valid. <-- OUTDATED
+    // Auth tokens issued to a user. ALL tokens in the array are valid
     tokens              AuthToken[]         @relation("UserAuthToken")
+
+
+    // Reset password tokens issued to a user. Only the last token in the array is valid.
+    rpTokens            RPToken[]           @relation("UserResetPasswordToken")
+
+    // All reports this user has made on posts
+    reports             PostReport[]        @relation("Reporter")
 
     // All payments a seller has made, for any and all items
     payments            PaymentTransaction[]    @relation("UserPayments")
@@ -60,8 +70,12 @@ model User {
     active              Boolean             @default(false)
     activateTokens      ActivateToken[]     @relation("EmailVerificationToken")
 
-    // Has this account been deleted or banned?
+    // Has this account been deleted?
     deleted             Boolean             @default(false)
+
+    // Has this account been banned?
+    banned              Boolean             @default(false)
+    banMsg              String?
 }
 
 
@@ -78,7 +92,7 @@ model BankAccount {
     bankName            String?
 
     userAccount         String              @unique
-    user                User                @relation("UserBankAccount", fields: [userAccount], references: [id])
+    user                User                @relation("UserBankAccount", fields: [userAccount], references: [id], onDelete: Cascade)
 }
 
 
@@ -91,7 +105,7 @@ model Item {
 
     // Seller who posted the item
     sellerId            String
-    seller              User                @relation("UserItem", fields: [sellerId], references: [id])
+    seller              User                @relation("UserItem", fields: [sellerId], references: [id], onDelete: Cascade)
 
     // The payment for this item
     payment             PaymentTransaction? @relation("ItemPayment")
@@ -104,6 +118,9 @@ model Item {
 
     // Has the item expired or been deleted?
     deleted             Boolean             @default(true)
+
+    // All reports this post has gotten
+    reports             PostReport[]        @relation("ReportedPost")
 
 
     // Item info:
@@ -132,11 +149,11 @@ model PaymentTransaction {
 
     // Item the payment is for
     itemId              String              @unique
-    item                Item?               @relation("ItemPayment", fields: [itemId], references: [id])
+    item                Item?               @relation("ItemPayment", fields: [itemId], references: [id], onDelete: Cascade)
 
     // Seller
     userId              String
-    user                User                @relation("UserPayments", fields: [userId], references: [id])
+    user                User                @relation("UserPayments", fields: [userId], references: [id], onDelete: Cascade)
 
     // Useful Stripe API feedback
     success             Boolean
@@ -145,7 +162,7 @@ model PaymentTransaction {
 
 
 
- 
+
 // Account activation tokens, sent by email
 model ActivateToken {
     createdAt           DateTime            @default(now())
@@ -155,7 +172,7 @@ model ActivateToken {
     token               String              @unique
 
     userId              String
-    user                User                @relation("EmailVerificationToken", fields: [userId], references: [id])
+    user                User                @relation("EmailVerificationToken", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 
@@ -168,8 +185,53 @@ model AuthToken {
     updatedAt           DateTime            @updatedAt
     id                  String              @id @default(cuid())
 
+    token               String              @unique
+
+    userId              String
+    user                User                @relation("UserAuthToken", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+
+// Token send to a user's email to reset password
+model RPToken {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
     token               String
 
     userId              String
-    user                User                @relation("UserAuthToken", fields: [userId], references: [id])
+    user                User                @relation("UserResetPasswordToken", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+
+model PostReport {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    msg                 String
+
+    reporterId          String?
+    reporter            User?               @relation("Reporter", fields: [reporterId], references: [id], onDelete: SetNull)
+
+    reportedPostId      String
+    reportedPost        Item                @relation("ReportedPost", fields: [reportedPostId], references: [id], onDelete: Cascade)
+}
+
+
+
+// PromoCode schema exists only for ease of creating and deleting promo codes.
+// Schema instances are not attatched to any one user.
+model PromoCode {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    allowedUsers        String[]            @default([])
+
+    code                String              @unique
+    freeMonths          Int
 }
