@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { CONTACT_EMAIL } from '@util/global';
 
-import { getUserWithRpTokens, makeRpToken } from '@util/prisma/actions/user';
+import { getUserWithRpTokens } from '@util/prisma/actions/user';
+import { makeRpToken } from '@util/prisma/actions/tokens';
 
 import { isLastRPTokenExpired } from '@util/api/reset-password';
 import { isValidEmail } from '@util/api/user';
