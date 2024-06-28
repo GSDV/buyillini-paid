@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { changePassword, getUser } from '@util/prisma/actions/user';
 import { getRpToken } from '@util/prisma/actions/tokens';
 
-import { isRPTokenExpired } from '@util/api/reset-password';
 import { hashPassword, isValidPassword } from '@util/api/user';
+import { isRPTokenExpired } from '@util/api/token';
 
 
 

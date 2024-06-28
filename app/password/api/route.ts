@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { CONTACT_EMAIL } from '@util/global';
 
 import { getUserWithRpTokens } from '@util/prisma/actions/user';
-import { makeRpToken } from '@util/prisma/actions/tokens';
+import { createRpToken } from '@util/prisma/actions/tokens';
 
-import { isLastRPTokenExpired } from '@util/api/reset-password';
 import { isValidEmail } from '@util/api/user';
 import { SendResetPasswordEmail } from '@util/api/email';
+import { isLastRPTokenExpired } from '@util/api/token';
 
 
 
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
         if (!isLastRPTokenExpired(userPrisma.rpTokens)) return NextResponse.json({ cStatus: 0, msg: `A reset password token has already been sent to your email. Please wait before sending another.` }, { status: 400 });
 
-        const rpToken = await makeRpToken(userPrisma.id);
+        const rpToken = await createRpToken(userPrisma.id);
         const sgCode = await SendResetPasswordEmail(userEmail, rpToken);
         if (sgCode!=200 && sgCode!=201 && sgCode!=204) NextResponse.json({ cStatus: 801, msg: `Unknown email error. Please try again in a few minutes.` }, { status: 400 });
 
