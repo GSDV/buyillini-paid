@@ -17,10 +17,6 @@ export default function Reset({ rpToken }: { rpToken: string }) {
 
     const [alert, setAlert] = useState<AlertType | null>(null);
 
-    const alertVars: AlertVariation[] = [
-        {cStatus: 404, jsx: (<p>This account does not exist. Please <a href='./signup'>sign up</a>.</p>)}
-    ];
-
     const attemptRequest = async (formData: FormData) => {
         const newPassword = formData.get('password');
         const confirm = formData.get('confirm');
@@ -43,7 +39,7 @@ export default function Reset({ rpToken }: { rpToken: string }) {
         <div className={formStyles.container}>
             <h2 className={formStyles.title}></h2>
             <Form action={attemptRequest} inputs={inputs} submitTitle='Reset password' />
-            {alert && <Alert alert={alert} variations={alertVars} />}
+            {alert && <Alert alert={alert} variations={[]} />}
         </div>
     );
 }
