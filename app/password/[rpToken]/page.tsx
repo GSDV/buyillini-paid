@@ -6,10 +6,10 @@ import Reset from '@components/pages/password/Reset';
 
 
 
-export default function Page({ params }: { params: { rptoken: string } }) {
+export default function Page({ params }: { params: { rpToken: string } }) {
     return (
         <CenterLayout>
-            <Reset rpToken={params.rptoken} />
+            <Reset rpToken={params.rpToken} />
         </CenterLayout>
     );
 }
