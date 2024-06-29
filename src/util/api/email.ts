@@ -1,0 +1,70 @@
+import sgMail from '@sendgrid/mail';
+
+import { DOMAIN } from '@util/global';
+
+
+
+export const sendResetPasswordEmail = async (email: string, token: string) => {
+    const msgText = `BuyIllini Reset Password. Copy and past the following link into your browser to reset your account password: ${DOMAIN}/password/${token}.`;
+    const msgHtml = `
+        <h1>BuyIllini Reset Password</h1>
+        <p>Click <a href="${DOMAIN}/verification/${token}">here</a> to reset your BuyIllini password.</p>
+        <p>If the above link does not work, copy and past the following into your browser: ${DOMAIN}/password/${token}</p>
+    `;
+    const mail = {
+        email: email,
+        subject: 'Reset Your BuyIllini Account Password',
+        msgText: msgText,
+        msgHtml: msgHtml
+    }
+
+    const sgCode = await sendEmail(mail);
+    return sgCode;
+}
+
+
+
+export const sendActivationEmail = async (email: string, token: string) => {
+    const msgText = `BuyIllini Verification. Copy and past the following link into your browser to activate your BuyIllini account: ${DOMAIN}/activate/${token}.`;
+    const msgHtml = `
+        <h1>BuyIllini Verification</h1>
+        <p>Click <a href="${DOMAIN}/activate/${token}">here</a> to activate your BuyIllini account.</p>
+        <p>If the above link does not work, copy and past the following into your browser: ${DOMAIN}/activate/${token}</p>
+    `;
+    const mail = {
+        email: email,
+        subject: 'Activate Your BuyIllini Account',
+        msgText: msgText,
+        msgHtml: msgHtml
+    };
+
+    const sgCode = await sendEmail(mail);
+    return sgCode;
+}
+
+
+
+
+
+export interface MailType {
+    email: string,
+    subject: string,
+    msgText: string,
+    msgHtml: string
+}
+export const sendEmail = async (mail: MailType) => {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+
+    const msg = {
+        to: mail.email,
+        from: process.env.SENGRID_EMAIL as string,
+        subject: mail.subject,
+        text: mail.msgText,
+        html: mail.msgHtml
+    };
+
+    const mailRes = await sgMail.send(msg);
+
+    // https://docs.sendgrid.com/api-reference/how-to-use-the-sendgrid-v3-api/responses
+    return mailRes[0].statusCode;
+}
