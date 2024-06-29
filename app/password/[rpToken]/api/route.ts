@@ -4,7 +4,7 @@ import { changePassword, getUser } from '@util/prisma/actions/user';
 import { getRpToken } from '@util/prisma/actions/tokens';
 
 import { hashPassword, isValidPassword } from '@util/api/user';
-import { isRPTokenExpired } from '@util/api/token';
+import { isRPTokenExpired } from '@util/api/tokens';
 
 
 

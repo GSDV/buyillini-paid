@@ -7,7 +7,7 @@ import { createRpToken } from '@util/prisma/actions/tokens';
 
 import { isValidEmail } from '@util/api/user';
 import { sendResetPasswordEmail } from '@util/api/email';
-import { isLastRPTokenExpired } from '@util/api/token';
+import { isLastRPTokenExpired } from '@util/api/tokens';
 
 
 
