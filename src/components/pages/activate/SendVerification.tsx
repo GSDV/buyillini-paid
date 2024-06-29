@@ -3,9 +3,9 @@
 import { useState } from 'react';
 
 import Form, { FormInputType } from '@components/Form';
-import { Alert, AlertType, AlertVariation } from '@components/Alert';
-
 import formStyles from '@styles/ui/form.module.css';
+
+import { Alert, AlertType, AlertVariation } from '@components/Alert';
 
 
 

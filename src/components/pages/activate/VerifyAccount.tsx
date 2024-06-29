@@ -1,13 +1,15 @@
 'use client';
 
-import { Alert, AlertType, AlertVariation } from '@components/Alert';
-import Loading from '@components/Loading';
-import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import Loading from '@components/Loading';
+
+import { Alert, AlertType, AlertVariation } from '@components/Alert';
 
 
-export default function VerifyAccount() {
-    const { activateToken } = useParams();
+
+export default function VerifyAccount({ activateToken }: { activateToken: string }) {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -25,15 +27,10 @@ export default function VerifyAccount() {
         const resJson = await res.json();
         setLoading(false);
         setAlert(resJson);
-        console.log(resJson)
         if (resJson.cStatus==200 || resJson.cStatus==201) router.push(`/account/${resJson.netId}`)
     }
 
     useEffect(() => {
-        if (Array.isArray(activateToken)) {
-            setAlert({cStatus: 102, msg: 'You did not provide the right activation code.'})
-            return;
-        };
         attemptActivate(activateToken);
     }, []);
 
