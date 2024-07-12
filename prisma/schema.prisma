@@ -32,8 +32,8 @@ model User {
 
     role                Role                @default(USER)
 
-    // Only hashed password is stored
     password            String
+    salt                String
 
     email               String              @unique
     netId               String              @unique
@@ -41,7 +41,7 @@ model User {
     displayName         String
     profilePicture      String?
 
-    bankAccount         BankAccount?        @relation("UserBankAccount")
+    stripeId            String?
 
     // Promo codes that the user has redeemed in the past (stored so he can't repeat them)
     promoCodes          String[]            @default([])
@@ -57,11 +57,11 @@ model User {
     // All reports this user has made on posts
     reports             PostReport[]        @relation("Reporter")
 
-    // All payments a seller has made, for any and all items
+    // All payments a seller has made, for any and all posts
     payments            PaymentTransaction[]    @relation("UserPayments")
 
-    // Items posted as a seller
-    items               Item[]              @relation("UserItem")
+    // Posts posted as a seller
+    posts               Post[]              @relation("UserPost")
 
     // Amount of free months a user has available
     freeMonths          Int                 @db.SmallInt
@@ -81,49 +81,50 @@ model User {
 
 
 
-model BankAccount {
+// model BankAccount {
+//     createdAt           DateTime            @default(now())
+//     updatedAt           DateTime            @updatedAt
+//     id                  String              @id @default(cuid())
+
+//     accountHolderName   String
+//     accountNumber       String
+//     routingNumber       String?
+//     bankName            String?
+
+//     userAccount         String              @unique
+//     user                User                @relation("UserBankAccount", fields: [userAccount], references: [id], onDelete: Cascade)
+// }
+
+
+
+
+
+model Post {
     createdAt           DateTime            @default(now())
     updatedAt           DateTime            @updatedAt
     id                  String              @id @default(cuid())
 
-    accountHolderName   String
-    accountNumber       String
-    routingNumber       String?
-    bankName            String?
-
-    userAccount         String              @unique
-    user                User                @relation("UserBankAccount", fields: [userAccount], references: [id], onDelete: Cascade)
-}
-
-
-
-
-model Item {
-    createdAt           DateTime            @default(now())
-    updatedAt           DateTime            @updatedAt
-    id                  String              @id @default(cuid())
-
-    // Seller who posted the item
+    // Seller who posted the post
     sellerId            String
-    seller              User                @relation("UserItem", fields: [sellerId], references: [id], onDelete: Cascade)
+    seller              User                @relation("UserPost", fields: [sellerId], references: [id], onDelete: Cascade)
 
-    // The payment for this item
-    payment             PaymentTransaction? @relation("ItemPayment")
-    // How many free months used for the item
+    // The payment for this post
+    payment             PaymentTransaction? @relation("PostPayment")
+    // How many free months used for the post
     freeMonthsUsed      Int                 @db.SmallInt
 
     // How many months is the posting active for
     duration            Int                 @db.SmallInt
     expireDate          DateTime
 
-    // Has the item expired or been deleted?
+    // Has the post expired or been deleted?
     deleted             Boolean             @default(true)
 
     // All reports this post has gotten
     reports             PostReport[]        @relation("ReportedPost")
 
 
-    // Item info:
+    // Post info:
     title               String
     description         String              @db.VarChar(500)
 
@@ -147,9 +148,9 @@ model PaymentTransaction {
     updatedAt           DateTime            @updatedAt
     id                  String              @id @default(cuid())
 
-    // Item the payment is for
-    itemId              String              @unique
-    item                Item?               @relation("ItemPayment", fields: [itemId], references: [id], onDelete: Cascade)
+    // Post the payment is for
+    postId              String              @unique
+    post                Post?               @relation("PostPayment", fields: [postId], references: [id], onDelete: Cascade)
 
     // Seller
     userId              String
@@ -218,7 +219,7 @@ model PostReport {
     reporter            User?               @relation("Reporter", fields: [reporterId], references: [id], onDelete: SetNull)
 
     reportedPostId      String
-    reportedPost        Item                @relation("ReportedPost", fields: [reportedPostId], references: [id], onDelete: Cascade)
+    reportedPost        Post                @relation("ReportedPost", fields: [reportedPostId], references: [id], onDelete: Cascade)
 }
 
 
