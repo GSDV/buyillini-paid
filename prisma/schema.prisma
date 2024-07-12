@@ -109,6 +109,7 @@ model Post {
     seller              User                @relation("UserPost", fields: [sellerId], references: [id], onDelete: Cascade)
 
     // The payment for this post
+    paid                Boolean
     payment             PaymentTransaction? @relation("PostPayment")
     // How many free months used for the post
     freeMonthsUsed      Int                 @db.SmallInt
@@ -116,6 +117,9 @@ model Post {
     // How many months is the posting active for
     duration            Int                 @db.SmallInt
     expireDate          DateTime
+
+    // Has this post been paid for or confirmed?
+    active              Boolean
 
     // Has the post expired or been deleted?
     deleted             Boolean             @default(true)
@@ -130,11 +134,8 @@ model Post {
 
     category            String
     price               Decimal             @db.Decimal(6, 2)
-    quantity            Int                 @db.SmallInt
     size                ClothingSize?
     shipping            Boolean
-
-    negotiating         Boolean
 
     images              String[]
 }
