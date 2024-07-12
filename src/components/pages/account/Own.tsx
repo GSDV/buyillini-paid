@@ -1,18 +1,19 @@
-import { User, Item } from '@prisma/client';
+import { User, Post } from '@prisma/client';
 
 import { useRef, useState } from 'react';
 
 import { BsGear, BsXCircle } from 'react-icons/bs';
 
+import { IMG_ACCEPTED_FILES } from '@util/global';
+
 import { useReloaderContext } from '@components/providers/Reloader';
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
 import CenterLayout from '@components/containers/CenterLayout';
-import { Alert, AlertType } from '@components/Alert';
-import { Pfp, Post } from './Components';
+import { Pfp, PostComponent } from './Components';
 import Loading from '@components/Loading';
+import { Alert, AlertType } from '@components/Alert';
 
-import { imgAcceptedFiles } from '@util/global';
 import { formatPhoneNumber } from '@util/ui/account';
 
 import accountStyles from '@styles/pages/account.module.css';
@@ -38,12 +39,12 @@ export const greyButton = clsx( {
 
 
 
-export function OwnAccount({ user, items }: { user: User, items: Item[] }) {
+export function OwnAccount({ user, posts }: { user: User, posts: Post[] }) {
     return (
         <div className={accountStyles.container}>
             <Header user={user} />
             <Buttons freeMonths={user.freeMonths} />
-            <Posts items={items}  />
+            <Posts posts={posts}  />
         </div>
     );
 }
@@ -80,7 +81,7 @@ function SettingsMenu({ user }: { user: User }) {
     const msContext = useMenuShadowContext();
 
     const [displayName, setDisplayName] = useState<string>(user.displayName);
-    const [phoneNumber, setPhoneNumber] = useState<string>(user.phoneNumber);
+    const [phoneNumber, setPhoneNumber] = useState<string>(formatPhoneNumber(user.phoneNumber));
     const [uploadedPfp, setUploadedPfp] = useState<File>();
     const pfpRef = useRef<HTMLInputElement | null>(null)
 
@@ -94,9 +95,9 @@ function SettingsMenu({ user }: { user: User }) {
         data.set('phoneNumber', phoneNumber);
 
         setLoading(true);
-        const res = await fetch('/account/api/', {
+        const res = await fetch('/account/netId/api/', {
             method: 'POST',
-            body: data,
+            body: data
         });
         const resJson = await res.json();
         setLoading(false);
@@ -128,7 +129,7 @@ function SettingsMenu({ user }: { user: User }) {
                     <div className={formStyles.formItem} style={{width: '100%', maxWidth: '200px'}}>
                         <h4>Profile Picture</h4>
                         <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => pfpRef.current?.click()} style={{cursor: 'pointer'}}><h5>Upload Image</h5></button>
-                        <input ref={pfpRef} type='file' accept={imgAcceptedFiles} onChange={(e) => setUploadedPfp(e.target.files?.[0])} style={{display: 'none'}} />
+                        <input ref={pfpRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={(e) => setUploadedPfp(e.target.files?.[0])} style={{display: 'none'}} />
                         {uploadedPfp && <h6 style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>Uploaded: {uploadedPfp.name}</h6>}
                     </div>
                     <div className={formStyles.formItem}>
@@ -160,7 +161,7 @@ function Buttons({ freeMonths }: { freeMonths: number }) {
     const { reload } = useReloaderContext();
 
     const attemptLogout = async () => {
-        const res = await fetch('/account/api/', {
+        const res = await fetch('/account/netId/api/', {
             method: 'PUT'
         });
         reload();
@@ -186,6 +187,7 @@ function DeleteAccount() {
 
     const deleteAccount = () => {
         // fetch()
+        // implement this
     }
 
     return (
@@ -204,10 +206,10 @@ function DeleteAccount() {
 
 
 
-function Posts({ items }: { items: Item[] }) {
+function Posts({ posts }: { posts: Post[] }) {
     const [active, setActive] = useState<boolean>(true);
-    const activePosts: Item[] = items.filter((item) => !item.deleted);
-    const pastPosts: Item[] = items.filter((item) => item.deleted);
+    const activePosts: Post[] = posts.filter((item) => !item.deleted);
+    const pastPosts: Post[] = posts.filter((item) => item.deleted);
 
     return (
         <div className={accountStyles.viewPostsContainer}>
@@ -219,25 +221,26 @@ function Posts({ items }: { items: Item[] }) {
                     <h3>Past Posts</h3>
                 </div>
             </div>
-            {active ? <ActivePosts items={activePosts} /> : <PastPosts items={pastPosts} />}
+            {active ? <ActivePosts posts={activePosts} /> : <PastPosts posts={pastPosts} />}
         </div>
     );
 }
 
-function ActivePosts({ items }: { items: Item[] }) {
+function ActivePosts({ posts }: { posts: Post[] }) {
     return (
         <div className={accountStyles.postsContainer}>
-            {items.length===0 && <CenterLayout><h3>You have no active posts.</h3></CenterLayout>}
-            {items.map((item) => <Post item={item} /> )}
+            {/* {items.length===0 && <CenterLayout><h3>You have no active posts.</h3></CenterLayout>} */}
+            {posts.map((post) => <PostComponent post={post} /> )}
+            {/* <PostComponent item={null} /> */}
         </div>
     );
 }
 
-function PastPosts({ items }: { items: Item[] }) {
+function PastPosts({ posts }: { posts: Post[] }) {
     return (
         <div className={accountStyles.postsContainer}>
-            {items.length===0 && <CenterLayout><h3>You have no past posts.</h3></CenterLayout>}
-            {items.map((item) => <Post item={item} /> )}
+            {posts.length===0 && <CenterLayout><h3>You have no past posts.</h3></CenterLayout>}
+            {posts.map((post) => <PostComponent post={post} /> )}
         </div>
     );
 }

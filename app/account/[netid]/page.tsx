@@ -5,25 +5,25 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from '@components/providers/Auth';
 
 import VStack from '@components/containers/VStack';
-import { Alert } from '@components/Alert';
 import Loading from '@components/Loading';
+import { Alert } from '@components/Alert';
 
 import { OwnAccount } from '@components/pages/account/Own';
 import { OtherAccount } from '@components/pages/account/Other';
 
-import { getUserFromNetId } from '@util/prisma/actions';
+import { getUserFromNetId } from '@util/prisma/actions/user';
 import { isValidUser } from '@util/api/auth';
 
 import { UserWithItems } from '@util/prisma/types';
 
 
 
-export default function Page({ params }: { params: { netid: string } }) {
+export default function Page({ params }: { params: { netId: string } }) {
     const [accountData, setAccountData] = useState<UserWithItems | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchAccount = async () => {
-        const userData = await getUserFromNetId(params.netid);
+        const userData = await getUserFromNetId(params.netId);
         if (isValidUser(userData)) setAccountData(userData);
         setLoading(false);
     }
@@ -64,9 +64,9 @@ function ChooseScreen({ user }: { user: UserWithItems }) {
     return (
         <>
             {(!authContext.user || authContext.user.id!=user.id) ?
-                <OtherAccount user={user} items={user.items} />
+                <OtherAccount user={user} posts={user.posts} />
             :
-                <OwnAccount user={user} items={user.items} />
+                <OwnAccount user={user} posts={user.posts} />
             }
         </>
     );

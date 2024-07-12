@@ -1,18 +1,18 @@
-import { User, Item } from '@prisma/client';
+import { User, Post } from '@prisma/client';
 
 import CenterLayout from '@components/containers/CenterLayout';
-import { Pfp, Post } from './Components';
+import { Pfp, PostComponent } from './Components';
 
 import { formatPhoneNumber } from '@util/ui/account';
 
 import accountStyles from '@styles/pages/account.module.css';
 
 
-export function OtherAccount({ user, items }: { user: User, items: Item[] }) {
+export function OtherAccount({ user, posts }: { user: User, posts: Post[] }) {
     return (
         <div className={accountStyles.container}>
             <Header user={user} />
-            <Posts items={items}  />
+            <Posts posts={posts}  />
         </div>
     );
 }
@@ -35,7 +35,7 @@ function Header({ user }: { user: User }) {
 
 
 
-function Posts({ items }: { items: Item[] }) {
+function Posts({ posts }: { posts: Post[] }) {
     return (
         <div className={accountStyles.viewPostsContainer}>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '5px'}}>
@@ -44,8 +44,8 @@ function Posts({ items }: { items: Item[] }) {
                 </div>
             </div>
             <div className={accountStyles.postsContainer}>
-                {items.length===0 && <CenterLayout><h3>This user has no active posts.</h3></CenterLayout>}
-                {items.map((item) => <Post item={item} /> )}
+                {posts.length===0 && <CenterLayout><h3>This user has no active posts.</h3></CenterLayout>}
+                {posts.map((post) => <PostComponent post={post} /> )}
             </div>
         </div>
     );
