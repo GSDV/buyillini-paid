@@ -1,4 +1,16 @@
-import '@styles/alert.css'
+import clsx from 'clsx';
+import styles from '@styles/ui/alert.module.css';
+
+
+
+const successAlert = clsx({
+    [styles.msg] : true,
+    [styles.success] : true
+});
+const errorAlert = clsx({
+    [styles.msg] : true,
+    [styles.error] : true
+});
 
 
 
@@ -17,14 +29,14 @@ export interface AlertComponentType {
     variations: AlertVariation[]
 }
 
-export function Alert({ alert, variations,  }: AlertComponentType) {
+export function Alert({ alert, variations }: AlertComponentType) {
     const variation = variations.find(alertVar => (alertVar.cStatus===alert.cStatus));
 
     const status = parseInt(alert.cStatus.toString()[0]);
-    const type = (status==2) ? 'success': 'error';
+    const classes = (status==2) ? successAlert: errorAlert;
 
     return (
-        <div className={`msg ${type}`}>
+        <div className={classes}>
             {variation ? 
                 <>{variation.jsx}</>
             :
