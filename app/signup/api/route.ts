@@ -1,12 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 import { CONTACT_EMAIL, DOMAIN } from '@util/global';
 
-import { isValidEmail, allFieldsPresent, isValidPassword } from '@util/api/user';
+import { createUser, getRedactedUser, getRedactedUserFromAuth } from '@util/prisma/actions/user';
+import { createActivateToken, createAuthToken } from '@util/prisma/actions/tokens';
 
+import { isValidEmail, allFieldsPresent, isValidPassword } from '@util/api/user';
 import { sendEmail } from '@util/api/email';
-import { createUser, getRedactedUser } from '@util/prisma/actions/user';
-import { createActivateToken } from '@util/prisma/actions/tokens';
+import { isValidUser } from '@util/api/auth';
+
+
+
+// When loading the login page, we will first see if the user is already logged in
+export async function GET(req: NextRequest) {
+    try {
+        const authTokenCookie = cookies().get('authtoken');
+        if (!authTokenCookie) return NextResponse.json({ cStatus: 200, msg: `User is not logged in.` }, { status: 200 });
+        const user = await getRedactedUserFromAuth(authTokenCookie.value);
+        const resValidUser = isValidUser(user);
+        if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 200 });
+        return NextResponse.json({ cStatus: 201, msg: `User is already logged in.`, netId: (user as any).netId }, { status: 200 });
+    } catch (err) {
+        return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}.` }, { status: 400 });
+    }
+}
 
 
 
@@ -50,6 +68,9 @@ export async function POST(req: NextRequest) {
 
         const sgCode = await sendEmail(mail);
         if (sgCode!=200 && sgCode!=201 && sgCode!=204) NextResponse.json({ cStatus: 801, msg: `Unknown email error. Please try again in a few minutes.` }, { status: 400 });
+
+        const authToken = await createAuthToken(userId);
+        cookies().set('authtoken', authToken);
 
         return NextResponse.json({ cStatus: 200, msg: `Success. Check your email to activate your account.` }, { status: 200 });
     } catch (err) {
