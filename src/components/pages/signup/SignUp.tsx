@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -49,18 +49,6 @@ export default function SignUp() {
         setAlert(resJson);
         if (resJson.cStatus==200) router.push(`/signup/success`);
     }
-
-
-    const checkIfAlreadyLoggedIn = async () => {
-        const res = await fetch('signup/api/', { method: 'GET' });
-        const resJson = await res.json();
-        if (resJson.cStatus==201) router.push(`/account/${resJson.netId}`);
-    }
-
-    useEffect(() => {
-        checkIfAlreadyLoggedIn();
-    }, []);
-
 
     return (
         <div className={formStyles.container}>
