@@ -11,6 +11,8 @@ Custom Status Codes (cStatus)
 
 2XX: Successes
 - 200: Whatever the request was, it went through as intended with no failures or issues.
+- 201: User is trying a pointless action (logging in when already logged in).
+- 202: User is loading at own account info instead of another account.
 
 
 
@@ -24,8 +26,11 @@ Custom Status Codes (cStatus)
 - 406: This account is already active (cannot send a verification email).
 - 410: Account has been banned and no authroizing actions are allowed.
 - 411: Account has been deleted and must be reactivated by the user before actions are allowed.
-- 420: Account tried claiming a promo code which does not exist.
-- 421: Account tried claiming the same promo code twice.
+- 412: Account is not activated yet and and must be verified through email before actions are allowed.
+- 413: Account is oherwise not a valid account for this action.
+- 420: User tried claiming a promo code which does not exist.
+- 421: User tried claiming the same promo code twice.
+- 422: Not eligible user tried claiming a special promo code.
 
 
 
@@ -52,3 +57,4 @@ Custom Status Codes (cStatus)
 - 900: Unknown Prisma error.
 - 904: Error from a create call.
 - 905: Error from an update call.
+- 906: Error from a delete call.
