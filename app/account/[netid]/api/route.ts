@@ -5,11 +5,39 @@ import { ACCEPTED_FILES } from '@util/global';
 
 import { deleteFromS3, uploadPfp } from '@util/s3/aws';
 
-import { deleteUser, getUserFromAuth, updateUser } from '@util/prisma/actions/user';
+import { getRedactedUserFromAuth, getRedactedUserWithItems, deleteUser, updateUser } from '@util/prisma/actions/user';
 import { deleteAuthToken } from '@util/prisma/actions/tokens';
 
 import { isValidUser } from '@util/api/auth';
-import { isValidPhoneNumber } from '@util/api/user'; 
+import { isValidPhoneNumber } from '@util/api/user';
+
+
+
+// Check if real, valid account and fetch data
+export async function GET(req: NextRequest, { params }: { params: { netId: string } }) {
+    try {
+        const accountNetId = params.netId;
+        const accountPrisma = await getRedactedUserWithItems({netId: accountNetId});
+
+        const resValidUser = isValidUser(accountPrisma);
+        if (!resValidUser.valid) return NextResponse.json({ cStatus: 404, msg: `This is account does not exist.` }, { status: 400 });
+
+        const authTokenCookie = cookies().get('authtoken');
+        if (authTokenCookie != null) {
+            const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
+            // If logged in user is looking at own account
+            if (userPrisma!=null && userPrisma.netId==accountNetId) return NextResponse.json({ cStatus: 202, msg: `Success (own account).`, userData: accountPrisma }, { status: 200 });
+        }
+
+        // Should never run, but to make TypeScript happy
+        if (!accountPrisma) return NextResponse.json({ cStatus: 404, msg: `This is account does not exist.` }, { status: 400 });
+        
+        accountPrisma.posts = accountPrisma.posts.filter(post => post.active);
+        return NextResponse.json({ cStatus: 200, msg: `Success (other account).`, userData: accountPrisma }, { status: 200 });
+    } catch (err) {
+        return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}.` }, { status: 400 });
+    }
+}
 
 
 
@@ -17,10 +45,11 @@ import { isValidPhoneNumber } from '@util/api/user';
 export async function POST(req: NextRequest) {
     try {
         const data = await req.formData();
+
         const authTokenCookie = cookies().get('authtoken');
         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
-        const userPrisma = await getUserFromAuth(authTokenCookie.value);
+        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
         if (!userPrisma) return NextResponse.json({ cStatus: 404, msg: `User does not exist. Sign up.` }, { status: 400 });
 
         const resValidUser = isValidUser(userPrisma);
@@ -66,20 +95,28 @@ export async function POST(req: NextRequest) {
 
 
 // Deleting account
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest, { params }: { params: { netId: string } }) {
     try {
         const authTokenCookie = cookies().get('authtoken');
         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
-        const userPrisma = await getUserFromAuth(authTokenCookie.value);
+        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
         if (!userPrisma) return NextResponse.json({ cStatus: 402, msg: `You are not logged in.` }, { status: 400 });
-        
+
+        const netId = params.netId;
+        if (netId===null || netId==="") return NextResponse.json({ cStatus: 101, msg: `Missing netId.` }, { status: 400 });
+        if (netId!=userPrisma.netId) return NextResponse.json({ cStatus: 102, msg: `NetId does not match logged in user.` }, { status: 400 });
+
         const resValid = isValidUser(userPrisma);
         if (!resValid.valid) return NextResponse.json(resValid.nextres, { status: 400 });
 
-        deleteUser(userPrisma.id);
-        cookies().set('authtoken', '');
+        console.log("AAAA")
+        console.log(netId)
         return NextResponse.json({ cStatus: 200, msg: `Your account has been deleted.` }, { status: 200 });
+
+        // deleteUser(userPrisma.id);
+        // cookies().set('authtoken', '');
+        // return NextResponse.json({ cStatus: 200, msg: `Your account has been deleted.` }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 906, msg: `Server error: ${err}.` }, { status: 400 });
     }
@@ -100,3 +137,4 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ cStatus: 900, msg: `Service error: ${err}.` }, { status: 400 });
     }
 }
+

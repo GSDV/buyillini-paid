@@ -2,72 +2,107 @@
 
 import { useEffect, useState } from 'react';
 
-import { useAuthContext } from '@components/providers/Auth';
+import { RedactedUserWithPosts } from '@util/prisma/types';
 
-import VStack from '@components/containers/VStack';
 import Loading from '@components/Loading';
-import { Alert } from '@components/Alert';
 
-import { OwnAccount } from '@components/pages/account/Own';
-import { OtherAccount } from '@components/pages/account/Other';
+import CenterLayout from '@components/containers/CenterLayout';
+import { Alert, AlertType } from '@components/Alert';
+import Account from '@components/pages/account/Account';
 
-import { getUserFromNetId } from '@util/prisma/actions/user';
-import { isValidUser } from '@util/api/auth';
 
-import { UserWithItems } from '@util/prisma/types';
 
 
 
 export default function Page({ params }: { params: { netId: string } }) {
-    const [accountData, setAccountData] = useState<UserWithItems | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [user, setUser] = useState<RedactedUserWithPosts | null>(null);
+    const [ownAccount, setOwnAccount] = useState<boolean>(false);
+    const [alert, setAlert] = useState<AlertType | null>(null);
 
-    const fetchAccount = async () => {
-        const userData = await getUserFromNetId(params.netId);
-        if (isValidUser(userData)) setAccountData(userData);
+    const fetchUserData = async () => {
+        console.log(`account/${params.netId}/api/`)
+        const res = await fetch(`/account/${params.netId}/api/`, { method: 'GET' });
+        const resJson = await res.json();
+        console.log(resJson)
+
+        if (resJson.cStatus==200 || resJson.cStatus==202) {
+            setUser(resJson.userData);
+            setOwnAccount(resJson.cStatus==202);
+        } else {
+            setAlert(resJson);
+        }
         setLoading(false);
     }
 
     useEffect(() => {
-        fetchAccount();
+        fetchUserData();
     }, []);
 
     return (
-        <VStack>
+        <CenterLayout>
             {loading ? 
                 <Loading />
             :
-                <>
-                    {!accountData ?
-                        <div style={{padding: '20px'}}>
-                            <Alert alert={{cStatus: 404, msg: 'User not found.'}} variations={[]} />
-                        </div>
-                    : 
-                        <ChooseScreen user={accountData} />
-                    }
-                </>
+                <>{alert ?
+                    <Alert alert={alert} variations={[]} />
+                :
+                    <>{user!=null && <Account user={user} ownAccount={ownAccount} /> }</>
+                }</>
             }
-        </VStack>
+        </CenterLayout>
     );
 }
 
 
 
-/*
-Now that user has been fetched (and is a real, non-banned, non-deleted user), make a decision:
-    1. If client is not logged in: display OTHER
-    2. If client is in but is not user: display OTHER
-    3. If client is logged in and is user: display OWN
-*/
-function ChooseScreen({ user }: { user: UserWithItems }) {
-    const authContext = useAuthContext();
-    return (
-        <>
-            {(!authContext.user || authContext.user.id!=user.id) ?
-                <OtherAccount user={user} posts={user.posts} />
-            :
-                <OwnAccount user={user} posts={user.posts} />
-            }
-        </>
-    );
-}
+
+
+
+
+///////////////////////////////////
+
+// export default function Page({ params }: { params: { netId: string } }) {
+//     const [isOwnAccount, setOwnAccount] = useState<boolean>(false);
+//     const [loading, setLoading] = useState<boolean>(true);
+
+//     const checkIfOwnAccount = async () => {
+//         const res = await fetch('account/', { method: 'GET' });
+//         const resJson = await res.json();
+//         if (resJson.cStatus==202) setOwnAccount(params.netId == resJson.netId);
+//         setLoading(false);
+//     }
+
+//     useEffect(() => {
+//         checkIfOwnAccount();
+//     }, []);
+
+//     return (
+//         <VStack>
+//             {loading ? 
+//                 <Loading />
+//             :
+//                 <ChooseScreen isOwnAccount={isOwnAccount} />
+//             }
+//         </VStack>
+//     );
+// }
+
+
+
+// function ChooseScreen({ isOwnAccount }: { isOwnAccount: boolean }) {
+//     return (
+//         <>
+//             {(isOwnAccount) ?
+//                 <OwnAccount />
+//             :
+//                 <OtherAccount />
+//             }
+//         </>
+//     );
+// }
+
+
+// {/* <div style={{padding: '20px'}}>
+//                             <Alert alert={{cStatus: 404, msg: 'User not found.'}} variations={[]} />
+//                         </div> */}
