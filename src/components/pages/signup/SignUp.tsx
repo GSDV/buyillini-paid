@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
+
+import { useReloaderContext } from '@components/providers/Reloader';
 
 import Form, { FormInputType } from '@components/Form';
 import { Alert, AlertType, AlertVariation } from '@components/Alert';
@@ -13,6 +14,7 @@ import formStyles from '@styles/ui/form.module.css';
 
 export default function SignUp() {
     const router = useRouter();
+    const { reload } = useReloaderContext();
 
     const inputs: FormInputType[] = [
         {title: 'Name', type: 'text', name: 'displayName'},
@@ -22,9 +24,8 @@ export default function SignUp() {
     ];
 
     const [alert, setAlert] = useState<AlertType | null>(null);
-
     const alertVars: AlertVariation[] = [
-        {cStatus: 405, jsx: (<p>This account already exists. Please <a href='./login'>log in</a>.</p>)}
+        {cStatus: 405, jsx: (<p>This account already exists. Please <a href='/login'>log in</a>.</p>)}
     ];
 
     const attemptSignUp = async (formData: FormData) => {
@@ -47,7 +48,10 @@ export default function SignUp() {
 
         const resJson = await res.json();
         setAlert(resJson);
-        if (resJson.cStatus==200) router.push(`/signup/success`);
+        if (resJson.cStatus==200) {
+            reload();
+            router.push(`/signup/success`);
+        }
     }
 
     return (

@@ -12,7 +12,7 @@ import { isValidUser } from '@util/api/auth';
 
 
 
-// When loading the login page, we will first see if the user is already logged in
+// When loading the signup page, we will first see if the user is already logged in
 export async function GET(req: NextRequest) {
     try {
         const authTokenCookie = cookies().get('authtoken');
@@ -69,6 +69,8 @@ export async function POST(req: NextRequest) {
         const sgCode = await sendEmail(mail);
         if (sgCode!=200 && sgCode!=201 && sgCode!=204) NextResponse.json({ cStatus: 801, msg: `Unknown email error. Please try again in a few minutes.` }, { status: 400 });
 
+        // User is logged in, but won't be allowed to do much.
+        // This saves user from havign to type login info again after verification email.
         const authToken = await createAuthToken(userId);
         cookies().set('authtoken', authToken);
 
