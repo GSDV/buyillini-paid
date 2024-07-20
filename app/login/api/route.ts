@@ -43,8 +43,7 @@ export async function POST(req: NextRequest) {
 
         const token = await createAuthToken(userPrisma.id);
         cookies().set('authtoken', token);
-
-        return NextResponse.json({ cStatus: 200, msg: `Success.`, token: token, user: userPrisma }, { status: 200 });
+        return NextResponse.json({ cStatus: 200, msg: `Success.`, netId: userPrisma.netId }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}.` }, { status: 400 });
     }
