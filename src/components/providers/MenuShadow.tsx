@@ -4,7 +4,6 @@
 import { createContext, useContext, useState } from 'react';
 
 
-
 interface MenuShadowContextType {
     setContent: React.Dispatch<React.SetStateAction<React.ReactNode>>,
     open: boolean,
