@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
+import { getRedactedUserFromAuth, subtractFreeMonths } from '@util/prisma/actions/user';
 import { PostData, createFreePost, getPost, markPostActive } from '@util/prisma/actions/posts';
 
 import { isValidUser } from '@util/api/auth';
@@ -68,7 +68,7 @@ function getPostData(formData: FormData) {
 
 
 
-// After confirming the post, mark it active and redirect to newly created post.
+// After confirming free post, mark it active and redirect to newly created post.
 export async function PUT(req: NextRequest, { params }: { params: { postId: string } }) {
     try {
         const postId = params.postId;
@@ -87,7 +87,10 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
         if (!postPrisma) return NextResponse.json({ cStatus: 430, msg: `This post does not exist.` }, { status: 400 });
         if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 414, msg: `This is not your post.` }, { status: 400 });
         if (postPrisma.active) return NextResponse.json({ cStatus: 201, msg: `This post is already active.` }, { status: 400 });
+        if (postPrisma.isPaid) return NextResponse.json({ cStatus: 431, msg: `This post is a paid post.` }, { status: 400 });
+        if (userPrisma.freeMonths < postPrisma.freeMonthsUsed) return NextResponse.json({ cStatus: 102, msg: `Not enough free months.` }, { status: 400 });
 
+        await subtractFreeMonths(userPrisma.id, postPrisma.freeMonthsUsed);
         await markPostActive(postId);
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
