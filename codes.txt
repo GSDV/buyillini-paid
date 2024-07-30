@@ -28,9 +28,12 @@ Custom Status Codes (cStatus)
 - 411: Account has been deleted and must be reactivated by the user before actions are allowed.
 - 412: Account is not activated yet and and must be verified through email before actions are allowed.
 - 413: Account is oherwise not a valid account for this action.
+- 414: Account is unathorized for this action.
 - 420: User tried claiming a promo code which does not exist.
 - 421: User tried claiming the same promo code twice.
 - 422: Not eligible user tried claiming a special promo code.
+- 430: Trying to confirm a post that does't exist.
+- 431: Trying to confirm a post of opoiste type (free vs paid).
 
 
 
