@@ -25,7 +25,7 @@ export default function Form({ action, inputs, submitTitle }: FormType) {
                 );
             })}
 
-            <button className='button' type="submit">{submitTitle}</button>
+            <button className='button' style={{ margin: '20px' }} type='submit'>{submitTitle}</button>
         </form>
     );
 }
