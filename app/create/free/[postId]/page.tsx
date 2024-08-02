@@ -1,27 +1,53 @@
-import { useState } from "react";
+'use client';
+
+import { useEffect, useState } from 'react';
+
+import { Post } from '@prisma/client';
+
+import CenterLayout from '@components/containers/CenterLayout';
+import NeedsToBeLoggedIn from '@components/NeedsToBeLoggedIn';
+import Loading from '@components/Loading';
+import ConfirmPost from '@components/pages/post/Confirm';
+import { Alert, AlertType } from '@components/Alert';
 
 
 
-export default function Page() {
-    // const [loading, setLoading] = useState<boolean>(true);
+export default function Page({ params }: { params: { postId: string } }) {
+    const [post, setPost] = useState<Post | null>(null);
+    const [alert, setAlert] = useState<AlertType | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
-    // const fetchDraftedPost = async () => {
-    //     const res = await fetch(`/create/api/`, { method: 'GET' });
-    //     // const resJson = await res.json();
-    //     // if (resJson.cStatus==200) {
-    //     //     setFreeMonths(resJson.freeMonths);
-    //     //     setPastPost(resJson.draftedPost);
-    //     // }
-    //     setLoading(false);
-    // }
+    const fetchDraftedPost = async () => {
+        const res = await fetch(`/create/free/${params.postId}/api/`, { method: 'GET' });
+        const resJson = await res.json();
+        if (resJson.cStatus==200) setPost(resJson.draftedPost);
+        else setAlert(resJson);
+        setLoading(false);
+    }
 
-    // useEffect(() => {
-    //     fetchDraftedPost();
-    // }, []);
+    useEffect(() => {
+        fetchDraftedPost();
+    }, []);
 
     return (
-        <div>
-            <h1>Confirm</h1>
-        </div>
+        <CenterLayout>
+            {loading ?
+                <Loading />
+            :
+                <NeedsToBeLoggedIn content={<PostExists post={post as Post} alert={alert} />} />
+            }
+        </CenterLayout>
     )
+}
+
+
+
+function PostExists({ post, alert}: { post: Post, alert: AlertType | null }) {
+    return (
+        <>{!alert ?
+            <ConfirmPost post={post} />
+        :
+            <Alert alert={alert} variations={[]} />
+        }</>
+    );
 }

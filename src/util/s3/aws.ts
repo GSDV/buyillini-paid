@@ -1,7 +1,6 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 
 
@@ -13,18 +12,6 @@ export const s3Client = new S3Client({
     }
 });
 
-
-export const getS3AsFile = async (key: string) => {
-    const command = new GetObjectCommand({
-        Bucket: process.env.S3_REGION,
-        Key: key
-    });
-    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 });
-    const response = await fetch(signedUrl);
-    const blob = await response.blob();
-    const file = new File([blob], `image ${key}`, { type: blob.type });
-    return file;
-}
 
 
 export const uploadPostPicture = async (buffer: Buffer) => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
@@ -25,7 +25,7 @@ export default function Create({ freeMonths, pastPost }: { freeMonths: number, p
 
 
 
-function Form({ pastPost, freeMonths }: { freeMonths: number, pastPost: Post | null }) {
+function Form({ freeMonths, pastPost }: { freeMonths: number, pastPost: Post | null }) {
     const router = useRouter();
 
     const [title, setTitle] = useState<string>(!pastPost ? '' : pastPost.title);
@@ -88,24 +88,6 @@ function Form({ pastPost, freeMonths }: { freeMonths: number, pastPost: Post | n
         if (resJson.cStatus==200) router.push(`/create/paid/${resJson.postId}`);
     }
 
-
-    const convertDraftedPostImages = async () => {
-        const pastImages: File[] = [];
-        if (pastPost != null) {
-            for (let i=0; i<pastPost.images.length; i++) {
-                const url = imgUrl(pastPost.images[i]);
-                const resImg = await fetch(url);
-                const blob = await resImg.blob();
-                pastImages.push(new File([blob], url, { type: blob.type }));
-            }
-        }
-        setImages(pastImages);
-    }
-
-    useEffect(() => {
-        convertDraftedPostImages();
-    }, []);
-
     return (
         <div className={createPostStyles.form}>
             <div className={createPostStyles.formItem}>
@@ -122,7 +104,7 @@ function Form({ pastPost, freeMonths }: { freeMonths: number, pastPost: Post | n
                 <h4>Category</h4>
                 <select value={category} onChange={(e)=>setCategoryField(e.target.value)}>
                     {CATEGORIES.map((cat, i) => (
-                        <option key={i} value={cat.link}>{cat.title}</option>
+                        <option key={i} value={cat.title}>{cat.title}</option>
                     ))}
                 </select>
             </div>
@@ -263,8 +245,6 @@ function ListingPeriod({ months, setMonths }: { months: number, setMonths: React
         </div>
     );
 }
-
-
 
 
 
