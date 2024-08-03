@@ -31,7 +31,7 @@ model User {
     netId               String              @unique
     phoneNumber         String              @default("")
     displayName         String
-    profilePicture      String?
+    profilePicture      String              @default("")
 
     stripeId            String?
 
@@ -92,22 +92,21 @@ model Post {
     expireDate          DateTime
 
     // Has this post been paid for or confirmed?
-    active              Boolean
+    active              Boolean             @default(false)
 
     // Has the post expired or been deleted?
-    deleted             Boolean             @default(true)
+    deleted             Boolean             @default(false)
 
     // All reports this post has gotten
     reports             PostReport[]        @relation("ReportedPost")
 
-
     // Post info:
-    title               String
+    title               String              @db.VarChar(50)
     description         String              @db.VarChar(500)
 
     category            String
     price               Decimal             @db.Decimal(6, 2)
-    size                String?
+    size                String
     gender              String
 
     images              String[]
