@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
 
@@ -15,7 +15,7 @@ export const s3Client = new S3Client({
 
 
 export const uploadPostPicture = async (buffer: Buffer) => {
-    const croppedBuffer = await sharp(buffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).toBuffer();
+    const croppedBuffer = await sharp(buffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).webp({ quality: 80, effort: 6 }).toBuffer();
     const key = `post-f-${uuidv4()}`;
     const res = await uploadToS3(croppedBuffer, key);
     return key;
