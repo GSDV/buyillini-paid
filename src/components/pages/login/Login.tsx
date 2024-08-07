@@ -50,6 +50,7 @@ export default function Login() {
         <div className={formStyles.container}>
             <h2 className={formStyles.title}>Login</h2>
             <Form action={attemptLogin} inputs={inputs} submitTitle='Login' />
+            <h4>Click <a href='/signup/'>here</a> to sign up</h4>
             {alert && <Alert alert={alert} variations={alertVars} />}
         </div>
     );
