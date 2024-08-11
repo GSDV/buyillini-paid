@@ -4,29 +4,21 @@ import { useRouter } from 'next/navigation';
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
 
 import { Post } from '@prisma/client';
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, formatDate, imgUrl } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, formatDate } from '@util/global';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 import { Alert, AlertType } from '@components/Alert';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
 import { colorScheme } from '@styles/colors';
+import Loading from '@components/Loading';
 
 
 
-export default function Create({ freeMonths, pastPost }: { freeMonths: number, pastPost: Post | null }) {
-    return (
-        <div className={createPostStyles.container}>
-            <h2 className={createPostStyles.title}>Create a Post</h2>
-            <Form pastPost={pastPost} freeMonths={freeMonths} />
-        </div>
-    );
-}
-
-
-
-function Form({ freeMonths, pastPost }: { freeMonths: number, pastPost: Post | null }) {
+export default function Create({ freeMonths, pastPost, pastImages }: { freeMonths: number, pastPost: Post | null, pastImages: File[] }) {
     const router = useRouter();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [alert, setAlert] = useState<AlertType | null>(null);
 
     const [title, setTitle] = useState<string>(!pastPost ? '' : pastPost.title);
     const [description, setDescription] = useState<string>(!pastPost ? '' : pastPost.description);
@@ -34,11 +26,10 @@ function Form({ freeMonths, pastPost }: { freeMonths: number, pastPost: Post | n
     const [size, setSize] = useState<string>(!pastPost ? CLOTHING_SIZES[0] : pastPost.size);
     const [gender, setGender] = useState<string>(!pastPost ? GENDERS[0] : pastPost.gender);
     const [price, setPrice] = useState<number>(!pastPost ? 0.00 : Number(pastPost.price));
-    const [images, setImages] = useState<File[]>([]);
+    const [images, setImages] = useState<File[]>(pastImages);
     const [months, setMonths] = useState<number>(!pastPost ? 1 : pastPost.duration);
     const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
 
-    const [alert, setAlert] = useState<AlertType | null>(null);
 
     const getData = () => {
         const postData = new FormData();
@@ -66,17 +57,20 @@ function Form({ freeMonths, pastPost }: { freeMonths: number, pastPost: Post | n
     }
 
     const attemptFreePost = async () => {
+        setLoading(true);
         const postData = getData();
         const res = await fetch(`/create/free/postId/api/`, {
             method: 'POST',
             body: postData,
         });
         const resJson = await res.json();
-        setAlert(resJson)
         if (resJson.cStatus==200) router.push(`/create/free/${resJson.postId}`);
+        setAlert(resJson);
+        setLoading(false);
     }
 
     const attemptPaidPost = async () => {
+        setLoading(true);
         const postData = getData();
         const res = await fetch(`/create/paid/postId/api/`, {
             method: 'POST',
@@ -84,75 +78,83 @@ function Form({ freeMonths, pastPost }: { freeMonths: number, pastPost: Post | n
             headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
-        setAlert(resJson)
         if (resJson.cStatus==200) router.push(`/create/paid/${resJson.postId}`);
+        setLoading(false);
+        setAlert(resJson)
     }
 
     return (
         <div className={createPostStyles.form}>
-            <div className={createPostStyles.formItem}>
-                <h4>Title</h4>
-                <input type='text' placeholder='Post title' value={title} onChange={(e)=>setTitle(e.target.value)} />
-            </div>
+            {loading ? 
+                <Loading />
+            :
+            <>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    {alert && <Alert alert={alert} variations={[]} />}
+                </div>
 
-            <div className={createPostStyles.formItem}>
-                <h4>Description</h4>
-                <textarea placeholder='Describe your item' value={description} onChange={(e)=>setDescription(e.target.value)} />
-            </div>
+                <h2 className={createPostStyles.title}>Create a Post</h2>
 
-            <div className={createPostStyles.formItem}>
-                <h4>Category</h4>
-                <select value={category} onChange={(e)=>setCategoryField(e.target.value)}>
-                    {CATEGORIES.map((cat, i) => (
-                        <option key={i} value={cat.title}>{cat.title}</option>
-                    ))}
-                </select>
-            </div>
-
-            {category!='other' &&
                 <div className={createPostStyles.formItem}>
-                    <h4>Size</h4>
-                    <select value={size} onChange={(e)=>setSize(e.target.value)}>
-                        {CLOTHING_SIZES.map((size, i) => (
-                            <option key={i} value={size}>{size}</option>
+                    <h4>Title</h4>
+                    <input type='text' placeholder='Post title' value={title} onChange={(e)=>setTitle(e.target.value)} />
+                </div>
+
+                <div className={createPostStyles.formItem}>
+                    <h4>Description</h4>
+                    <textarea placeholder='Describe your item' value={description} onChange={(e)=>setDescription(e.target.value)} />
+                </div>
+
+                <div className={createPostStyles.formItem}>
+                    <h4>Category</h4>
+                    <select value={category} onChange={(e)=>setCategoryField(e.target.value)}>
+                        {CATEGORIES.map((cat, i) => (
+                            <option key={i} value={cat.title}>{cat.title}</option>
                         ))}
                     </select>
                 </div>
-            }
 
-            {category!='other' &&
+                {category!='other' &&
+                    <div className={createPostStyles.formItem}>
+                        <h4>Size</h4>
+                        <select value={size} onChange={(e)=>setSize(e.target.value)}>
+                            {CLOTHING_SIZES.map((size, i) => (
+                                <option key={i} value={size}>{size}</option>
+                            ))}
+                        </select>
+                    </div>
+                }
+
+                {category!='other' &&
+                    <div className={createPostStyles.formItem}>
+                        <h4>Gender</h4>
+                        <select value={gender} onChange={(e)=>setGender(e.target.value)}>
+                            {GENDERS.map((gender, i) => (
+                                <option key={i} value={gender}>{gender}</option>
+                            ))}
+                        </select>
+                    </div>
+                }
+
                 <div className={createPostStyles.formItem}>
-                    <h4>Gender</h4>
-                    <select value={gender} onChange={(e)=>setGender(e.target.value)}>
-                        {GENDERS.map((gender, i) => (
-                            <option key={i} value={gender}>{gender}</option>
-                        ))}
-                    </select>
+                    <h4>Price</h4>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
+                        <h4>$</h4>
+                        <input type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' value={price} onChange={(e)=>setPrice(Number(e.target.value))} />
+                    </div>
                 </div>
-            }
 
-            <div className={createPostStyles.formItem}>
-                <h4>Price</h4>
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                    <h4>$</h4>
-                    <input type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' value={price} onChange={(e)=>setPrice(Number(e.target.value))} />
+                <Images images={images} setImages={setImages} />
+
+                <ListingPeriod months={months} setMonths={setMonths} />
+
+                {freeMonths!=0 && <UseFreeMonths userFreeMonths={userFreeMonths} setUserFreeMonths={setUserFreeMonths} freeMonths={freeMonths} />}
+
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
+                    {months<=userFreeMonths && <button onClick={attemptFreePost}>Create Post (Use {months} free {months==1 ? 'month' : 'months'})</button>}
+                    {months>userFreeMonths && <button onClick={attemptPaidPost}>Create Post (Pay ${months-userFreeMonths})</button>}
                 </div>
-            </div>
-
-            <Images images={images} setImages={setImages} />
-
-            <ListingPeriod months={months} setMonths={setMonths} />
-
-            {freeMonths!=0 && <UseFreeMonths userFreeMonths={userFreeMonths} setUserFreeMonths={setUserFreeMonths} freeMonths={freeMonths} />}
-
-            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '10px'}}>
-                {months<=userFreeMonths && <button className='button' onClick={attemptFreePost}><h5>Create Post (Use {months} free {months==1 ? 'month' : 'months'})</h5></button>}
-                {userFreeMonths<months && <button className='button' onClick={attemptPaidPost}><h5>Create Post (Pay ${months-userFreeMonths})</h5></button>}
-            </div>
-
-            <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                {alert && <Alert alert={alert} variations={[]} />}
-            </div>
+            </>}
         </div>
     );
 }
