@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useReloaderContext } from '@components/providers/Reloader';
+import { useAuthContext } from '@components/providers/Auth';
 
-import Form, { FormInputType } from '@components/Form';
 import { Alert, AlertType, AlertVariation } from '@components/Alert';
 
 import formStyles from '@styles/ui/form.module.css';
@@ -14,7 +13,7 @@ import formStyles from '@styles/ui/form.module.css';
 
 export default function Login() {
     const router = useRouter();
-    const { reload } = useReloaderContext();
+    const { fetchCookie } = useAuthContext();
 
     const inputs: FormInputType[] = [
         {title: 'Email', type: 'text', name: 'email'},
@@ -41,7 +40,7 @@ export default function Login() {
         const resJson = await res.json();
         setAlert(resJson);
         if (resJson.cStatus==200) {
-            reload();
+            fetchCookie();
             router.push(`/account/${resJson.netId}`);
         }
     }
@@ -49,9 +48,40 @@ export default function Login() {
     return (
         <div className={formStyles.container}>
             <h2 className={formStyles.title}>Login</h2>
-            <Form action={attemptLogin} inputs={inputs} submitTitle='Login' />
-            <h4>Click <a href='/signup/'>here</a> to sign up</h4>
+            <LoginForm action={attemptLogin} inputs={inputs} />
             {alert && <Alert alert={alert} variations={alertVars} />}
         </div>
+    );
+}
+
+
+
+interface FormInputType {
+    title: string,
+    name: string,
+    type: React.HTMLInputTypeAttribute
+}
+
+interface FormType {
+    action: (formData: FormData) => void,
+    inputs: FormInputType[]
+}
+
+function LoginForm({ action, inputs }: FormType) {
+    return (
+        <form className={formStyles.form} action={action}>
+            {inputs.map((input, i) => { 
+                return (
+                    <div key={i} className={formStyles.formItem}>
+                        <h4>{input.title}</h4> <input type={input.type} name={input.name} autoComplete={input.name} />
+                    </div>
+                );
+            })}
+
+            <div style={{ padding: '20px',  display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <button style={{ alignSelf: 'center' }} type='submit'>Login</button>
+                <h5 style={{ textAlign: 'center' }}>Click <a href='/signup/'>here</a> to sign up</h5>
+            </div>
+        </form>
     );
 }

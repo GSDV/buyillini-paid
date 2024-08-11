@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useReloaderContext } from '@components/providers/Reloader';
+import { useAuthContext } from '@components/providers/Auth';
 
-import Form, { FormInputType } from '@components/Form';
 import { Alert, AlertType, AlertVariation } from '@components/Alert';
 
 import formStyles from '@styles/ui/form.module.css';
@@ -14,7 +13,7 @@ import formStyles from '@styles/ui/form.module.css';
 
 export default function SignUp() {
     const router = useRouter();
-    const { reload } = useReloaderContext();
+    const { fetchCookie } = useAuthContext();
 
     const inputs: FormInputType[] = [
         {title: 'Name', type: 'text', name: 'displayName'},
@@ -40,7 +39,7 @@ export default function SignUp() {
             password: formData.get('password')
         };
 
-        const res = await fetch('signup/api/', {
+        const res = await fetch('/signup/api/', {
             method: 'POST',
             body: JSON.stringify({userData}),
             headers: { 'Content-Type': 'application/json' }
@@ -49,16 +48,50 @@ export default function SignUp() {
         const resJson = await res.json();
         setAlert(resJson);
         if (resJson.cStatus==200) {
-            reload();
-            router.push(`/signup/success`);
+            fetchCookie();
+            router.push(`/signup/success/`);
         }
     }
 
     return (
         <div className={formStyles.container}>
             <h2 className={formStyles.title}>Sign up for BuyIllini</h2>
-            <Form action={attemptSignUp} inputs={inputs} submitTitle='Sign up' />
+            <SignUpForm action={attemptSignUp} inputs={inputs} />
             {alert && <Alert alert={alert} variations={alertVars} />}
         </div>
+    );
+}
+
+
+
+interface FormInputType {
+    title: string,
+    name: string,
+    type: React.HTMLInputTypeAttribute
+}
+
+interface FormType {
+    action: (formData: FormData) => void,
+    inputs: FormInputType[]
+}
+
+function SignUpForm({ action, inputs }: FormType) {
+    return (
+        <form className={formStyles.form} action={action}>
+            {inputs.map((input, i) => { 
+                return (
+                    <div key={i} className={formStyles.formItem}>
+                        <h4>{input.title}</h4> <input type={input.type} name={input.name} autoComplete={input.name} />
+                    </div>
+                );
+            })}
+
+            <h5 style={{ width: '250px', textAlign: 'center' }}>By signing up, you agree to the <a href="/terms/" target="_blank">Terms</a> and <a href="/privacy-policy/" target="_blank">Privacy Policy</a> of BuyIllini.</h5>
+
+            <div style={{ padding: '20px',  display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <button style={{ alignSelf: 'center' }} type='submit'>Sign up</button>
+                <h5 style={{ textAlign: 'center' }}>Click <a href='/login/'>here</a> to login</h5>
+            </div>
+        </form>
     );
 }
