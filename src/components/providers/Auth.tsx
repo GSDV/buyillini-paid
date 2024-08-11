@@ -1,46 +1,39 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-
+import Cookies from 'js-cookie';
 
 
 interface AuthContextType {
     authToken: string,
     setAuthToken: React.Dispatch<React.SetStateAction<string>>,
-    loading: boolean
+    loading: boolean,
+    fetchCookie: () => void
 }
 
 const init: AuthContextType = {
     authToken: '',
     setAuthToken: ()=>{},
-    loading: true
+    loading: true,
+    fetchCookie: ()=>{}
 };
 
 const AuthContext = createContext<AuthContextType>(init);
 
 
 
-export function Auth({ cookie, children }: { cookie: RequestCookie | undefined, children: React.ReactNode }) {
+// export function Auth({ cookie, children }: { cookie: RequestCookie | undefined, children: React.ReactNode }) {
+export function Auth({ children }: { children: React.ReactNode }) {
     const [authToken, setAuthToken] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
-    const fetchCookie = async () => {
-        console.log('------- STARTING fetchCookie -------');
-        const token = (!cookie) ? '' : cookie.value;
-
-        const userRes = await getRedactedUserFromAuth(token);
-        if (!userRes) {
-            setAuthToken('');
-        }
-        else {
-            setAuthToken(token);
-        }
+    const fetchCookie = () => {
+        const cookie = Cookies.get('authtoken');
+        const token = (!cookie) ? '' : cookie;
         setLoading(false);
-        console.log('------- ENDING fetchCookie -------');
-        console.log('cookie/authotken: ', token, '   user: ', userRes?.email);
+        console.log("FETCHED COOKIE: ", token);
+        setAuthToken(token);
     }
 
     useEffect(() => {
@@ -48,7 +41,7 @@ export function Auth({ cookie, children }: { cookie: RequestCookie | undefined, 
     }, []);
 
     return (
-        <AuthContext.Provider value={{ authToken, setAuthToken, loading }} >
+        <AuthContext.Provider value={{ authToken, setAuthToken, fetchCookie, loading }} >
             {children}
         </AuthContext.Provider>
     );
