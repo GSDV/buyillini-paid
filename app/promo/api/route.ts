@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-import { getUserFromAuth } from '@util/prisma/actions';
+import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { claimPromoCode, getPromoCodePrisma } from '@util/prisma/actions/promo';
 
 
 
 export async function POST(req: NextRequest) {
+    // try {}
     const { promoCode } = await req.json();
 
     if (!promoCode || promoCode==='') return NextResponse.json({ cStatus: 101, msg: `Please enter a promo code.` }, { status: 400 });
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
     const authTokenCookie = cookies().get('authtoken');
     if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
-    const userPrisma = await getUserFromAuth(authTokenCookie.value);
+    const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
     if (!userPrisma) return NextResponse.json({ cStatus: 402, msg: `You are not logged in.` }, { status: 400 });
 
     if (userPrisma.promoCodes.includes(promoCode)) return NextResponse.json({ cStatus: 421, msg: `You already claimed this promo code.` }, { status: 400 });
