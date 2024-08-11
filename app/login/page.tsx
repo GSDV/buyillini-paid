@@ -13,9 +13,9 @@ export default function Page() {
     const router = useRouter();
 
     const checkIfAlreadyLoggedIn = async () => {
-        const res = await fetch('login/api/', { method: 'GET' });
+        const res = await fetch('/login/api/', { method: 'GET' });
         const resJson = await res.json();
-        if (resJson.cStatus==201) router.push(`/account/${resJson.netId}`);
+        if (resJson.cStatus==201) router.push(`/account/${resJson.netId}/`);
     }
 
     useEffect(() => {

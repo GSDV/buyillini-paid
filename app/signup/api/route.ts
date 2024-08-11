@@ -19,10 +19,13 @@ export async function GET(req: NextRequest) {
         if (!authTokenCookie) return NextResponse.json({ cStatus: 200, msg: `User is not logged in.` }, { status: 200 });
         const user = await getRedactedUserFromAuth(authTokenCookie.value);
         const resValidUser = isValidUser(user);
-        if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 200 });
+        if (!resValidUser.valid) {
+            if (resValidUser.nextres?.cStatus==412) return NextResponse.json({ cStatus: 201, msg: `Account is logged in but inactive.`, netId: (user as any).netId }, { status: 200 });
+            return NextResponse.json(resValidUser.nextres, { status: 200 });
+        }
         return NextResponse.json({ cStatus: 201, msg: `User is already logged in.`, netId: (user as any).netId }, { status: 200 });
     } catch (err) {
-        return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}.` }, { status: 400 });
+        return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
     }
 }
 
@@ -76,6 +79,6 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ cStatus: 200, msg: `Success. Check your email to activate your account.` }, { status: 200 });
     } catch (err) {
-        return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}.` }, { status: 400 });
+        return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
     }
 }
