@@ -49,6 +49,9 @@ model User {
     // All reports this user has made on posts
     reports             PostReport[]        @relation("Reporter")
 
+    // All reports this user has made on posts
+    interestedPosts     BuyerInterest[]     @relation("Buyer")
+
     // All payments a seller has made, for any and all posts
     payments            PaymentTransaction[]    @relation("UserPayments")
 
@@ -77,6 +80,8 @@ model Post {
     updatedAt           DateTime            @updatedAt
     id                  String              @id @default(cuid())
 
+    displayDate           DateTime           @default(now())
+
     // Seller who posted the post
     sellerId            String
     seller              User                @relation("UserPost", fields: [sellerId], references: [id], onDelete: Cascade)
@@ -99,6 +104,9 @@ model Post {
 
     // All reports this post has gotten
     reports             PostReport[]        @relation("ReportedPost")
+
+    // All reports this post has gotten
+    interestedBuyers    BuyerInterest[]     @relation("BuyerPost")
 
     // Post info:
     title               String              @db.VarChar(50)
@@ -181,6 +189,7 @@ model RPToken {
 
 
 
+// Reporter is required, but if an account is deleted the reports still are available in the database (hence the "?"s)
 model PostReport {
     createdAt           DateTime            @default(now())
     updatedAt           DateTime            @updatedAt
@@ -193,6 +202,22 @@ model PostReport {
 
     reportedPostId      String
     reportedPost        Post                @relation("ReportedPost", fields: [reportedPostId], references: [id], onDelete: Cascade)
+}
+
+
+
+model BuyerInterest {
+    createdAt           DateTime            @default(now())
+    updatedAt           DateTime            @updatedAt
+    id                  String              @id @default(cuid())
+
+    msg                 String
+
+    buyerId             String?
+    buyer               User?               @relation("Buyer", fields: [buyerId], references: [id], onDelete: SetNull)
+
+    postId              String
+    post                Post                @relation("BuyerPost", fields: [postId], references: [id], onDelete: Cascade)
 }
 
 
