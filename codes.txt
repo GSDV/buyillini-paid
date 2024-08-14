@@ -12,7 +12,8 @@ Custom Status Codes (cStatus)
 2XX: Successes
 - 200: Whatever the request was, it went through as intended with no failures or issues.
 - 201: User is trying a pointless action (logging in when already logged in).
-- 202: User is loading at own account info instead of another account.
+- 202: User is loading own account info instead of another account.
+- 203: User is loading other account info while logged in (as opposed to logged out).
 
 
 
@@ -32,8 +33,13 @@ Custom Status Codes (cStatus)
 - 420: User tried claiming a promo code which does not exist.
 - 421: User tried claiming the same promo code twice.
 - 422: Not eligible user tried claiming a special promo code.
-- 430: Trying to confirm a post that does't exist.
-- 431: Trying to confirm a post of opoiste type (free vs paid).
+- 430: Trying action on post that doesn't exist.
+- 431: Trying to confirm a post of opposite type (free vs paid).
+- 432: Trying action on post that isn't active.
+- 433: Trying action on post that is deleted.
+- 434: Trying action on post that is expired.
+- 440: Trying duplicate action (reporting post twice).
+
 
 
 
