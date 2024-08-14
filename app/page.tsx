@@ -1,95 +1,71 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import { useEffect, useState } from 'react';
+import { PostWithRedactedUser } from '@util/prisma/types';
+import Loading from '@components/Loading';
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+import VerticalLayout from '@components/containers/VerticalLayout';
+import AllCategories from '@components/pages/Root';
+import { UserFiltersType } from '@components/pages/shop/Filters';
+import { AlertType, CheckIfAlert } from '@components/Alert';
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+export default function Page() {
+    const [page, setPage] = useState<number>(1);
+    const [maxPages, setMaxPages] = useState<number>(0);
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+    const [filters, setFilters] = useState<UserFiltersType>({
+        sizes: [],
+        gender: 'Unisex',
+        categories: [],
+        maxPrice: 9999.99,
+        minPrice: 0
+    });
+    const [posts, setPosts] = useState<PostWithRedactedUser[]>([]);
+    const [alert, setAlert] = useState<AlertType | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+    const updatePage = (newPage: number) => {
+        setPage(newPage);
+        fetchPosts(newPage);
+    }
+
+    const fetchPosts = async (fetchPage: number) => {
+        setLoading(true);
+        const params = new URLSearchParams({
+            sizes: filters.sizes.join(','),
+            gender: filters.gender,
+            categories: filters.categories.join(','),
+            minPrice: String(filters.minPrice),
+            maxPrice: String(filters.maxPrice),
+            page: String(fetchPage)
+        }).toString();
+        const res = await fetch(`/api?${params}`, { method: 'GET' });
+        const resJson = await res.json();
+        if (resJson.cStatus==200) {
+            setPosts(resJson.posts);
+            setMaxPages(resJson.maxPages);
+        }
+        setAlert(resJson);
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        fetchPosts(page);
+    }, [filters]);
+
+    return (
+        <VerticalLayout>
+            {loading ? 
+                <Loading />
+            :
+                <CheckIfAlert 
+                    alert={alert}
+                    variations={[]}
+                    content={<AllCategories posts={posts} filters={filters} setFilters={setFilters} page={page} updatePage={updatePage} maxPages={maxPages} />}
+                />
+            }
+        </VerticalLayout>
+    );
 }
+
