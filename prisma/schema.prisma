@@ -52,9 +52,6 @@ model User {
     // All reports this user has made on posts
     interestedPosts     BuyerInterest[]     @relation("Buyer")
 
-    // All payments a seller has made, for any and all posts
-    payments            PaymentTransaction[]    @relation("UserPayments")
-
     // Posts posted as a seller
     posts               Post[]              @relation("UserPost")
 
@@ -88,7 +85,7 @@ model Post {
 
     // The payment for this post
     isPaid              Boolean
-    payment             PaymentTransaction? @relation("PostPayment")
+    payment             Payment?            @relation("PostPayment")
     // How many free months used for the post
     freeMonthsUsed      Int                 @db.SmallInt
 
@@ -123,7 +120,7 @@ model Post {
 
 
 
-model PaymentTransaction {
+model Payment {
     // Date of transaction
     createdAt           DateTime            @default(now())
     updatedAt           DateTime            @updatedAt
@@ -133,13 +130,12 @@ model PaymentTransaction {
     postId              String              @unique
     post                Post?               @relation("PostPayment", fields: [postId], references: [id], onDelete: Cascade)
 
-    // Seller
-    userId              String
-    user                User                @relation("UserPayments", fields: [userId], references: [id], onDelete: Cascade)
+    // Amount of months paid for
+    // Not always equal to the amount of total months of the post, since free months could have been used
+    amount              Int
 
-    // Useful Stripe API feedback
-    success             Boolean
-    msg                 Boolean
+    stripeSessionId     String
+    successfullyPaid    Boolean             @default(false)
 }
 
 
