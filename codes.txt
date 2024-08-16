@@ -42,12 +42,18 @@ Custom Status Codes (cStatus)
 
 
 
-
 5XX: Relating to Tokens (Auth and Activation)
 - 500: Unknown error with tokens.
 - 501: Token is not real.
 - 502: Token is expired.
 - 510: User requested another token, but the last token has not expired yet.
+
+
+
+6XX: Relating to Stripe calls
+- 600: Unknown Stripe error.
+- 601: Stripe payment intent (Purchase) does not exist on post.
+- 602: Post was already paid for.
 
 
 
