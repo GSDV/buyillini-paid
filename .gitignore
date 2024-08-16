@@ -38,4 +38,6 @@ next-env.d.ts
 
 # Custom
 .env
-util/env.ts
+prisma/migrations
+app/test/
+.DS_Store
