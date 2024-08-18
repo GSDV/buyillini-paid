@@ -1,0 +1,8 @@
+{
+    "crons": [
+      {
+        "path": "/cron/delete-expired-posts",
+        "schedule": "0 0 * * *"
+      }
+    ]
+  }
