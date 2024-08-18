@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
         if (userPrisma.freeMonths < postData.userFreeMonths) return NextResponse.json({ cStatus: 102, msg: `Not enough free months.` }, { status: 400 });
 
         await deleteDraftedPosts(userPrisma.id)
-        console.log("postData: ", postData)
         const postId = await createFreePost(postData, userPrisma.id);
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });

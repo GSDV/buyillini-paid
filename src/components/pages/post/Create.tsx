@@ -48,10 +48,10 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
     const setCategoryField = (value: string) => {
         if (value=='other') {
             setSize('');
-            setGender('Both');
+            setGender('Unisex');
         } else if (category=='other' && value!='other') {
             setSize(CLOTHING_SIZES[0]);
-            setGender('Both');
+            setGender('Unisex');
         }
         setCategory(value);
     }
@@ -61,7 +61,7 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
         const postData = getData();
         const res = await fetch(`/create/free/postId/api/`, {
             method: 'POST',
-            body: postData,
+            body: postData
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) router.push(`/create/free/${resJson.postId}`);
@@ -74,9 +74,9 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
         const postData = getData();
         const res = await fetch(`/create/paid/postId/api/`, {
             method: 'POST',
-            body: JSON.stringify({ postData }),
-            headers: { 'Content-Type': 'application/json' }
+            body: postData
         });
+
         const resJson = await res.json();
         if (resJson.cStatus==200) router.push(`/create/paid/${resJson.postId}`);
         setLoading(false);
@@ -109,7 +109,7 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
                     <h4>Category</h4>
                     <select value={category} onChange={(e)=>setCategoryField(e.target.value)}>
                         {CATEGORIES.map((cat, i) => (
-                            <option key={i} value={cat.title}>{cat.title}</option>
+                            <option key={i} value={cat.link}>{cat.title}</option>
                         ))}
                     </select>
                 </div>

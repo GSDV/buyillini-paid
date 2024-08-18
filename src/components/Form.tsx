@@ -20,12 +20,12 @@ export default function Form({ action, inputs, submitTitle }: FormType) {
             {inputs.map((input, i) => { 
                 return (
                     <div key={i} className={formStyles.formItem}>
-                        <h4>{input.title}</h4> <input type={input.type} name={input.name} autoComplete={input.name} />
+                        <h4>{input.title}</h4> <input type={input.type} name={input.name} />
                     </div>
                 );
             })}
 
-            <button className='button' style={{ margin: '20px' }} type='submit'>{submitTitle}</button>
+            <button style={{ margin: '20px', alignSelf: 'center' }} type='submit'>{submitTitle}</button>
         </form>
     );
 }

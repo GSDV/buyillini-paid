@@ -1,5 +1,5 @@
 'use server';
-import prisma from '@util/prisma/client';
+import { prisma } from '@util/prisma/client';
 import { PromoCode } from '@prisma/client';
 
 

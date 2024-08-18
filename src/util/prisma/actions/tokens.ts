@@ -1,5 +1,5 @@
 'use server';
-import prisma from '@util/prisma/client';
+import { prisma } from '@util/prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
 

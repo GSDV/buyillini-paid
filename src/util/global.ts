@@ -18,8 +18,11 @@ export const getPfpUrl = (key: string) => (key==='') ? DEFAULT_PFP : imgUrl(key)
 
 
 export const formatPhoneNumber = (phoneStr: string) => `(${phoneStr.substring(0, 3)}) ${phoneStr.substring(3, 6)}-${phoneStr.substring(6, 10)}`;
-export const formatDate = (d: Date) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+export const formatDate = (d: Date) => d.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
 export const formatPrice = (p: number) => `$${p.toFixed(2)}`;
+
+export const getCategoryTitle = (link: string) => CATEGORIES.find(cat => cat.link === link)?.title;
+
 
 
 // Each user gets this many free months when signing up
@@ -44,18 +47,18 @@ export const MONTH_TO_MILLI = DEFINED_MONTH * 24 * 60 * 60 * 1000;
 
 export const CATEGORIES = [
     {title: 'Sweatshirts', link: 'sweatshirts', img: '/categories/sweatshirts.png'},
-    {title: 'Jackets', link: 'jackets', img: '/categories/sweatshirts.png'},
-    {title: 'T-Shirts', link: 't-shirts', img: '/categories/sweatshirts.png'},
-    {title: 'Shirts', link: 'shirts', img: '/categories/sweatshirts.png'},
-    {title: 'Tops', link: 'tops', img: '/categories/sweatshirts.png'},
-    {title: 'Pants', link: 'pants', img: '/categories/sweatshirts.png'},
-    {title: 'Shorts', link: 'shorts', img: '/categories/sweatshirts.png'},
-    {title: 'Dresses', link: 'dresses', img: '/categories/sweatshirts.png'},
-    {title: 'Shoes', link: 'shoes', img: '/categories/sweatshirts.png'},
-    {title: 'Athletics', link: 'athletics', img: '/categories/sweatshirts.png'},
-    {title: 'Hats', link: 'hats', img: '/categories/sweatshirts.png'},
-    {title: 'Accessories', link: 'accessories', img: '/categories/sweatshirts.png'},
-    {title: 'Other', link: 'other', img: '/categories/sweatshirts.png'}
+    {title: 'Jackets', link: 'jackets', img: '/categories/jackets.png'},
+    {title: 'T-Shirts', link: 't-shirts', img: '/categories/t-shirts.png'},
+    {title: 'Shirts', link: 'shirts', img: '/categories/shirts.png'},
+    {title: 'Tops', link: 'tops', img: '/categories/tops.png'},
+    {title: 'Pants', link: 'pants', img: '/categories/pants.png'},
+    {title: 'Shorts', link: 'shorts', img: '/categories/shorts.png'},
+    {title: 'Dresses', link: 'dresses', img: '/categories/dresses.png'},
+    {title: 'Shoes', link: 'shoes', img: '/categories/shoes.png'},
+    {title: 'Athletics', link: 'athletics', img: '/categories/athletics.png'},
+    {title: 'Hats', link: 'hats', img: '/categories/hats.png'},
+    {title: 'Accessories', link: 'accessories', img: '/categories/accessories.png'},
+    {title: 'Other', link: 'other', img: '/categories/other.png'}
 ] as const;
 export type CategoryType = typeof CATEGORIES[number];
 

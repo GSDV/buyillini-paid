@@ -1,6 +1,8 @@
+import { Post, User } from '@prisma/client';
 import sgMail from '@sendgrid/mail';
 
-import { DOMAIN } from '@util/global';
+import { CONTACT_EMAIL, DOMAIN, EMAIL_FOOTER, formatPhoneNumber } from '@util/global';
+import { PostWithRedactedUser, RedactedUser } from '@util/prisma/types';
 
 
 
@@ -42,6 +44,36 @@ export const sendActivationEmail = async (email: string, token: string) => {
     return sgCode;
 }
 
+
+
+export const sendBuyRequest = async (buyer: RedactedUser, buyerMsg: string, post: PostWithRedactedUser) => {
+    const msgText = `BuyIllini Interest. We wanted to inform you that "${buyer.displayName}" is interested in purchasing "${post.title}". Contact this buyer through "${buyer.email}".`;
+    const msgHtml = `
+        <h1>Buyer Interest</h1>
+        <p>${buyer.displayName} is interested in purchasing "<a href='${DOMAIN}/post/${post.id}'>${post.title}</a>". Contact this buyer through:</p>
+        <ul>
+            <li>Email: ${buyer.email}</li>
+            ${(buyer.phoneNumber!='' ? `<li>Phone: ${formatPhoneNumber(buyer.phoneNumber)}</li>` : ``)}
+        </ul>
+
+        <br />
+
+        ${buyerMsg!='' ? `<p>Buyer's message:</p><p>${buyerMsg}</p>`: ``}
+
+        <br />
+
+        ${EMAIL_FOOTER}
+    `;
+    const mail = {
+        email: post.seller.email,
+        subject: 'BuyIllini Interest',
+        msgText: msgText,
+        msgHtml: msgHtml
+    };
+
+    const sgCode = await sendEmail(mail);
+    return sgCode;
+}
 
 
 

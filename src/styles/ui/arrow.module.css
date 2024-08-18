@@ -1,0 +1,17 @@
+
+
+.arrow {
+    color: var(--orangePrimary);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.otherPages {
+    /* text-decoration: underline; */
+    cursor: pointer;
+    color: var(--orangePrimary);
+}

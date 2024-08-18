@@ -27,7 +27,7 @@ export default function VerifyAccount({ activateToken }: { activateToken: string
         const resJson = await res.json();
         setLoading(false);
         setAlert(resJson);
-        if (resJson.cStatus==200 || resJson.cStatus==201) router.push(`/account/${resJson.netId}`)
+        if (resJson.cStatus==200 || resJson.cStatus==201) router.push(`/account/${resJson.netId}`);
     }
 
     useEffect(() => {

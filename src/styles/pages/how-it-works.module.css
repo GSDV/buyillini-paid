@@ -1,0 +1,32 @@
+.container {
+    padding: 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+
+
+.stepContainers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: none;
+    gap: 30px;
+}
+@media (max-width: 850px) {
+    .stepContainers {
+        grid-template-columns: none;
+        grid-template-rows: repeat(3, minmax(0, 1fr));
+        gap: 50px;
+    }
+}
+
+.step {
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}

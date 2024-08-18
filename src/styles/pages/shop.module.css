@@ -1,0 +1,138 @@
+
+.layout {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.categoriesContainer {
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+
+.category {
+    padding: 5px;
+    max-width: min(300px, 30%);
+    flex: 1 1 30%;
+    border: 3px solid var(--black);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--black);
+    cursor: pointer;
+}
+
+
+
+
+
+.filtersContainer {
+    padding: 10px;
+    height: fit-content;
+    background-color: var(--greLight);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.filterItem {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+
+
+
+.postsWrapper {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    justify-items: center;
+    gap: 30px 20px;
+    overflow-y: scroll;
+}
+@media (max-width: 1200px) {
+    .postsWrapper { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 1000px) {
+    .postsWrapper { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+    .postsWrapper { grid-template-columns: repeat(2, minmax(0, 1fr));  }
+}
+
+
+.postContainer {
+    width: 100%;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--lightOrange);
+    background-color: var(--lightOrange);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.postHeader {
+    padding: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: min(10px, 1vw);
+    background-color: var(--lightOrange);
+    text-decoration: none;
+}
+.postHeader img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+.postHeader h4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.post {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.postImgWrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+}
+.postImgWrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.post h4 {
+    height: 2.7em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: center;
+}

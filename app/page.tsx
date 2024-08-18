@@ -19,16 +19,12 @@ export default function Page() {
         gender: 'Unisex',
         categories: [],
         maxPrice: 9999.99,
-        minPrice: 0
+        minPrice: 0,
+        deleted: false
     });
     const [posts, setPosts] = useState<PostWithRedactedUser[]>([]);
     const [alert, setAlert] = useState<AlertType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-
-    const updatePage = (newPage: number) => {
-        setPage(newPage);
-        fetchPosts(newPage);
-    }
 
     const fetchPosts = async (fetchPage: number) => {
         setLoading(true);
@@ -38,8 +34,10 @@ export default function Page() {
             categories: filters.categories.join(','),
             minPrice: String(filters.minPrice),
             maxPrice: String(filters.maxPrice),
+            deleted: String(filters.deleted),
             page: String(fetchPage)
         }).toString();
+
         const res = await fetch(`/api?${params}`, { method: 'GET' });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
@@ -52,7 +50,7 @@ export default function Page() {
 
     useEffect(() => {
         fetchPosts(page);
-    }, [filters]);
+    }, [filters, page]);
 
     return (
         <VerticalLayout>
@@ -62,7 +60,7 @@ export default function Page() {
                 <CheckIfAlert 
                     alert={alert}
                     variations={[]}
-                    content={<AllCategories posts={posts} filters={filters} setFilters={setFilters} page={page} updatePage={updatePage} maxPages={maxPages} />}
+                    content={<AllCategories posts={posts} filters={filters} setFilters={setFilters} page={page} maxPages={maxPages} setPage={setPage} />}
                 />
             }
         </VerticalLayout>

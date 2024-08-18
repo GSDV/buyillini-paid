@@ -33,8 +33,6 @@ model User {
     displayName         String
     profilePicture      String              @default("")
 
-    stripeId            String?
-
     // Promo codes that the user has redeemed in the past (stored so he can't repeat them)
     promoCodes          String[]            @default([])
 

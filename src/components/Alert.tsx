@@ -24,7 +24,7 @@ export interface AlertVariation {
     jsx: React.ReactNode
 }
 
-export interface AlertComponentType {
+interface AlertComponentType {
     alert: AlertType,
     variations: AlertVariation[]
 }
@@ -43,5 +43,22 @@ export function Alert({ alert, variations }: AlertComponentType) {
                 <p>{alert.msg}</p>
             }
         </div>
+    );
+}
+
+interface CheckIfAlertType {
+    alert: AlertType|null,
+    variations: AlertVariation[],
+    content: React.ReactNode
+}
+export function CheckIfAlert({ alert, variations, content }: CheckIfAlertType) {
+    return (
+        <>
+            {(alert!=null && alert.cStatus/100!=2) ?
+                <Alert alert={alert} variations={variations} />
+            :
+                <>{content}</>
+            }
+        </>
     );
 }

@@ -16,8 +16,8 @@ export const reportPost = async (reporterId: string, postId: string, msg: string
 
 
 export const didUserAlreadyReportPost = async (reporterId: string, reportedPostId: string) => {
-    await prisma.postReport.findFirst({
+    const postReportPrisma = await prisma.postReport.findFirst({
         where: { reporterId: reporterId, reportedPostId }
     });
-    return prisma!=null;
+    return postReportPrisma!=null;
 }

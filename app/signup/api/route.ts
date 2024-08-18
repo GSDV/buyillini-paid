@@ -35,8 +35,7 @@ export async function GET(req: NextRequest) {
 // Their account will be created AND a verification email will be automatically sent
 export async function POST(req: NextRequest) {
     try {
-        const body = await req.json();
-        const { userData } = body;
+        const { userData } = await req.json();
 
         if (!userData) return NextResponse.json({ cStatus: 101, msg: `No itemData provided. Refresh this page.` }, { status: 400 });
 

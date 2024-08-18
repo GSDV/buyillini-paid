@@ -34,6 +34,6 @@ export async function POST(req: NextRequest) {
     
         return NextResponse.json({ cStatus: 200, msg: `Verification email sent! Check your inbox and click the account activation link.` }, { status: 200 });
     } catch (err) {
-        return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}.` }, { status: 400 });
+        return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
     }
 }

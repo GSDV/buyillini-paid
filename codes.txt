@@ -6,6 +6,7 @@ Custom Status Codes (cStatus)
 - 100: Unknown, unspecific error.
 - 101: Some fields of data (which should've been provided by the user) are empty / do not exist.
 - 102: Some fields of data (which are provided by the user) have invalid or incorrect data.
+- 110: Unknown operation.
 
 
 

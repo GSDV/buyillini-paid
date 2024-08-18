@@ -1,0 +1,119 @@
+* {
+    box-sizing: border-box;
+}
+
+
+:root {
+    --white: #e9ebeb;
+    --black: #1c1c1c;
+    --orangePrimary: #ff7936;
+    --orangePrimaryShadow: #f07030;
+
+    --lightOrange: #fca971;
+
+    --red: #ed4747;
+    --redShadow: #c73636;
+
+    --grey: #afafaf;
+    --greyShadow: #9a9999;
+    --greLight: #d8d7d7;
+
+    --greyText: #9d9d9d;
+}
+
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+html {
+    font-size: 100%;
+    overscroll-behavior: contain;
+}
+
+
+body {
+    height: max(500px, 100%);
+    background-color: var(--white);
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+textarea, input, select {
+    padding: 5px;
+    border: 0;
+    border-radius: 5px;
+    font: inherit;
+    letter-spacing: inherit;
+    word-spacing: inherit;
+    font-size: 100%;
+}
+
+
+h1 { font-size: 2rem; }
+
+h2 { font-size: 1.5rem; }
+
+h3 { font-size: 1.3rem; }
+
+h4 { font-size: 1.1rem; }
+
+h5 { font-size: 0.9rem; }
+
+h6 { font-size: 0.8rem; }
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+    color: var(--black);
+    font-weight: 400;
+}
+
+
+
+button {
+    padding: 10px 15px;
+    width: fit-content;
+    border: 0;
+    border-radius: 10px;
+    background-color: var(--orangePrimary);
+    cursor: pointer;
+    color: var(--white);
+    font-size: 0.9rem;
+}
+
+
+
+.msContainer {
+    position: relative;
+    padding: 30px;
+    width: clamp(200px, 80%, 600px);
+    border-radius: 20px;
+    background-color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+.msClose {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+
+.bgRed {
+    background-color: var(--red);
+}
+.bgGrey {
+    background-color: var(--grey);
+}
