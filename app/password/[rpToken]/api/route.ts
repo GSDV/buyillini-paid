@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         // Since we found a real token, there must be a real user associated with it. So the following should in theory never run, but just in case
         if (!userPrisma) return NextResponse.json({ cStatus: 400, msg: `Unknown server error.`}, { status: 400 });
 
-        const hashedPassword = await hashPassword(newPassword);
+        const hashedPassword = await hashPassword(newPassword, userPrisma.salt);
         if (userPrisma.password === hashedPassword) return NextResponse.json({ cStatus: 102, msg: `New password cannot be the same as current one.` }, { status: 400 });
 
         await changePassword(userPrisma.id, hashedPassword);
