@@ -127,8 +127,8 @@ model Payment {
     id                  String              @id @default(cuid())
 
     // Post the payment is for
-    postId              String              @unique
-    post                Post?               @relation("PostPayment", fields: [postId], references: [id], onDelete: Cascade)
+    postId              String?             @unique
+    post                Post?               @relation("PostPayment", fields: [postId], references: [id], onDelete: SetNull)
 
     // Amount of months paid for
     // Not always equal to the amount of total months of the post, since free months could have been used
