@@ -37,6 +37,7 @@ function Actions() {
                 <MarkDeleteUser setAlert={setAlert} />
                 <BanUser setAlert={setAlert} />
                 <UnbanUser setAlert={setAlert} />
+                {/* Make super user (non illinois emal), add free months */}
         </div>
         </div>
     );
