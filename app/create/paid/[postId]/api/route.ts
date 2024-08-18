@@ -76,9 +76,6 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
             cancel_url: `${DOMAIN}/create/paid/${postPrisma.id}/stripe/error`,
             automatic_tax: { enabled: true }
         });
-
-        console.log("session: ", session);
-        console.log("client: ", session.client_secret);
         
         await deleteAllFailedPostPayments(postPrisma.id);
         await addPaymentToPost(postPrisma.id, session.id, months);

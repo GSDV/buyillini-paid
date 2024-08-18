@@ -238,12 +238,3 @@ export const didUserBuyPostRecently = async (buyerId: string, postId: string) =>
 
 
 
-
-export const markDeleteAllExpiredPosts = async () => {
-    const now = new Date();
-    const res = await prisma.post.updateMany({
-        where: { deleted: false, active: true, expireDate: {lte: now} },
-        data: { deleted: true }
-    });
-    return res.count;
-}

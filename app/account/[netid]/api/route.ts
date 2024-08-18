@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-import { ACCEPTED_FILES } from '@util/global';
+import { ACCEPTED_FILES, CONTACT_EMAIL, DOMAIN } from '@util/global';
 
 import { deleteFromS3, uploadPfp } from '@util/s3/aws';
 
@@ -18,12 +18,10 @@ export async function GET(req: NextRequest, { params }: { params: { netId: strin
         const accountNetId = params.netId;
         const accountPrisma = await getRedactedUserWithItems({netId: accountNetId});
 
-        // const resValidUser = isValidUser(accountPrisma);
-        // if (!resValidUser) return { valid: false, nextres: { cStatus: 404, msg: `User does not exist. Sign up.` } };
-        // if (user.banned) return { valid: false, nextres: { cStatus: 410, msg: `This account has been banned: ${user.banMsg}` } };
-        // if (user.deleted) return { valid: false, nextres: { cStatus: 411, msg: `This account has been deleted. Please email ${CONTACT_EMAIL} to reactivate your account.` } };
-        // if (!user.active) return { valid: false, nextres: { cStatus: 412, msg: `This account is not active. Please go to ${DOMAIN}/activate.` } };
-        // if (!resValidUser.valid) return NextResponse.json({ cStatus: 404, msg: `This is account does not exist.` }, { status: 400 });
+        if (!accountPrisma) return NextResponse.json({ cStatus: 404, msg: `User does not exist. Sign up.` }, { status: 400 });
+        if (!accountPrisma.active) return NextResponse.json({ cStatus: 412, msg: `This account is not active. Please go to ${DOMAIN}/activate.` }, { status: 400 });
+        if (accountPrisma.banned) return NextResponse.json({ cStatus: 410, msg: `This account has been banned: ${accountPrisma.banMsg}` }, { status: 400 });
+        if (accountPrisma.deleted) return NextResponse.json({ cStatus: 411, msg: `This account has been deleted. Please email ${CONTACT_EMAIL} to reactivate your account.` }, { status: 400 });
 
         const authTokenCookie = cookies().get('authtoken');
         if (authTokenCookie != null) {

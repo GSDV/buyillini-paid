@@ -41,7 +41,9 @@ export default function Page({ params }: { params: { netId: string } }) {
                 <Loading />
             :
                 <>{alert ?
-                    <Alert alert={alert} variations={[]} />
+                    <CenterLayout>
+                        <Alert alert={alert} variations={[]} />
+                    </CenterLayout>
                 :
                     <>{user!=null && <Account user={user} ownAccount={ownAccount} /> }</>
                 }</>

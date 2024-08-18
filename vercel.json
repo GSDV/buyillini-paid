@@ -1,7 +1,7 @@
 {
     "crons": [
       {
-        "path": "/cron/delete-expired-posts",
+        "path": "/cron/once-per-day",
         "schedule": "0 0 * * *"
       }
     ]

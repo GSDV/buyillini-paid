@@ -26,7 +26,6 @@ export default function Page() {
             setPastPost(resJson.draftedPost);
 
             const imgFiles: File[] = [];
-            // Uncomment in prod:
             const imgs = resJson.draftedPost.images;
             for (let i=0; i<imgs.length; i++) {
                 const response = await fetch(imgUrl(imgs[i]));

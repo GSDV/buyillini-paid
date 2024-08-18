@@ -81,7 +81,8 @@ export async function DELETE(req: NextRequest) {
                 await deleteUser({ netId: data.netId });
                 break;
             case 'BAN_USER':
-                await banUser({ netId: data.netId }, data.msg, new Date(data.expiration));
+                const expiration = data.expiration==null ? null : new Date(data.expiration);
+                await banUser({ netId: data.netId }, data.msg, expiration);
                 break;
             default:
                 return NextResponse.json({ cStatus: 110, msg: `Unknown operation.` }, { status: 400 });

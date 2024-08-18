@@ -7,7 +7,6 @@ import { formatDate, formatPhoneNumber, getPfpUrl } from '@util/global';
 
 
 export default function DisplayUser({ user }: { user: User }) {
-
     return (
         <VerticalLayout>
             <img style={{width: '100px', height: '100px'}} src={getPfpUrl(user.profilePicture)}/>
@@ -26,7 +25,7 @@ export default function DisplayUser({ user }: { user: User }) {
             <h4><b>Banned: </b>{user.banned.toString()}</h4>
             {user.banned && <>
                 <h4><b>Ban Msg: </b>{user.banMsg}</h4>
-                <h4><b>Ban Expiration: </b>{user.banExpiration!=null && formatDate(user.banExpiration)}</h4>
+                <h4><b>Ban Expiration: </b>{user.banExpiration!=null ? formatDate(user.banExpiration) : 'never'}</h4>
             </>}
         </VerticalLayout>
     );
