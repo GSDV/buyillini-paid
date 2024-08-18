@@ -67,6 +67,7 @@ model User {
 
     // Has this account been banned?
     banned              Boolean             @default(false)
+    banExpiration       DateTime?
     banMsg              String?
 }
 
