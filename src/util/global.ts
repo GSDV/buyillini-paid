@@ -11,6 +11,7 @@ export const IMG_ACCEPTED_FILES = 'image/png, image/jpeg, image/jpg, image/webp'
 
 
 // Get the AWS S3 image URL
+export const BUYILLINI_LOGO = `https://buyillini.s3.us-east-2.amazonaws.com/bi-logo`;
 export const DEFAULT_PFP = `/ui/default-profile-picture.png`;
 export const imgUrl = (key: string) => `https://buyillini.s3.us-east-2.amazonaws.com/${key}`;
 export const getPfpUrl = (key: string) => (key==='') ? DEFAULT_PFP : imgUrl(key);

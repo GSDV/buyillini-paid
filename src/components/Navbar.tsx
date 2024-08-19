@@ -1,18 +1,22 @@
-'use server'
+'use server';
+
+import Link from 'next/link';
 
 import { cookies } from 'next/headers';
-import Link from 'next/link';
-import Image from 'next/image';
-import { DEFAULT_PFP } from '@util/global';
+
 import { navbarInfo } from '@util/prisma/actions/user';
+
+import { BUYILLINI_LOGO } from '@util/global';
+
 import navbarStyles from '@styles/ui/navbar.module.css';
+
+
 
 export default async function Navbar() {
     return (
         <div className={navbarStyles.navbar}>
             <Link href='/'>
-                {/* <Image alt='logop' src='https://buyillini.s3.us-east-2.amazonaws.com/bi-logo' width={50} height={50} /> */}
-                <img alt='logo' src='https://buyillini.s3.us-east-2.amazonaws.com/bi-logo' width='50' height='50'  />
+                <img alt='logo' src={BUYILLINI_LOGO} width='50' height='50'  />
             </Link>
             <NavbarItem title='Shop' link='/shop/' />
             <NavbarItem title='Promos' link='/promo/' />
