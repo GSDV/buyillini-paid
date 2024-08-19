@@ -46,7 +46,7 @@ export const updatePost = async (postId: string, postData: EditPostData) => {
     for (let i=0; i<postData.images.length; i++) {
         const imgBytes = await postData.images[i].arrayBuffer();
         const imgBuffer = Buffer.from(imgBytes);
-        const imgUrl = await uploadPostPicture(imgBuffer);
+        const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
         imageUrls.push(imgUrl);
     }
     const { images, ...cleanedData } = postData;
@@ -88,7 +88,7 @@ export const createFreePost = async (postData: PostData, userId: string) => {
     for (let i=0; i<postData.images.length; i++) {
         const imgBytes = await postData.images[i].arrayBuffer();
         const imgBuffer = Buffer.from(imgBytes);
-        const imgUrl = await uploadPostPicture(imgBuffer);
+        const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
         imageUrls.push(imgUrl);
     }
     const { images, userFreeMonths, months, ...cleanedData } = postData;
@@ -106,7 +106,7 @@ export const createPaidPost = async (postData: PostData, userId: string) => {
     for (let i=0; i<postData.images.length; i++) {
         const imgBytes = await postData.images[i].arrayBuffer();
         const imgBuffer = Buffer.from(imgBytes);
-        const imgUrl = await uploadPostPicture(imgBuffer);
+        const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
         imageUrls.push(imgUrl);
     }
     const { images, userFreeMonths, months, ...cleanedData } = postData;

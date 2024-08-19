@@ -14,28 +14,28 @@ export const s3Client = new S3Client({
 
 
 
-export const uploadPostPicture = async (buffer: Buffer) => {
+export const uploadPostPicture = async (buffer: Buffer, type: string) => {
     const croppedBuffer = await sharp(buffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).webp({ quality: 80, effort: 6 }).toBuffer();
     const key = `post-f-${uuidv4()}`;
-    const res = await uploadToS3(croppedBuffer, key);
+    const res = await uploadToS3(croppedBuffer, key, type);
     return key;
 }
 
 
-export const uploadPfp = async (buffer: Buffer) => {
+export const uploadPfp = async (buffer: Buffer, type: string) => {
     const croppedBuffer = await sharp(buffer).resize({ width: 250, height: 250, fit: 'cover' }).toBuffer();
     const key = `pfp-f-${uuidv4()}`;
-    const res = await uploadToS3(croppedBuffer, key);
+    const res = await uploadToS3(croppedBuffer, key, type);
     return key;
 }
 
 
-export const uploadToS3 = async (file: Buffer, key: string) => {
+export const uploadToS3 = async (file: Buffer, key: string, type: string) => {
     const params = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: key,
         Body: file,
-        ContentType: "image/*"
+        ContentType: type
     }
     const cmd = new PutObjectCommand(params);
     await s3Client.send(cmd);
