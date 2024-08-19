@@ -23,6 +23,7 @@ import formStyles from '@styles/ui/form.module.css';
 import clsx from 'clsx';
 import { colorScheme } from '@styles/colors';
 import PageArrows from '@components/Arrows';
+import Link from 'next/link';
 
 
 
@@ -164,7 +165,7 @@ function Buttons({ freeMonths }: { freeMonths: number }) {
         <div style={{ display: 'flex', flexDirection: 'row', gap: '20px', width: '100%', alignItems: 'flex-start' }}>
             <button onClick={attemptLogout} style={{ backgroundColor: 'var(--red)', alignSelf: 'flex-start' }}>Log Out</button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                <a href='/create/'><button style={{ alignSelf: 'flex-start' }}>Post</button></a>
+                <Link href='/create/'><button style={{ alignSelf: 'flex-start' }}>Post</button></Link>
                 <h5 style={{ color: 'var(--grey)' }}>Free months left: {freeMonths}</h5>
             </div>
         </div>
