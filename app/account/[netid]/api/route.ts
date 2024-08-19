@@ -24,8 +24,12 @@ export async function GET(req: NextRequest, { params }: { params: { netId: strin
         if (accountPrisma.deleted) return NextResponse.json({ cStatus: 411, msg: `This account has been deleted. Please email ${CONTACT_EMAIL} to reactivate your account.` }, { status: 400 });
 
         const authTokenCookie = cookies().get('authtoken');
+        console.log("authTokenCookie: ", authTokenCookie)
         if (authTokenCookie != null) {
+            console.log("authTokenCookie val: ", authTokenCookie.value)
             const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
+            console.log("userPrisma netid: ", userPrisma?.netId)
+            console.log("account netid: ", accountNetId)
             // If logged in user is looking at own account
             if (userPrisma!=null && userPrisma.netId==accountNetId) return NextResponse.json({ cStatus: 202, msg: `Success (own account).`, userData: accountPrisma }, { status: 200 });
         }
