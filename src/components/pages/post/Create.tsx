@@ -59,8 +59,6 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
     const attemptFreePost = async () => {
         setLoading(true);
         const postData = getData();
-        console.log("images: ", postData.get('images'));
-        console.log("postData: ", postData);
         const res = await fetch(`/create/free/postId/api/`, {
             method: 'POST',
             body: postData

@@ -33,12 +33,9 @@ export const isValidPostData = (postData: PostData) => {
 
     if (!isValidPrice(price)) msg = `Price must be between $0 and $9,999.99.`;
 
-    console.log("D 111");
     if (images.length<=0 || images.length>5) msg = `Must provide 1 to 5 images.`;
     for (let i=0; i<images.length; i++) {
-        console.log("D 222 ", i);
         const resValidPost = isValidPostDataImage(images[i]);
-        console.log("D 333 ", i, resValidPost);
         if (!resValidPost.valid) return { valid: false, nextres: resValidPost.nextres };
     }
 
@@ -58,13 +55,9 @@ export const isValidPrice = (price: number) => {
 
 
 export const isValidPostDataImage = (img: any) => {
-    console.log("JJJ 1")
     if (!(img instanceof File)) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a png, jpg, or webp file.`} };
-    console.log("JJJ 2 ", img.type)
     if (!ACCEPTED_FILES.includes(img.type)) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a png, jpg, or webp file.`} };
-    console.log("JJJ 3")
     if (img.size > 5000000) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a picture under 5 MBs.`} };
-    console.log("JJJ 4")
     return { valid: true };
 }
 

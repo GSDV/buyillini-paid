@@ -9,17 +9,13 @@ export default function ConfirmPost({ post }: { post: Post }) {
     const router = useRouter();
 
     const confirmPost = async () => {
-        if (post.isPaid) {
-            // send to stripe
-        } else {
-            const res = await fetch(`/create/free/${post.id}/api`, {
-                method: 'PUT',
-                body: post.id,
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const resJson = await res.json();
-            if (resJson.cStatus==200 || resJson==201) router.push(`/post/${resJson.postId}/`);
-        }
+        const res = await fetch(`/create/free/${post.id}/api`, {
+            method: 'PUT',
+            body: post.id,
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const resJson = await res.json();
+        if (resJson.cStatus==200 || resJson==201) router.push(`/post/${resJson.postId}/`);
     }
 
     return (

@@ -13,32 +13,25 @@ import { getPostData, isValidPostData } from '@util/api/posts';
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
-        console.log("AAA")
         const postData = getPostData(formData);
-        console.log("postData: ", postData)
 
         if (!postData) return NextResponse.json({ cStatus: 101, msg: `Some fields are missing or invalid.` }, { status: 400 });
 
-        console.log("BBB")
         const authTokenCookie = cookies().get('authtoken');
         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
-        console.log("CCC")
         const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
         if (!userPrisma) return NextResponse.json({ cStatus: 402, msg: `You are not logged in.` }, { status: 400 });
         const resValidUser = isValidUser(userPrisma);
         if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
 
-        console.log("DDD")
         const resValidPost = isValidPostData(postData);
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
 
         if (userPrisma.freeMonths < postData.userFreeMonths) return NextResponse.json({ cStatus: 102, msg: `Not enough free months.` }, { status: 400 });
 
-        await deleteDraftedPosts(userPrisma.id)
-        console.log("EEE")
+        await deleteDraftedPosts(userPrisma.id);
         const postId = await createFreePost(postData, userPrisma.id);
-        console.log("FFF")
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {

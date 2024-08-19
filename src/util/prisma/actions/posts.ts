@@ -44,9 +44,11 @@ export interface EditPostData {
 export const updatePost = async (postId: string, postData: EditPostData) => {
     const imageUrls: string[] = [];
     for (let i=0; i<postData.images.length; i++) {
-        const imgBytes = await postData.images[i].arrayBuffer();
-        const imgBuffer = Buffer.from(imgBytes);
-        const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
+        // const imgBytes = await postData.images[i].arrayBuffer();
+        // const imgBuffer = Buffer.from(imgBytes);
+        // const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
+        // imageUrls.push(imgUrl);
+        const imgUrl = await uploadPostPicture(postData.images[i]);
         imageUrls.push(imgUrl);
     }
     const { images, ...cleanedData } = postData;
@@ -86,9 +88,11 @@ export const createFreePost = async (postData: PostData, userId: string) => {
     const expiration = new Date(Date.now() + postData.months*MONTH_TO_MILLI);
     const imageUrls: string[] = [];
     for (let i=0; i<postData.images.length; i++) {
-        const imgBytes = await postData.images[i].arrayBuffer();
-        const imgBuffer = Buffer.from(imgBytes);
-        const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
+        // const imgBytes = await postData.images[i].arrayBuffer();
+        // const imgBuffer = Buffer.from(imgBytes);
+        // const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
+        // imageUrls.push(imgUrl);
+        const imgUrl = await uploadPostPicture(postData.images[i]);
         imageUrls.push(imgUrl);
     }
     const { images, userFreeMonths, months, ...cleanedData } = postData;
@@ -104,9 +108,11 @@ export const createPaidPost = async (postData: PostData, userId: string) => {
     const expiration = new Date(Date.now() + postData.months*MONTH_TO_MILLI);
     const imageUrls: string[] = [];
     for (let i=0; i<postData.images.length; i++) {
-        const imgBytes = await postData.images[i].arrayBuffer();
-        const imgBuffer = Buffer.from(imgBytes);
-        const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
+        // const imgBytes = await postData.images[i].arrayBuffer();
+        // const imgBuffer = Buffer.from(imgBytes);
+        // const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
+        // imageUrls.push(imgUrl);
+        const imgUrl = await uploadPostPicture(postData.images[i]);
         imageUrls.push(imgUrl);
     }
     const { images, userFreeMonths, months, ...cleanedData } = postData;
