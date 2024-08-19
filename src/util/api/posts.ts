@@ -60,7 +60,7 @@ export const isValidPrice = (price: number) => {
 export const isValidPostDataImage = (img: any) => {
     console.log("JJJ 1")
     if (!(img instanceof File)) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a png, jpg, or webp file.`} };
-    console.log("JJJ 2")
+    console.log("JJJ 2 ", img.type)
     if (!ACCEPTED_FILES.includes(img.type)) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a png, jpg, or webp file.`} };
     console.log("JJJ 3")
     if (img.size > 5000000) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a picture under 5 MBs.`} };
