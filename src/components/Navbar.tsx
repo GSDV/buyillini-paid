@@ -46,6 +46,7 @@ function NavProfile() {
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchPfp = async () => {
+        setLoading(true);
         const { pfp, netId } = await navbarInfo(authContext.authToken);
         setPfp(pfp);
         setNetId(netId);
@@ -53,7 +54,6 @@ function NavProfile() {
     }
 
     useEffect(() => {
-        // if (!authContext.loading) fetchPfp();
         fetchPfp();
     }, [authContext.authToken]);
 

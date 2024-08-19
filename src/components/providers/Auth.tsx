@@ -31,6 +31,7 @@ export function Auth({ children }: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
+        console.log("USE EFFECT COOKIE");
         fetchCookie();
     }, []);
 
