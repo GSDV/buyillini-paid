@@ -20,8 +20,6 @@ export default function Page({ params }: { params: { netId: string } }) {
 
     const fetchUserData = async () => {
         setLoading(true);
-        console.log("params: ", params);
-        console.log("params netId: ", params.netId);
         const res = await fetch(`/account/${params.netId}/api/`, { method: 'GET' });
         const resJson = await res.json();
 
