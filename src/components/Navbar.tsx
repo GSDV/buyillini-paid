@@ -11,7 +11,8 @@ export default async function Navbar() {
     return (
         <div className={navbarStyles.navbar}>
             <Link href='/'>
-                <Image alt='logop' src='https://buyillini.s3.us-east-2.amazonaws.com/bi-logo' width={50} height={50} />
+                {/* <Image alt='logop' src='https://buyillini.s3.us-east-2.amazonaws.com/bi-logo' width={50} height={50} /> */}
+                <img alt='logo' src='https://buyillini.s3.us-east-2.amazonaws.com/bi-logo' width='50' height='50'  />
             </Link>
             <NavbarItem title='Shop' link='/shop/' />
             <NavbarItem title='Promos' link='/promo/' />
@@ -52,7 +53,8 @@ async function NavProfile() {
                 <RightNavbarItem title='Log In' link='/login' />
             :
                 <Link href={`/account/${netId}`} style={{marginLeft: 'auto'}}>
-                    <Image className={navbarStyles.profilePicture} alt='Profile Picture' src={pfpUrl} width={30} height={30} />
+                    {/* <Image className={navbarStyles.profilePicture} alt='Profile Picture' src={pfpUrl} width={30} height={30} /> */}
+                    <img className={navbarStyles.profilePicture} alt='Profile Picture' src={pfpUrl} width='30' height='30'  />
                 </Link>
             }
         </>
