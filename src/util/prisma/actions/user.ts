@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@util/prisma/client';
-import { DEFAULT_FREE_MONTHS, getPfpUrl, imgUrl } from '@util/global';
+import { DEFAULT_FREE_MONTHS, DEFAULT_PFP, getPfpUrl, imgUrl } from '@util/global';
 import { makePasswordHash } from '@util/api/user';
 
 
@@ -75,17 +75,14 @@ export const subtractFreeMonths = async (id: string, amount: number) => {
 
 
 export const navbarInfo = async (authToken: string) => {
-    const tokenPrisma = await prisma.authToken.findFirst({
-        where: {token: authToken},
-        include: {user: true}
-    });
+    const userPrisma = await getRedactedUserFromAuth(authToken);
 
     let pfp = '';
     let netId = '';
-    if (!tokenPrisma || !tokenPrisma.user) return { pfp, netId };
+    if (!userPrisma) return { pfp, netId };
 
-    pfp = getPfpUrl(tokenPrisma.user.profilePicture)
-    netId = tokenPrisma.user.netId;
+    pfp = userPrisma.profilePicture=='' ? DEFAULT_PFP : getPfpUrl(userPrisma.profilePicture);
+    netId = userPrisma.netId;
 
     return { pfp, netId };
 }
