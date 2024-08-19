@@ -1,5 +1,4 @@
-// export const DOMAIN = 'https://buyillini.com';
-export const DOMAIN = 'http://localhost:3000';
+export const DOMAIN = 'https://buyillini.com';
 
 
 export const CONTACT_EMAIL = `gs44@illinois.edu`;
