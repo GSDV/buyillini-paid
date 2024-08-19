@@ -165,7 +165,7 @@ function Buttons({ freeMonths }: { freeMonths: number }) {
         <div style={{ display: 'flex', flexDirection: 'row', gap: '20px', width: '100%', alignItems: 'flex-start' }}>
             <button onClick={attemptLogout} style={{ backgroundColor: 'var(--red)', alignSelf: 'flex-start' }}>Log Out</button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                <Link href='/create/'><button style={{ alignSelf: 'flex-start' }}>Post</button></Link>
+                <Link href='/create/' style={{width: 'fit-content'}}><button style={{ alignSelf: 'flex-start' }}>Post</button></Link>
                 <h5 style={{ color: 'var(--grey)' }}>Free months left: {freeMonths}</h5>
             </div>
         </div>
