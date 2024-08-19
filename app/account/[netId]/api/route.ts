@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
             userUpdateData.profilePicture = pfpKey;
         }
         
-        updateUser(userPrisma.id, userUpdateData);
+        await updateUser(userPrisma.id, userUpdateData);
         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
