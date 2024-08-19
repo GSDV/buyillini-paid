@@ -62,9 +62,9 @@ async function NavProfile() {
 
 
 function RightNavbarItem({ title, link }: { title: string, link: string }) {
-  return (
-    <Link href={link} className={navbarStyles.navbarItem} style={{marginLeft: 'auto', padding: '10px'}}>
-      <h3>{title}</h3>
-    </Link>
-  );
+    return (
+        <Link href={link} className={navbarStyles.navbarItem} style={{marginLeft: 'auto', padding: '10px'}}>
+            <h3>{title}</h3>
+        </Link>
+    );
 }

@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
 
             const pfpBytes = await pfp.arrayBuffer();
             const buffer = Buffer.from(pfpBytes);
-            if (userPrisma.profilePicture != null) await deleteFromS3(userPrisma.profilePicture);
+            if (userPrisma.profilePicture != '') await deleteFromS3(userPrisma.profilePicture);
             const pfpKey = await uploadPfp(buffer, pfp.type);
             userUpdateData.profilePicture = pfpKey;
         }
