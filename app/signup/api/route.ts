@@ -7,7 +7,7 @@ import { createUser, getRedactedUser, getRedactedUserFromAuth } from '@util/pris
 import { createActivateToken, createAuthToken } from '@util/prisma/actions/tokens';
 
 import { isValidEmail, allFieldsPresent, isValidPassword } from '@util/api/user';
-import { sendEmail } from '@util/api/email';
+import { sendActivationEmail } from '@util/api/email';
 import { isValidUser } from '@util/api/auth';
 
 
@@ -52,27 +52,13 @@ export async function POST(req: NextRequest) {
         }
 
         const userId = await createUser(userData.displayName, userData.email, userData.password);
-        const token = await createActivateToken(userId);
+        const activationToken = await createActivateToken(userId);
 
-        const msgText = `BuyIllini Verification. Copy and past the following link into your browser to activate your BuyIllini account: ${DOMAIN}/verification/${token}.`;
-        const msgHtml = `
-            <h1>BuyIllini Verification</h1>
-            <p>Click <a href="${DOMAIN}/verification/${token}">here</a> to activate your BuyIllini account.</p>
-            <p>If the above link does not work, copy and past the following into your browser: ${DOMAIN}/verification/${token}</p>
-        `;
-
-        const mail = {
-            email: userData.email,
-            subject: 'Activate Your BuyIllini Account',
-            msgText: msgText,
-            msgHtml: msgHtml
-        };
-
-        const sgCode = await sendEmail(mail);
+        const sgCode = await sendActivationEmail(userData.email, activationToken);
         if (sgCode!=200 && sgCode!=201 && sgCode!=204) NextResponse.json({ cStatus: 801, msg: `Unknown email error. Please try again in a few minutes.` }, { status: 400 });
 
         // User is logged in, but won't be allowed to do much.
-        // This saves user from havign to type login info again after verification email.
+        // This saves user from having to type login info again after verification email.
         const authToken = await createAuthToken(userId);
         cookies().set('authtoken', authToken);
 

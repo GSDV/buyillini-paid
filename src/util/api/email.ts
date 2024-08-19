@@ -27,7 +27,7 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
 
 
 export const sendActivationEmail = async (email: string, token: string) => {
-    const msgText = `BuyIllini Verification. Copy and past the following link into your browser to activate your BuyIllini account: ${DOMAIN}/activate/${token}.`;
+    const msgText = `BuyIllini Account Activation. Copy and past the following link into your browser to activate your BuyIllini account: ${DOMAIN}/activate/${token}.`;
     const msgHtml = `
         <h1>BuyIllini Verification</h1>
         <p>Click <a href="${DOMAIN}/activate/${token}">here</a> to activate your BuyIllini account.</p>
