@@ -26,13 +26,16 @@ export default function Page() {
             setPastPost(resJson.draftedPost);
 
             const imgFiles: File[] = [];
-            const imgs = resJson.draftedPost.images;
-            for (let i=0; i<imgs.length; i++) {
-                const response = await fetch(imgUrl(imgs[i]));
-                const blob = await response.blob();
-                const file = new File([blob], `image`, { type: blob.type });
-                imgFiles.push(file);
+            if (resJson.draftedPost!=null) {
+                const imgs = resJson.draftedPost.images;
+                for (let i=0; i<imgs.length; i++) {
+                    const response = await fetch(imgUrl(imgs[i]));
+                    const blob = await response.blob();
+                    const file = new File([blob], `image`, { type: blob.type });
+                    imgFiles.push(file);
+                }
             }
+            
             setPastImages(imgFiles);
             setLoading(false);
         }
