@@ -156,7 +156,6 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
 
 
 function Buttons({ freeMonths }: { freeMonths: number }) {
-    const router = useRouter();
     const attemptLogout = async () => {
         const res = await fetch(`/account/api/`, { method: 'PUT' });
         window.location.reload();

@@ -38,7 +38,7 @@ export default function Page() {
             page: String(fetchPage)
         }).toString();
 
-        const res = await fetch(`/api?${params}`, { method: 'GET' });
+        const res = await fetch(`/shop/api?${params}`, { method: 'GET' });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
             setPosts(resJson.posts);

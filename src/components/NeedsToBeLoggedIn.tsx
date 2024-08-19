@@ -2,20 +2,39 @@
 // If logged in, shows content.
 'use client';
 
-import { useAuthContext } from '@components/providers/Auth';
+import { useEffect, useState } from 'react';
 
-import NotLoggedIn from '@components/NotLoggedIn';
+import Link from 'next/link';
 
 
 
+// The component will allow someone to see the content at first, no matter what.
+// "NotLoggedIn" will display only after checkign logged in status.
 export default function NeedsToBeLoggedIn({ content }: { content: React.ReactNode }) {
-    const authContext = useAuthContext();
+    const [loggedIn, setLoggedIn] = useState<boolean>(true);
 
+    const fetchCookie = async () => {
+        const res = await fetch(`/api`, { method: 'GET' });
+        const resJson = await res.json();
+        setLoggedIn(resJson.cStatus==200);
+    }
+
+    useEffect(() => {
+        fetchCookie();
+    }, []);
+
+    console.log('Rendering: ', loggedIn.toString());
+    if (!loggedIn) return <NotLoggedIn />;
+    return <>{content}</>;
+}
+
+
+
+function NotLoggedIn() {
     return (
-        <>{authContext.authToken==='' ? 
-            <NotLoggedIn />
-        :
-            <>{content}</>
-        }</>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <h2 style={{fontWeight: 500}}>You are not logged in.</h2>
+            <h4>Please <Link href='/login'>log in</Link> or <Link href='/signup'>sign up</Link> to continue.</h4>
+        </div>
     );
 }
