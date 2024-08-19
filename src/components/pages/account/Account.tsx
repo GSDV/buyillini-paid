@@ -8,7 +8,6 @@ import { BsGear, BsXCircle } from 'react-icons/bs';
 
 import { DEFAULT_PFP, IMG_ACCEPTED_FILES, imgUrl } from '@util/global';
 
-import { useReloaderContext } from '@components/providers/Reloader';
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
 import VerticalLayout from '@components/containers/VerticalLayout';
@@ -68,7 +67,6 @@ function Header({ user, ownAccount }: { user: RedactedUser, ownAccount: boolean 
 
 
 function SettingsMenu({ user }: { user: RedactedUser }) {
-    const { reload } = useReloaderContext();
     const router = useRouter();
     
     const msContext = useMenuShadowContext();
@@ -98,7 +96,7 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
         setAlert(resJson);
         if (resJson.cStatus==200) {
             msContext.closeMenu();
-            reload();
+            window.location.reload();
         }
     }
 
@@ -157,11 +155,9 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
 
 
 function Buttons({ freeMonths }: { freeMonths: number }) {
-    const { reload } = useReloaderContext();
-
     const attemptLogout = async () => {
         const res = await fetch(`/account/api/`, { method: 'PUT' });
-        reload();
+        window.location.reload();
     }
 
     return (
