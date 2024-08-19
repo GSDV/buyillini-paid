@@ -54,6 +54,7 @@ function NavProfile() {
     }
 
     useEffect(() => {
+        console.log("NAVBAR PROFILE LOADING")
         fetchPfp();
     }, [authContext.authToken]);
 
