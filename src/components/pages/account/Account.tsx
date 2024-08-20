@@ -10,7 +10,6 @@ import { DEFAULT_PFP, IMG_ACCEPTED_FILES, imgUrl } from '@util/global';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
-import VerticalLayout from '@components/containers/VerticalLayout';
 import CenterLayout from '@components/containers/CenterLayout';
 import Loading from '@components/Loading';
 import { Alert, AlertType, CheckIfAlert } from '@components/Alert';
