@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 
 // The component will allow someone to see the content at first, no matter what.
-// "NotLoggedIn" will display only after checkign logged in status.
+// "NotLoggedIn" will display only after checking logged in status.
 export default function NeedsToBeLoggedIn({ content }: { content: React.ReactNode }) {
     const [loggedIn, setLoggedIn] = useState<boolean>(true);
 
@@ -23,7 +23,6 @@ export default function NeedsToBeLoggedIn({ content }: { content: React.ReactNod
         fetchCookie();
     }, []);
 
-    console.log('Rendering: ', loggedIn.toString());
     if (!loggedIn) return <NotLoggedIn />;
     return <>{content}</>;
 }

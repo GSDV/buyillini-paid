@@ -1,7 +1,7 @@
 {
     "crons": [
       {
-        "path": "/cron/once-per-day",
+        "path": "/admin/crons/once-per-day",
         "schedule": "0 0 * * *"
       }
     ]

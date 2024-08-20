@@ -58,6 +58,7 @@ export const CATEGORIES = [
     {title: 'Athletics', link: 'athletics', img: '/categories/athletics.png'},
     {title: 'Hats', link: 'hats', img: '/categories/hats.png'},
     {title: 'Accessories', link: 'accessories', img: '/categories/accessories.png'},
+    {title: 'Dorm & Apartment', link: 'dorm-and-apartment', img: '/categories/dorm-and-apartment.png'},
     {title: 'Other', link: 'other', img: '/categories/other.png'}
 ] as const;
 export type CategoryType = typeof CATEGORIES[number];
