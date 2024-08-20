@@ -318,6 +318,8 @@ function OtherPosts({ userId }: { userId: string }) {
     );
 }
 
+
+
 interface PostsType {
     noPosts: string,
     posts: Post[],
@@ -326,19 +328,15 @@ interface PostsType {
     setPage: React.Dispatch<React.SetStateAction<number>>
 }
 function Posts({ noPosts, posts, page, max, setPage }: PostsType) {
+    if (posts.length==0) return <CenterLayout><h3>{noPosts}</h3></CenterLayout>;
+
     return (
-            <>
-                {posts.length==0 ?
-                    <CenterLayout><h3>{noPosts}</h3></CenterLayout>
-                :
-                    <>
-                        <div className={accountStyles.postsWrapper}>
-                            {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
-                        </div>
-                        <PageArrows page={page} max={max} setPage={setPage} />
-                    </>
-                }
-            </>
+        <>
+            <div className={accountStyles.postsWrapper}>
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+            </div>
+            <PageArrows page={page} max={max} setPage={setPage} />
+        </>
     );
 }
 
@@ -360,17 +358,6 @@ function PostComponent({ post }: { post: Post }) {
 
 
 export function Pfp({ pfp }: { pfp: string | null }) {
-    return (
-        <>
-            {!pfp ?
-                <img className={accountStyles.pfp} alt='Profile Picture' src={DEFAULT_PFP}  />
-            :
-                <img className={accountStyles.pfp} alt='Profile Picture' src={imgUrl(pfp)} />
-            }
-        </>
-    );
+    if (!pfp) return <img className={accountStyles.pfp} alt='Profile Picture' src={DEFAULT_PFP} />;
+    return <img className={accountStyles.pfp} alt='Profile Picture' src={imgUrl(pfp)} />;
 }
-
-
-
-
