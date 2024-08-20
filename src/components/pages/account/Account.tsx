@@ -259,28 +259,22 @@ function OwnPosts({ userId }: { userId: string }) {
                     <h3>Past Posts</h3>
                 </div>
             </div>
-                                {/* <div className={accountStyles.viewPostsContainer}> */}
-        <div className={accountStyles.postContainer}>
+   
+            <div className={accountStyles.postsContainer}>
                 {loading ?
                     <Loading />
                 :
                     <CheckIfAlert alert={alert} variations={[]} content={<ActiveOrPastPosts active={active} posts={posts} page={page} max={maxPages} setPage={setPage} />} />
                 }
-                                {/* </div> */}</div>
+            </div>
+
         </div>
     );
 }
 
 function ActiveOrPastPosts({ active, posts, page, max, setPage }: { active: boolean, posts: Post[], page: number, max: number, setPage: React.Dispatch<React.SetStateAction<number>> }) {
-    return (
-        <>
-        {active ?
-            <Posts noPosts='You have no active posts.' posts={posts} page={page} max={max} setPage={setPage} />
-        :
-            <Posts noPosts='You have no past posts.' posts={posts} page={page} max={max} setPage={setPage} />
-        }
-        </>
-    );
+    if (active) return <Posts noPosts='You have no active posts.' posts={posts} page={page} max={max} setPage={setPage} />;
+    return <Posts noPosts='You have no past posts.' posts={posts} page={page} max={max} setPage={setPage} />;
 }
 
 
@@ -314,13 +308,13 @@ function OtherPosts({ userId }: { userId: string }) {
     }, [page]);
 
     return (
-        <CenterLayout>
+        <div className={accountStyles.postsContainer}>
             {loading ?
                 <Loading />
             :
                 <CheckIfAlert alert={alert} variations={[]} content={<Posts noPosts='This account has no active posts.' posts={posts} page={page} max={maxPages} setPage={setPage} />} />
             }
-        </CenterLayout>
+        </div>
     );
 }
 
@@ -333,7 +327,7 @@ interface PostsType {
 }
 function Posts({ noPosts, posts, page, max, setPage }: PostsType) {
     return (
-            <div className={accountStyles.postsContainer}>
+            <>
                 {posts.length==0 ?
                     <CenterLayout><h3>{noPosts}</h3></CenterLayout>
                 :
@@ -344,7 +338,7 @@ function Posts({ noPosts, posts, page, max, setPage }: PostsType) {
                         <PageArrows page={page} max={max} setPage={setPage} />
                     </>
                 }
-            </div>
+            </>
     );
 }
 
@@ -352,12 +346,14 @@ function Posts({ noPosts, posts, page, max, setPage }: PostsType) {
 function PostComponent({ post }: { post: Post }) {
     const img = imgUrl(post.images[0]);
     return (
+        <div className={accountStyles.postContainer}>
             <a className={accountStyles.post} href={`/post/${post.id}`} target='_blank'>
                 <div className={accountStyles.postImgWrapper}>
                     <img src={img} />
                 </div>
                 <h4>{post.title}</h4>
             </a>
+        </div>
     );
 }
 
