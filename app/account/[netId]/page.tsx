@@ -43,9 +43,9 @@ export default function Page({ params }: { params: { netId: string } }) {
                 <Loading />
             :
                 
-                <CenterLayout>
+                <VerticalLayout>
                     <CheckIfAlert alert={alert} variations={[]} content={<Account user={user as RedactedUser} ownAccount={ownAccount} />} />
-                </CenterLayout>
+                </VerticalLayout>
             }
         </>
     );
