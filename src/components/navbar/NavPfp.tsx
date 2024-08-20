@@ -29,7 +29,7 @@ export default function NavProfile() {
         const resJson = await res.json();
         if (resJson.user != null) {
             const pfpUrl = getPfpUrl(resJson.user.profilePicture);
-            setNetId(resJson.netId);
+            setNetId(resJson.user.netId);
             setPfp(pfpUrl);
         }
         setLoading(false);
