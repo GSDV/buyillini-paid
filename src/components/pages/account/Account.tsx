@@ -30,13 +30,11 @@ import Link from 'next/link';
 
 export default function Account({ user, ownAccount }: { user: RedactedUser, ownAccount: boolean }) {
     return (
-        <VerticalLayout>
-            <div className={accountStyles.container}>
-                <Header user={user} ownAccount={ownAccount} />
-                {ownAccount && <Buttons freeMonths={user.freeMonths} />}
-                {ownAccount ? <OwnPosts userId={user.id} /> : <OtherPosts userId={user.id} /> }
-            </div>
-        </VerticalLayout>
+        <div className={accountStyles.container}>
+            <Header user={user} ownAccount={ownAccount} />
+            {ownAccount && <Buttons freeMonths={user.freeMonths} />}
+            {ownAccount ? <OwnPosts userId={user.id} /> : <OtherPosts userId={user.id} /> }
+        </div>
     );
 }
 

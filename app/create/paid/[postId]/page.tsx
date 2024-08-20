@@ -7,8 +7,7 @@ import { Post } from '@prisma/client';
 import CenterLayout from '@components/containers/CenterLayout';
 import NeedsToBeLoggedIn from '@components/NeedsToBeLoggedIn';
 import Loading from '@components/Loading';
-import ConfirmPost from '@components/pages/post/Confirm';
-import { Alert, AlertType } from '@components/Alert';
+import { AlertType, CheckIfAlert } from '@components/Alert';
 import PayForPost from '@components/pages/post/PayForPost';
 
 
@@ -45,10 +44,10 @@ export default function Page({ params }: { params: { postId: string } }) {
 
 function PostExists({ post, alert}: { post: Post, alert: AlertType | null }) {
     return (
-        <>{!alert ?
-            <PayForPost post={post} />
-        :
-            <Alert alert={alert} variations={[]} />
-        }</>
+        <CheckIfAlert 
+            alert={alert}
+            variations={[]}
+            content={<PayForPost post={post} />}
+        />
     );
 }

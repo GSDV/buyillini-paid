@@ -52,13 +52,6 @@ interface CheckIfAlertType {
     content: React.ReactNode
 }
 export function CheckIfAlert({ alert, variations, content }: CheckIfAlertType) {
-    return (
-        <>
-            {(alert!=null && alert.cStatus/100!=2) ?
-                <Alert alert={alert} variations={variations} />
-            :
-                <>{content}</>
-            }
-        </>
-    );
+    if (alert!=null && alert.cStatus/100!=2) return <Alert alert={alert} variations={variations} />;
+    return <>{content}</>;
 }

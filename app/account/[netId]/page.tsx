@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react';
 
-import { RedactedUserWithPosts } from '@util/prisma/types';
+import { RedactedUser, RedactedUserWithPosts } from '@util/prisma/types';
 
 import Loading from '@components/Loading';
 
-import CenterLayout from '@components/containers/CenterLayout';
-import { Alert, AlertType } from '@components/Alert';
+import { AlertType, CheckIfAlert } from '@components/Alert';
 import Account from '@components/pages/account/Account';
+import VerticalLayout from '@components/containers/VerticalLayout';
+import CenterLayout from '@components/containers/CenterLayout';
 
 
 
@@ -41,13 +42,10 @@ export default function Page({ params }: { params: { netId: string } }) {
             {loading ? 
                 <Loading />
             :
-                <>{alert ?
-                    <CenterLayout>
-                        <Alert alert={alert} variations={[]} />
-                    </CenterLayout>
-                :
-                    <>{user!=null && <Account user={user} ownAccount={ownAccount} /> }</>
-                }</>
+                
+                <CenterLayout>
+                    <CheckIfAlert alert={alert} variations={[]} content={<Account user={user as RedactedUser} ownAccount={ownAccount} />} />
+                </CenterLayout>
             }
         </>
     );

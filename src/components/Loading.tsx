@@ -12,11 +12,6 @@ export default function Loading() {
 }
 
 export function CheckIfLoading({ loading, content }: { loading: boolean, content: React.ReactNode }) {
-    return (
-        <>{loading ?
-            <Loading />
-        :
-            <>{content}</>
-        }</>
-    )
+    if (loading) return <Loading />;
+    return <>{content}</>;
 }
