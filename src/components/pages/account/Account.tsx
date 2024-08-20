@@ -259,13 +259,13 @@ function OwnPosts({ userId }: { userId: string }) {
                     <h3>Past Posts</h3>
                 </div>
             </div>
-            <>
+                                <div className={accountStyles.viewPostsContainer}>
                 {loading ?
                     <Loading />
                 :
                     <CheckIfAlert alert={alert} variations={[]} content={<ActiveOrPastPosts active={active} posts={posts} page={page} max={maxPages} setPage={setPage} />} />
                 }
-            </>
+                                </div>
         </div>
     );
 }
@@ -332,7 +332,6 @@ interface PostsType {
 }
 function Posts({ noPosts, posts, page, max, setPage }: PostsType) {
     return (
-        <div className={accountStyles.viewPostsContainer}>
             <div className={accountStyles.postsContainer}>
                 {posts.length==0 ?
                     <CenterLayout><h3>{noPosts}</h3></CenterLayout>
@@ -345,7 +344,6 @@ function Posts({ noPosts, posts, page, max, setPage }: PostsType) {
                     </>
                 }
             </div>
-        </div>
     );
 }
 
