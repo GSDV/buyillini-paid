@@ -23,6 +23,7 @@ import clsx from 'clsx';
 import { colorScheme } from '@styles/colors';
 import PageArrows from '@components/Arrows';
 import Link from 'next/link';
+import { useAuthContext } from '@components/providers/Auth';
 
 
 
@@ -153,8 +154,11 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
 
 
 function Buttons({ freeMonths }: { freeMonths: number }) {
+    const { fetchCookie } = useAuthContext();
+    
     const attemptLogout = async () => {
         const res = await fetch(`/account/api/`, { method: 'PUT' });
+        fetchCookie();
         window.location.reload();
     }
 
