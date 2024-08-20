@@ -2,13 +2,10 @@
 
 import Link from 'next/link';
 
-import { cookies } from 'next/headers';
-
-import { navbarInfo } from '@util/prisma/actions/user';
-
 import { BUYILLINI_LOGO } from '@util/global';
 
 import navbarStyles from '@styles/ui/navbar.module.css';
+import NavProfile from './NavPfp';
 
 
 
@@ -37,8 +34,11 @@ function NavbarItem({ title, link }: { title: string, link: string }) {
 }
 
 
+/*
 
-async function NavProfile() {
+
+
+export default function NavProfile() {
     const cookieStore = cookies();
     const authToken = cookieStore.get('authtoken')?.value || '';
 
@@ -51,17 +51,13 @@ async function NavProfile() {
         netId = resNav.netId;
     }
 
+
+    if (pfpUrl == '') return <RightNavbarItem title='Log In' link='/login' />;
+
     return (
-        <>
-            {pfpUrl == '' ? 
-                <RightNavbarItem title='Log In' link='/login' />
-            :
-                <Link href={`/account/${netId}`} style={{marginLeft: 'auto'}}>
-                    {/* <Image className={navbarStyles.profilePicture} alt='Profile Picture' src={pfpUrl} width={30} height={30} /> */}
-                    <img className={navbarStyles.profilePicture} alt='Profile Picture' src={pfpUrl} width='30' height='30'  />
-                </Link>
-            }
-        </>
+        <Link href={`/account/${netId}`} style={{marginLeft: 'auto'}}>
+            <img className={navbarStyles.profilePicture} alt='Profile Picture' src={pfpUrl} width='30' height='30'  />
+        </Link>
     );
 }
 
@@ -74,3 +70,4 @@ function RightNavbarItem({ title, link }: { title: string, link: string }) {
         </Link>
     );
 }
+*/

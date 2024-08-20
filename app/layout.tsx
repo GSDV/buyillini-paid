@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import Providers from '@components/providers/Providers';
 
-import Navbar from '@components/Navbar';
+import Navbar from '@components/navbar/Navbar';
 import Footer from '@components/Footer';
 
 import '@styles/global.css';

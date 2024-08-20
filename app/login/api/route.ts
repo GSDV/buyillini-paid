@@ -20,8 +20,6 @@ export async function GET(req: NextRequest) {
 
         if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 200 });
 
-        revalidatePath(`/`);
-        revalidatePath(`/account/[netId]`);
         return NextResponse.json({ cStatus: 201, msg: `User is already logged in.`, netId: (user as any).netId }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
@@ -49,8 +47,6 @@ export async function POST(req: NextRequest) {
         const token = await createAuthToken(userPrisma.id);
         cookies().set('authtoken', token);
 
-        revalidatePath(`/`);
-        revalidatePath(`/account/[netId]`);
         return NextResponse.json({ cStatus: 200, msg: `Success.`, netId: userPrisma.netId }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });

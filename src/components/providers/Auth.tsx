@@ -62,6 +62,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
 
+
 interface AuthContextType {
     authToken: string,
     setAuthToken: React.Dispatch<React.SetStateAction<string>>,
@@ -88,6 +89,7 @@ export function Auth({ children }: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
+        console.log("FETCHING COOKIE")
         fetchCookie();
     }, []);
 
