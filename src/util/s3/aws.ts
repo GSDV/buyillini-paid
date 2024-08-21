@@ -16,9 +16,13 @@ export const s3Client = new S3Client({
 
 export const uploadPostPicture = async (file: File) => {
     try {
+        console.log("-> AAA")
         const imgBytes = await file.arrayBuffer();
+        console.log("-> BBB")
         const imgBuffer = Buffer.from(imgBytes);
+        console.log("-> CCC")
         const croppedBuffer = await sharp(imgBuffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).webp({ quality: 80, effort: 6 }).toBuffer();
+        console.log("-> DDD")
         const key = `post-f-${uuidv4()}`;
         console.log("UPLOADING TO S3 with type: ", file.type);
         await uploadToS3(croppedBuffer, key, file.type);
