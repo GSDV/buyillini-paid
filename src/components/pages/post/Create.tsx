@@ -78,6 +78,7 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
         });
 
         const resJson = await res.json();
+        console.log("attemptPaidPost: ", resJson);
         if (resJson.cStatus==200) router.push(`/create/paid/${resJson.postId}`);
         setLoading(false);
         setAlert(resJson)
