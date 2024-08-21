@@ -1,5 +1,5 @@
 .grid {
-    padding: 20px;
+    padding: min(1.5vw, 20px);
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -17,17 +17,17 @@
 }
 
 .category {
-    padding: 10px;
+    padding: min(0.5vw, 10px);
     max-width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    align-items: center;
-    text-decoration: none;
     border: 5px solid var(--black);
     border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
 }
 
 .catTitle {
-    font-size: clamp(1.1rem, 3vw, 1.9em);
+    font-size: clamp(1rem, 3.5vw, 1.9em);
 }
