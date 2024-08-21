@@ -64,9 +64,13 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
             body: postData
         });
         const resJson = await res.json();
-        if (resJson.cStatus==200) router.push(`/create/free/${resJson.postId}`);
-        setAlert(resJson);
-        setLoading(false);
+        if (resJson.cStatus==200) {
+            router.push(`/create/free/${resJson.postId}`);
+        }
+        else {
+            setAlert(resJson);
+            setLoading(false);
+        }
     }
 
     const attemptPaidPost = async () => {
@@ -78,9 +82,16 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
         });
 
         const resJson = await res.json();
-        if (resJson.cStatus==200) router.push(`/create/paid/${resJson.postId}`);
-        setLoading(false);
-        setAlert(resJson);
+        if (resJson.cStatus==200) {
+            router.push(`/create/paid/${resJson.postId}`);
+        }
+        else {
+            setAlert(resJson);
+            setLoading(false);
+        }
+        // if (resJson.cStatus==200) router.push(`/create/paid/${resJson.postId}`);
+        // setLoading(false);
+        // setAlert(resJson);
     }
 
     return (
