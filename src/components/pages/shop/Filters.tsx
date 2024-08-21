@@ -138,7 +138,7 @@ function SizeFilter({ filters, update }: FilterType) {
         <div className={shopStyles.filterItem} style={{flexDirection: 'column'}}>
             <h4>Sizes: </h4>
             {CLOTHING_SIZES.map((size, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'row' }}>
+                <div key={i} className={shopStyles.filterChoice}>
                     <input type='checkbox' name='sizes' value={size} checked={filters.sizes.includes(size)} onChange={update} />
                     <h5>{size}</h5>
                 </div>
@@ -152,7 +152,7 @@ function GenderFilter({ filters, update }: FilterType) {
         <div className={shopStyles.filterItem} style={{flexDirection: 'column'}}>
             <h4>Gender: </h4>
             {GENDERS.map((gender, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'row' }}>
+                <div key={i} className={shopStyles.filterChoice}>
                     <input type='radio' name='gender' value={gender} checked={filters.gender==gender} onChange={update} />
                     <h5>{gender}</h5>
                 </div>
@@ -166,7 +166,7 @@ function Categories({ filters, update }: FilterType) {
         <div className={shopStyles.filterItem} style={{flexDirection: 'column'}}>
             <h4>Categories: </h4>
             {CATEGORIES.map((cat, i) => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'row' }}>
+                <div key={i} className={shopStyles.filterChoice}>
                     <input type='checkbox' name='cats' value={cat.link} checked={filters.categories.includes(cat.link)} onChange={update} />
                     <h5>{cat.title}</h5>
                 </div>
@@ -179,7 +179,7 @@ function MaxPrice({ filters, update }: FilterType) {
     return (
         <div className={shopStyles.filterItem} style={{flexDirection: 'column'}}>
             <h4>Max Price: </h4>
-            <input style={{fontSize: '0.8em'}} type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' defaultValue={filters.maxPrice} onBlur={update} />
+            <input style={{fontSize: 'min(2.7vw, 0.8em)'}} type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' defaultValue={filters.maxPrice} onBlur={update} />
         </div>
     );
 }
@@ -188,7 +188,7 @@ function MinPrice({ filters, update }: FilterType) {
     return (
         <div className={shopStyles.filterItem} style={{flexDirection: 'column'}}>
             <h4>Min Price: </h4>
-            <input style={{fontSize: '0.8em'}} type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' defaultValue={filters.minPrice} onBlur={update} />
+            <input style={{fontSize: 'min(2.7vw, 0.8em)'}} type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' defaultValue={filters.minPrice} onBlur={update} />
         </div>
     );
 }

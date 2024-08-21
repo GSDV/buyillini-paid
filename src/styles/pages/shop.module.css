@@ -36,14 +36,16 @@
 
 
 .filtersContainer {
-    padding: 10px;
+    padding: min(1.5vw, 10px);
     height: fit-content;
     background-color: var(--greyLight);
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
+.filtersContainer h3 {
+    font-size: min(3.2vw, 1.3rem);
+}
 .filter {
     display: flex;
     flex-direction: column;
@@ -54,6 +56,14 @@
     flex-direction: row;
     gap: 5px;
 }
+.filterChoice {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.filterItem h4 { font-size: min(2.8vw, 1.1rem); }
+.filterItem h5 { font-size: min(2.5vw, 0.9rem); }
 
 
 
