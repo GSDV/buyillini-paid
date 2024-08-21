@@ -71,7 +71,10 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
 
     const attemptPaidPost = async () => {
         setLoading(true);
+        console.log("CLIENT AAA");
         const postData = getData();
+        console.log("CLIENT BBB");
+        console.log("CLIENT postData", postData);
         const res = await fetch(`/create/paid/postId/api/`, {
             method: 'POST',
             body: postData
