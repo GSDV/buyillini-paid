@@ -44,7 +44,7 @@
     gap: 10px;
 }
 .filtersContainer h3 {
-    font-size: min(3.2vw, 1.3rem);
+    font-size: min(3.5vw, 1.3rem);
 }
 .filter {
     display: flex;
@@ -62,7 +62,7 @@
     align-items: center;
 }
 
-.filterItem h4 { font-size: min(2.8vw, 1.1rem); }
+.filterItem h4 { font-size: min(3vw, 1.1rem); }
 .filterItem h5 { font-size: min(2.5vw, 0.9rem); }
 
 

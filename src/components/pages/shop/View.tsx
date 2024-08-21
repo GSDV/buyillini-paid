@@ -13,7 +13,7 @@ export default function ViewPosts({ noPosts, posts }: { noPosts: string, posts: 
     return (
         <>
             {posts.length==0 ?
-                <CenterLayout><h3>{noPosts}</h3></CenterLayout>
+                <CenterLayout><h3 style={{textAlign: 'center'}}>{noPosts}</h3></CenterLayout>
             :
                 <div className={shopStyles.postsWrapper}>
                     {posts.map((post, i) => <PostComponent post={post} key={i} /> )}

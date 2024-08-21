@@ -6,8 +6,10 @@
 
 
 
-.footerText {
+.footerText, .footerSubtitle {
     color: var(--black);
     text-align: center;
     font-weight: 300;
 }
+.footerText { font-size: min(3vw, 1.1em); }
+.footerSubtitle { font-size: min(2.5vw, 0.9em); }
