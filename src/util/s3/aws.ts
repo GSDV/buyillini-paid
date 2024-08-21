@@ -23,15 +23,9 @@ export const uploadPostPicture = async (file: File) => {
         console.log("-> CCC")
         const metadata = await sharp(imgBuffer).metadata();
         console.log("metadata: ", metadata);
-        const croppedBuffer = await sharp(imgBuffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).webp({ quality: 80, effort: 6 }).toBuffer();
-        try {
-            const eee = await sharp(imgBuffer)
-              .resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } })
-              .webp({ quality: 80, effort: 6 })
-              .toBuffer();
-          } catch (error) {
-            console.error('Error processing image:', error);
-        }
+        // const croppedBuffer = await sharp(imgBuffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).webp({ quality: 80, effort: 6 }).toBuffer();
+        const croppedBuffer = await sharp(imgBuffer).resize({ width: 1200, height: 2100, fit: 'contain' }).flatten({background: { r: 0, g: 0, b: 0 }}).webp({ quality: 80, effort: 6 }).toBuffer();
+        
         console.log("-> DDD")
         const key = `post-f-${uuidv4()}`;
         console.log("UPLOADING TO S3 with type: ", file.type);
