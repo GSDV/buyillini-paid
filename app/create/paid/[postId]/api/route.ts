@@ -12,29 +12,39 @@ import { addPaymentToPost, deleteAllFailedPostPayments } from '@util/prisma/acti
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
-
+// need to look into this
 // Used for storing post data before the post is confirmed.
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
+
+        console.log("AA")
         const postData = getPostData(formData);
+
+        console.log("BB")
 
         if (!postData) return NextResponse.json({ cStatus: 101, msg: `Some fields are missing or invalid.` }, { status: 400 });
 
+        console.log("CC")
         const authTokenCookie = cookies().get('authtoken');
         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
+        console.log("DD")
         const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
         if (!userPrisma) return NextResponse.json({ cStatus: 402, msg: `You are not logged in.` }, { status: 400 });
         const resValidUser = isValidUser(userPrisma);
         if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
 
+        console.log("EE")
         const resValidPost = isValidPostData(postData);
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
 
+        console.log("FF")
         if (userPrisma.freeMonths < postData.userFreeMonths) return NextResponse.json({ cStatus: 102, msg: `Not enough free months.` }, { status: 400 });
 
+        console.log("GG")
         await deleteDraftedPosts(userPrisma.id)
+        console.log("BBB")
         const postId = await createPaidPost(postData, userPrisma.id);
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
