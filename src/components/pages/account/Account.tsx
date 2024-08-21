@@ -52,13 +52,13 @@ function Header({ user, ownAccount }: { user: RedactedUser, ownAccount: boolean 
         <div className={accountStyles.header}>
             <Pfp pfp={profilePicture} />
 
-            <div style={{display: 'flex', flexDirection: 'column', flex: 1, overflow: 'clip'}}>
+            <div style={{display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0}}>
                 <h1 className={accountStyles.displayName}>{displayName}</h1>
                 <h3 className={accountStyles.email}>{email}</h3>
                 {phoneNumber!='' && <h3 className={accountStyles.email}>{formatPhoneNumber(phoneNumber)}</h3>}
             </div>
 
-            {ownAccount && <BsGear onClick={openSettingsMenu} size={70} color={colorScheme.orangePrimary} style={{marginLeft: 'auto', cursor: 'pointer'}} />}
+            {ownAccount && <BsGear onClick={openSettingsMenu} className={accountStyles.settingsIcon} />}
         </div>
     );
 }

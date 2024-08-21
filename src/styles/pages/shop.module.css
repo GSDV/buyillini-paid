@@ -38,7 +38,7 @@
 .filtersContainer {
     padding: 10px;
     height: fit-content;
-    background-color: var(--greLight);
+    background-color: var(--greyLight);
     display: flex;
     flex-direction: column;
     gap: 10px;

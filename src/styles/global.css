@@ -16,7 +16,9 @@
 
     --grey: #afafaf;
     --greyShadow: #9a9999;
-    --greLight: #d8d7d7;
+    --greyLight: #d8d7d7;
+    
+    --greyDark: #9e9e9e;
 
     --greyText: #9d9d9d;
 }
