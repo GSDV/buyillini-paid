@@ -2,7 +2,7 @@ export const DOMAIN = 'https://buyillini.com';
 
 
 export const CONTACT_EMAIL = `contact@buyillini.com`;
-export const EMAIL_FOOTER = `<p>Thank you for using BuyIllini. Contact ${CONTACT_EMAIL} for any questions.</p>`;
+export const EMAIL_FOOTER = `<p>Thank you for using BuyIllini. Email ${CONTACT_EMAIL} for any questions.</p>`;
 
 
 // Used for input elements and api routes.
