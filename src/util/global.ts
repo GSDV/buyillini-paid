@@ -1,7 +1,7 @@
 export const DOMAIN = 'https://buyillini.com';
 
 
-export const CONTACT_EMAIL = `gs44@illinois.edu`;
+export const CONTACT_EMAIL = `contact@buyillini.com`;
 export const EMAIL_FOOTER = `<p>Thank you for using BuyIllini. Contact ${CONTACT_EMAIL} for any questions.</p>`;
 
 
