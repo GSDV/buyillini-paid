@@ -99,7 +99,6 @@ export const getPostData = (formData: FormData) => {
     const months = formData.get('months');
     const userFreeMonths = formData.get('userFreeMonths');
 
-    console.log("IMAGES: ", images.length, images)
     if (!title || !description || !category || (category!='other' && (!size || !gender)) || !price || !images || !months) return null;
 
     const postData: PostData = {

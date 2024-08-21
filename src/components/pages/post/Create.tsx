@@ -58,16 +58,12 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
 
     const attemptFreePost = async () => {
         setLoading(true);
-        console.log("CLIENT AAA");
         const postData = getData();
         const res = await fetch(`/create/free/postId/api/`, {
             method: 'POST',
             body: postData
         });
-        console.log("CLIENT BBB");
-        console.log("CLIENT postData", postData);
         const resJson = await res.json();
-        console.log("attemptFreePost: ", resJson);
         if (resJson.cStatus==200) router.push(`/create/free/${resJson.postId}`);
         setAlert(resJson);
         setLoading(false);
