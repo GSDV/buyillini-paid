@@ -158,8 +158,8 @@ function Buttons({ freeMonths }: { freeMonths: number }) {
     
     const attemptLogout = async () => {
         const res = await fetch(`/account/api/`, { method: 'PUT' });
-        fetchCookie();
-        window.location.reload();
+        fetchCookie(); // fetchCookie to keep authContext updated
+        window.location.reload(); // Page reload to display "Other" page instead of "Own"
     }
 
     return (

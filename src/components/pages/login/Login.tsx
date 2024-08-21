@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { useAuthContext } from '@components/providers/Auth';
-
 import { Alert, AlertType, AlertVariation } from '@components/Alert';
+
+import { useAuthContext } from '@components/providers/Auth';
 
 import formStyles from '@styles/ui/form.module.css';
 

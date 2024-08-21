@@ -1,7 +1,7 @@
 // When a menu needs to be opened, the rest of the screen needs a black layer as a background.
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 
 interface MenuShadowContextType {
@@ -28,6 +28,12 @@ export function MenuShadow({ children }: { children: React.ReactNode }) {
 
     const openMenu = () => { setOpen(true) }
     const closeMenu = () => { setOpen(false) }
+
+    useEffect(() => {
+        if (open) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = '';
+        return () => { document.body.style.overflow = ''; };
+    }, [open]);
 
     return (
         <MenuShadowContext.Provider value={{ setContent, open, openMenu, closeMenu }} >

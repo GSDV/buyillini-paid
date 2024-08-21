@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     background-color: var(--orangePrimary);
 }
 
@@ -12,7 +12,9 @@
 
 .navbarItem {
     padding: 10px 10px;
+    display: block;
     text-decoration: none;
+    cursor: pointer;
 }
 .navbar h3 {
     color: var(--white);
@@ -29,4 +31,58 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
+}
+
+.menuIcon {
+    display: none;
+    color: var(--white);
+    font-size: 40px;
+    cursor: pointer;
+}
+
+
+.miniNavbar {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.miniNavbar::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--orangePrimary);
+    opacity: 0.8;
+    z-index: 0;
+}
+
+.miniNavbarItem {
+    /* width: 100%; */
+    padding: 15px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    z-index: 2;
+}
+.miniNavbarItem h1 {
+    color: var(--white);
+}
+/* .miniNavbarItem:hover {
+    background-color: var(--orangePrimaryShadow);
+} */
+
+@media (max-width: 700px) {    
+    .menuIcon {
+        color: var(--white);
+        font-size: 20;
+        display: block;
+    }
+
+    .navbarItem {
+        display: none;
+    }
 }
