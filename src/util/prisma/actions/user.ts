@@ -144,3 +144,14 @@ export const markUserAsDeleted = async (id: string) => {
         data: { deleted: true }
     });
 }
+
+
+
+export const addFreeMonthsToUser = async (where: any, freeMonths: number) => {
+    await prisma.user.update({
+        where,
+        data: {
+            freeMonths: { increment: freeMonths }
+        }
+    });
+}

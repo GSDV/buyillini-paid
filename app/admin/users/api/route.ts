@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 import { getUser, banUser, updateUser, deleteUser, isAdmin, markDeleteUser } from '@util/prisma/actions/admin';
+import { addFreeMonthsToUser } from '@util/prisma/actions/user';
 
 
 
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
 
 
 
-export async function POST(req: NextRequest) {
+export async function PUT(req: NextRequest) {
     try {
         const authTokenCookie = cookies().get('authtoken');
         const resPermissions = await isAdmin(authTokenCookie);
@@ -41,14 +42,17 @@ export async function POST(req: NextRequest) {
         const { operation, data } = await req.json();
 
         switch (operation) {
-            case 'MAKE_ADMMIN':
-                const adminData = { role: 'ADMIN' };
-                await updateUser({ netId: data.netId }, adminData);
-                break;
-            case 'UNMAKE_ADMIN':
-                const userData = { role: 'USER' };
-                await updateUser({ netId: data.netId }, userData);
-                break;
+            // For now, update directly in supabase
+            // case 'MAKE_ADMIN':
+            //     const adminData = { role: 'ADMIN' };
+            //     await updateUser({ netId: data.netId }, adminData);
+            //     break;
+            // case 'UNMAKE_ADMIN':
+            //     const userData = { role: 'USER' };
+            //     await updateUser({ netId: data.netId }, userData);
+            //     break;
+            case 'ADD_FREE_MONTHS':
+                await addFreeMonthsToUser({ netId: data.netId }, data.freeMonths);
             case 'UNBAN_USER':
                 const unbanData = { banned: false, banMsg: '', banExpiration: null };
                 await updateUser({ netId: data.netId }, unbanData);

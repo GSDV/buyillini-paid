@@ -37,7 +37,7 @@ function Actions() {
                 <MarkDeleteUser setAlert={setAlert} />
                 <BanUser setAlert={setAlert} />
                 <UnbanUser setAlert={setAlert} />
-                {/* Make super user (non illinois emal), add free months */}
+                <AddFreeMonths setAlert={setAlert} />
         </div>
         </div>
     );
@@ -185,7 +185,7 @@ function UnbanUser({ setAlert }: AdminActionType) {
         const operation = 'UNBAN_USER';
 
         const res = await fetch(`/admin/users/api/`, {
-            method: 'POST',
+            method: 'PUT',
             body: JSON.stringify({ operation, data }),
             headers: { 'Content-Type': 'application/json' }
         });
@@ -197,6 +197,38 @@ function UnbanUser({ setAlert }: AdminActionType) {
         <div className={adminStyles.actionContainer}>
             <h3>Unban User</h3>
             <Form action={attemptUnbanUser} inputs={inputs} submitTitle='Unban User' />
+        </div>
+    );
+}
+
+
+
+function AddFreeMonths({ setAlert }: AdminActionType) {
+    const inputs: FormInputType[] = [
+        { title: 'NetId', name: 'netId', type: 'text' },
+        { title: 'Free Months To Add', name: 'freeMonths', type: 'number' }
+    ];
+
+    const attemptAdd = async (formData: FormData) => {
+        const netId = formData.get('netId');
+        const freeMonths = formData.get('freeMonths');
+
+        const data = { netId, freeMonths };
+        const operation = 'ADD_FREE_MONTHS';
+
+        const res = await fetch(`/admin/users/api/`, {
+            method: 'PUT',
+            body: JSON.stringify({ operation, data }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const resJson = await res.json();
+        setAlert(resJson);
+    }
+
+    return (
+        <div className={adminStyles.actionContainer}>
+            <h3>Add Free Months</h3>
+            <Form action={attemptAdd} inputs={inputs} submitTitle='Add' />
         </div>
     );
 }
