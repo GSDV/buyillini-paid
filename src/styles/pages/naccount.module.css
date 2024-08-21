@@ -49,8 +49,8 @@
 
 
 .settingsIcon {
-    width: clamp(60px, 10vw, 90px);
-    height: clamp(60px, 10vw, 90px);
+    width: clamp(50px, 9.5vw, 80px);
+    height: clamp(50px, 9.5vw, 80px);
     margin-left: auto;
     color: var(--orangePrimary);
     cursor: pointer;
@@ -97,20 +97,21 @@
 }
 
 .postsContainer {
-    padding: 20px;
+    /* padding: 20px; */
+    padding: min(1.5vw, 20px);
     flex: 1;
     width: 100%;
     border: 1px solid var(--black);
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 
 .postsWrapper {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 40px 20px;
+    /* gap: 40px 20px; */
+    gap: min(2.5vw, 40px) min(1.3vw, 20px) ;
 }
 
 
@@ -148,5 +149,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
-    font-size: clamp(0.7em, 2.1vw, 1.1em);
+    font-size: clamp(0.8em, 2.1vw, 1.1em);
 }

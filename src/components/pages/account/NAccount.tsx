@@ -53,7 +53,7 @@ function Header({ user, ownAccount }: { user: RedactedUser, ownAccount: boolean 
             <Pfp pfp={profilePicture} />
 
             <div style={{display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0}}>
-                <h1 className={accountStyles.displayName}>{displayName}e jwfj efj ewfjefwjewjf jbwejbdew jwd jqwd  yfc y d</h1>
+                <h1 className={accountStyles.displayName}>{displayName}</h1>
                 <h3 className={accountStyles.email}>{email}</h3>
                 {phoneNumber!='' && <h3 className={accountStyles.email}>{formatPhoneNumber(phoneNumber)}</h3>}
             </div>
@@ -337,6 +337,14 @@ function Posts({ noPosts, posts, page, max, setPage }: PostsType) {
     return (
         <>
             <div className={accountStyles.postsWrapper}>
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
+                {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
                 {posts.map((post, i) => <PostComponent key={i} post={post} /> )}
             </div>
             <PageArrows page={page} max={max} setPage={setPage} />
