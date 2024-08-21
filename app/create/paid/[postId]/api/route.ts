@@ -50,16 +50,20 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
     try {
         const postId = params.postId;
 
+        console.log("AAA")
+
         if (!postId) return NextResponse.json({ cStatus: 101, msg: `No postId provided.` }, { status: 400 });
 
         const authTokenCookie = cookies().get('authtoken');
         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
+        console.log("BBB")
         const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
         if (!userPrisma) return NextResponse.json({ cStatus: 402, msg: `You are not logged in.` }, { status: 400 });
         const resValidUser = isValidUser(userPrisma);
         if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
 
+        console.log("CCC")
         const postPrisma = await getPost(postId);
         if (!postPrisma) return NextResponse.json({ cStatus: 430, msg: `This post does not exist.` }, { status: 400 });
         if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 414, msg: `This is not your post.` }, { status: 400 });
@@ -67,8 +71,10 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
         if (!postPrisma.isPaid) return NextResponse.json({ cStatus: 431, msg: `This post is a free post.` }, { status: 400 });
         if (userPrisma.freeMonths < postPrisma.freeMonthsUsed) return NextResponse.json({ cStatus: 102, msg: `Not enough free months.` }, { status: 400 });
 
+        console.log("DDD")
         const months = postPrisma.duration - postPrisma.freeMonthsUsed;
 
+        console.log("EEE")
         const session = await stripe.checkout.sessions.create({
             line_items: [ { price: process.env.STRIPE_BUYILLINI_ONE_MONTH_PRICE_ID, quantity: months } ],
             mode: 'payment',
@@ -76,6 +82,9 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
             cancel_url: `${DOMAIN}/create/paid/${postPrisma.id}/stripe/error`,
             automatic_tax: { enabled: true }
         });
+        console.log("FFF")
+        console.log("STRIPE SESSION: ", session)
+        console.log("STRIPE SESSION: ", session.id)
         
         await deleteAllFailedPostPayments(postPrisma.id);
         await addPaymentToPost(postPrisma.id, session.id, months);
