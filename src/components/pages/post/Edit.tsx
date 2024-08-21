@@ -60,9 +60,13 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
             body: postData,
         });
         const resJson = await res.json();
-        setAlert(resJson);
-        setLoading(false);
-        if (resJson.cStatus==200) router.push(`/post/${post.id}`);
+
+        if (resJson.cStatus==200) {
+            router.push(`/post/${post.id}`);
+        } else {
+            setAlert(resJson);
+            setLoading(false);
+        }
     }
 
     return (
