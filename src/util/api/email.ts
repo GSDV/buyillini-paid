@@ -89,7 +89,7 @@ export const sendEmail = async (mail: MailType) => {
 
     const msg = {
         to: mail.email,
-        from: process.env.SENGRID_EMAIL as string,
+        from: CONTACT_EMAIL,
         subject: mail.subject,
         text: mail.msgText,
         html: mail.msgHtml
