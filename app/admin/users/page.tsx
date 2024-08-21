@@ -211,7 +211,7 @@ function AddFreeMonths({ setAlert }: AdminActionType) {
 
     const attemptAdd = async (formData: FormData) => {
         const netId = formData.get('netId');
-        const freeMonths = formData.get('freeMonths');
+        const freeMonths = Number(formData.get('freeMonths'));
 
         const data = { netId, freeMonths };
         const operation = 'ADD_FREE_MONTHS';
