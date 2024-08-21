@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
         const promoCodePrisma = await getPromoCodePrisma(promoCode);
         if (!promoCodePrisma) return NextResponse.json({ cStatus: 420, msg: `Promo code does not exist.` }, { status: 400 });
 
-        const allowedUsers = promoCodePrisma.allowedUsers;
-        if (allowedUsers.length!=0 && !allowedUsers.includes(userPrisma.netId)) return NextResponse.json({ cStatus: 0, msg: `You are not eligible for this promo code.` }, { status: 400 });
+        const eligibleUsers = promoCodePrisma.eligibleUsers;
+        if (eligibleUsers.length!=0 && !eligibleUsers.includes(userPrisma.netId)) return NextResponse.json({ cStatus: 0, msg: `You are not eligible for this promo code.` }, { status: 400 });
 
         try {
             await claimPromoCode(userPrisma.id, promoCodePrisma);

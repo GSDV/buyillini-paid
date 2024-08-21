@@ -225,7 +225,7 @@ model PromoCode {
     updatedAt           DateTime            @updatedAt
     id                  String              @id @default(cuid())
 
-    allowedUsers        String[]            @default([])
+    eligibleUsers       String[]            @default([])
 
     code                String              @unique
     freeMonths          Int

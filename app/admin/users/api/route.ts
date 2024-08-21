@@ -53,6 +53,7 @@ export async function PUT(req: NextRequest) {
             //     break;
             case 'ADD_FREE_MONTHS':
                 await addFreeMonthsToUser({ netId: data.netId }, data.freeMonths);
+                break;
             case 'UNBAN_USER':
                 const unbanData = { banned: false, banMsg: '', banExpiration: null };
                 await updateUser({ netId: data.netId }, unbanData);
