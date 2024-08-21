@@ -99,6 +99,7 @@ export const getPostData = (formData: FormData) => {
     const months = formData.get('months');
     const userFreeMonths = formData.get('userFreeMonths');
 
+    console.log("IMAGES: ", images.length, images)
     if (!title || !description || !category || (category!='other' && (!size || !gender)) || !price || !images || !months) return null;
 
     const postData: PostData = {
@@ -108,7 +109,7 @@ export const getPostData = (formData: FormData) => {
         size: size as any,
         gender: gender as string,
         price: Math.round(Number(price)*100)/100,
-        images: formData.getAll('images') as File[],
+        images: images,
         months: Math.floor(Number(months)),
         userFreeMonths: Math.floor(Number(userFreeMonths))
     }

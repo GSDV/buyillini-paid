@@ -88,6 +88,7 @@ export const createFreePost = async (postData: PostData, userId: string) => {
     const expiration = new Date(Date.now() + postData.months*MONTH_TO_MILLI);
     const imageUrls: string[] = [];
     for (let i=0; i<postData.images.length; i++) {
+        console.log("IMAGE TO S3, i: ", i)
         // const imgBytes = await postData.images[i].arrayBuffer();
         // const imgBuffer = Buffer.from(imgBytes);
         // const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);

@@ -15,12 +15,13 @@ export const s3Client = new S3Client({
 
 
 export const uploadPostPicture = async (file: File) => {
-    console.log("SERVER LOG")
     const imgBytes = await file.arrayBuffer();
     const imgBuffer = Buffer.from(imgBytes);
     const croppedBuffer = await sharp(imgBuffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).webp({ quality: 80, effort: 6 }).toBuffer();
     const key = `post-f-${uuidv4()}`;
+    console.log("UPLOADING TO S3 with type: ", file.type);
     const res = await uploadToS3(croppedBuffer, key, file.type);
+    console.log("RES: ", res);
     return key;
 }
 
@@ -48,7 +49,8 @@ export const uploadToS3 = async (file: Buffer, key: string, type: string) => {
         ContentType: type
     }
     const cmd = new PutObjectCommand(params);
-    await s3Client.send(cmd);
+    const res = await s3Client.send(cmd);
+    return res;
 }
 
 

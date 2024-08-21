@@ -44,8 +44,10 @@ export async function POST(req: NextRequest) {
 
         console.log("GG")
         await deleteDraftedPosts(userPrisma.id)
-        console.log("BBB")
+        console.log("HH")
         const postId = await createPaidPost(postData, userPrisma.id);
+        console.log("postId: ", postId)
+        console.log("II")
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {
