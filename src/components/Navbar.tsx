@@ -13,6 +13,7 @@ import { useMenuShadowContext } from '@components/providers/MenuShadow';
 import { BUYILLINI_LOGO, getPfpUrl } from '@util/global';
 
 import navbarStyles from '@styles/ui/navbar.module.css';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -135,9 +136,17 @@ function Popup({ items }: { items: NavItem[] }) {
 
 
 function MiniNavbarItem({ title, link }: NavItem) {
+    const msContext = useMenuShadowContext();
+    const router = useRouter();
+
+    const navigateUser = () => {
+        msContext.closeMenu();
+        router.push(link);
+    }
+
     return (
-        <Link href={link} className={navbarStyles.miniNavbarItem}>
+        <div onClick={navigateUser} className={navbarStyles.miniNavbarItem}>
             <h1>{title}</h1>
-        </Link>
+        </div>
     );
 }
