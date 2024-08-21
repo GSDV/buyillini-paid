@@ -3,7 +3,8 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 40px 20px;
+    gap: min(2.5vw, 30px) min(1.5vw, 20px);
+
 }
 
 .gridItem {
@@ -28,15 +29,5 @@
 }
 
 .catTitle {
-    font-size: clamp(1rem, 3vw, 1.9em);
-}
-
-
-@media (max-width: 700px) {
-    .grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-    .catTitle {
-        font-size: 1.5em;
-    }
+    font-size: clamp(1.1rem, 3vw, 1.9em);
 }

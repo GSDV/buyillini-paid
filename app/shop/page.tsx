@@ -1,8 +1,9 @@
-import CenterLayout from '@components/containers/CenterLayout';
 import VerticalLayout from '@components/containers/VerticalLayout';
+
 import { CATEGORIES, CategoryType } from '@util/global';
 
 import categoryStyles from '@styles/pages/pick-category.module.css'
+
 
 
 export default function PickCategory() {
@@ -16,6 +17,8 @@ export default function PickCategory() {
     )
 }
 
+
+
 function Category({ cat }: { cat: CategoryType }) {
     return (
         <div className={categoryStyles.gridItem}>
@@ -28,4 +31,3 @@ function Category({ cat }: { cat: CategoryType }) {
         </div>
     );
 }
-
