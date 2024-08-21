@@ -28,8 +28,8 @@ export default function Page({ params }: { params: { postId: string } }) {
             setPost(resJson.post);
 
             const imgFiles: File[] = [];
-            if (resJson.draftedPost!=null) {
-                const imgs = resJson.draftedPost.images;
+            if (resJson.post!=null) {
+                const imgs = resJson.post.images;
                 for (let i=0; i<imgs.length; i++) {
                     const response = await fetch(imgUrl(imgs[i]));
                     const blob = await response.blob();
