@@ -7,9 +7,8 @@ import { RedactedUser, RedactedUserWithPosts } from '@util/prisma/types';
 import Loading from '@components/Loading';
 
 import { AlertType, CheckIfAlert } from '@components/Alert';
-import Account from '@components/pages/account/Account';
+import Account from '@components/pages/account/NAccount';
 import VerticalLayout from '@components/containers/VerticalLayout';
-import CenterLayout from '@components/containers/CenterLayout';
 
 
 
