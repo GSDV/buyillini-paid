@@ -21,6 +21,7 @@ export default function Page() {
     const fetchFreeMonthsAndDraftedPost = async () => {
         const res = await fetch(`/create/api/`, { method: 'GET' });
         const resJson = await res.json();
+        console.log("resJson: ", resJson)
         if (resJson.cStatus==200) {
             setFreeMonths(resJson.freeMonths);
             setPastPost(resJson.draftedPost);
