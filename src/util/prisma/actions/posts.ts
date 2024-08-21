@@ -93,6 +93,7 @@ export const createFreePost = async (postData: PostData, userId: string) => {
         // const imgBuffer = Buffer.from(imgBytes);
         // const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
         // imageUrls.push(imgUrl);
+        console.log("[", postData.images[i])
         const imgUrl = await uploadPostPicture(postData.images[i]);
         console.log("IMAGE UPL: ", imgUrl)
         imageUrls.push(imgUrl);
