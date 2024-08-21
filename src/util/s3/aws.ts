@@ -27,7 +27,7 @@ export const uploadPostPicture = async (file: File) => {
         return key;
     } catch (err) {
         console.log("uPP: error ", err);
-        return 'p';
+        return err as string;
     }
 }
 

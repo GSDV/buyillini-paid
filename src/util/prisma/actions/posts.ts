@@ -94,6 +94,7 @@ export const createFreePost = async (postData: PostData, userId: string) => {
         // const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
         // imageUrls.push(imgUrl);
         const imgUrl = await uploadPostPicture(postData.images[i]);
+        console.log("IMAGE UPL: ", imgUrl)
         imageUrls.push(imgUrl);
     }
     const { images, userFreeMonths, months, ...cleanedData } = postData;
