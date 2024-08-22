@@ -246,11 +246,11 @@ function OwnPosts({ userId }: { userId: string }) {
 
     const activeTab = clsx({
         [accountStyles.postsButton] : true,
-        [accountStyles.postsButtonFocused] : !active
+        [accountStyles.postsButtonFocused] : active
     });
     const pastTab = clsx({
         [accountStyles.postsButton] : true,
-        [accountStyles.postsButtonFocused] : active
+        [accountStyles.postsButtonFocused] : !active
     });
 
     return (

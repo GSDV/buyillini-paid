@@ -37,7 +37,6 @@ export default function Page() {
             }
             
             setPastImages(imgFiles);
-            setLoading(false);
         }
         setLoading(false);
     }
