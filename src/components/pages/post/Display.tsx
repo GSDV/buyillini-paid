@@ -44,6 +44,8 @@ export default function DisplayPost({ post, cStatus }: { post: PostWithRedactedU
                 </>}
 
                 {cStatus==200 && <h4 style={{color: 'var(--grey)'}}>Log in to buy post</h4>}
+                
+                {post.deleted && <button onClick={()=>console.log('repost')}>Repost</button>}
             </div>
 
             {alert && <Alert alert={alert} variations={[]} />}

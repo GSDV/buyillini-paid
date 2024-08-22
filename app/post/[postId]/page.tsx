@@ -13,14 +13,14 @@ import { PostWithRedactedUser } from '@util/prisma/types';
 export default function Page({ params }: { params: { postId: string } }) {
     const [post, setPost] = useState<PostWithRedactedUser | null>(null);
     const [alert, setAlert] = useState<AlertType | null>(null);
-    const [cStatus, SetCStatus] = useState<number>(400);
+    const [cStatus, setCStatus] = useState<number>(400);
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchPost = async () => {
         const res = await fetch(`/post/${params.postId}/api/`, { method: 'GET' });
         const resJson = await res.json();
         if (resJson.cStatus==200 || resJson.cStatus==202 || resJson.cStatus==203) {
-            SetCStatus(resJson.cStatus);
+            setCStatus(resJson.cStatus);
             setPost(resJson.post);
         }
         else {
@@ -38,7 +38,7 @@ export default function Page({ params }: { params: { postId: string } }) {
             {loading ?
                 <Loading />
             :
-                <PostExists post={post as PostWithRedactedUser} cStatus={cStatus} alert={alert} />
+                <ChooseView post={post as PostWithRedactedUser} cStatus={cStatus} alert={alert} />
             }
         </CenterLayout>
     )
@@ -46,12 +46,10 @@ export default function Page({ params }: { params: { postId: string } }) {
 
 
 
-function PostExists({ post, cStatus, alert}: { post: PostWithRedactedUser, cStatus: number, alert: AlertType | null }) {
-    return (
-        <CheckIfAlert 
-            alert={alert}
-            variations={[]}
-            content={<DisplayPost post={post} cStatus={cStatus} />}
-        />
-    );
+function ChooseView({ post, cStatus, alert}: { post: PostWithRedactedUser, cStatus: number, alert: AlertType | null }) {
+    if (!post.deleted) return <CheckIfAlert alert={alert} variations={[]} content={<DisplayPost post={post} cStatus={cStatus} />} />;
+
+    if (post.deleted && cStatus==202) return <CheckIfAlert alert={alert} variations={[]} content={<DisplayPost post={post} cStatus={cStatus} />} />;
+
+    return <Alert alert={{cStatus: 400, msg: 'This post has been deleted'}} variations={[]} />;
 }
