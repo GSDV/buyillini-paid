@@ -79,7 +79,7 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
                     {alert && <Alert alert={alert} variations={[]} />}
                 </div>
 
-                <h2 className={createPostStyles.title}>Create a Post</h2>
+                <h2 className={createPostStyles.title}>Edit Post</h2>
 
                 <div className={createPostStyles.formItem}>
                     <h4>Title</h4>
