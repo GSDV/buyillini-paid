@@ -10,7 +10,6 @@ import { Post } from '@prisma/client';
 import Loading from '@components/Loading';
 import { imgUrl } from '@util/global';
 import { Alert, AlertType } from '@components/Alert';
-import Create from '@components/pages/post/Create';
 
 
 
@@ -27,7 +26,6 @@ export default function Page({ params }: { params: { postId: string } }) {
         setAlert(resJson);
         if (resJson.cStatus==200) {
             setPost(resJson.post);
-            console.log("post", resJson.post)
 
             const imgFiles: File[] = [];
             if (resJson.post!=null) {
