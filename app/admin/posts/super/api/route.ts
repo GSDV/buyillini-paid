@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
 
 
-export const getSuperPostData = (formData: FormData) => {
+const getSuperPostData = (formData: FormData) => {
     const title = formData.get('title');
     const description = formData.get('description');
     const category = formData.get('category') as string;
@@ -59,7 +59,7 @@ export const getSuperPostData = (formData: FormData) => {
 
 
 
-export const isValidSuperPostData = (postData: SuperPostData) => {
+const isValidSuperPostData = (postData: SuperPostData) => {
     const { title, description, category, size, gender, price, images, months } = postData;
 
     let msg = '';
