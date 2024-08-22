@@ -188,7 +188,7 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
             <h4>Super Listing Period</h4>
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                <input type='number' min='1' step='1' style={{width: 'fit-content'}} value={value} onChange={calcExpiration} />
+                <input type='number' min='1' step='1' style={{width: '100px'}} value={value} onChange={calcExpiration} />
                 <h4>{value==1 ? 'month' : 'months'}</h4>
             </div>
             
