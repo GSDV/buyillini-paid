@@ -13,18 +13,6 @@ export const getPromoCodePrisma = async (promoCode: string) => {
 
 
 
-export const makePromoCode = async (code: string, eligibleUsers: string[], freeMonths: number) => {
-    await prisma.promoCode.create({
-        data: {
-            code: code.toUpperCase(),
-            eligibleUsers,
-            freeMonths
-        }
-    });
-}
-
-
-
 export const claimPromoCode = async (userId: string, promo: PromoCode) => {
     await prisma.user.update({
         where: { id: userId },

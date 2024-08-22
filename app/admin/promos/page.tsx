@@ -34,6 +34,7 @@ function Actions() {
                 <div className={adminStyles.actionsContainer}>
                 <GetPromo setAlert={setAlert} />
                 <MakePromo setAlert={setAlert} />
+                <DeletePromo setAlert={setAlert} />
         </div>
         </div>
     );
@@ -65,7 +66,7 @@ function GetPromo({ setAlert }: AdminActionType) {
 
     return (
         <div className={adminStyles.actionContainer}>
-            <h3>Get User Data</h3>
+            <h3>Get Promo Code</h3>
             <Form action={getUser} inputs={inputs} submitTitle='Get User' />
             {user && <div>
                 <DisplayUser user={user} />
@@ -105,7 +106,7 @@ function MakePromo({ setAlert }: AdminActionType) {
 
     return (
         <div className={adminStyles.actionContainer}>
-            <h3>Add Free Months</h3>
+            <h3>Make Promo Code</h3>
             <Form action={attemptMakePromo} inputs={inputs} submitTitle='Make Promo' />
         </div>
     );
@@ -113,33 +114,17 @@ function MakePromo({ setAlert }: AdminActionType) {
 
 
 
-
-
-
-
-
-
-
-
-
-///
-
-
-
-
-
-
-function DeleteUser({ setAlert }: AdminActionType) {
+function DeletePromo({ setAlert }: AdminActionType) {
     const inputs: FormInputType[] = [
-        { title: 'NetId', name: 'netId', type: 'text' }
+        { title: 'Promo', name: 'code', type: 'text' }
     ];
 
-    const banUser = async (formData: FormData) => {
-        const netId = formData.get('netId');
-        const data = { netId };
-        const operation = 'DELETE_USER';
+    const attemptDeletePromo = async (formData: FormData) => {
+        const promo = formData.get('code');
+        const data = { promo };
+        const operation = 'DELETE_PROMO';
 
-        const res = await fetch(`/admin/users/api/`, {
+        const res = await fetch(`/admin/promos/api/`, {
             method: 'DELETE',
             body: JSON.stringify({ operation, data }),
             headers: { 'Content-Type': 'application/json' }
@@ -150,101 +135,10 @@ function DeleteUser({ setAlert }: AdminActionType) {
 
     return (
         <div className={adminStyles.actionContainer}>
-            <h3>Delete User</h3>
-            <Form action={banUser} inputs={inputs} submitTitle='Delete User' />
+            <h3>Delete Promo</h3>
+            <Form action={attemptDeletePromo} inputs={inputs} submitTitle='Delete Promo' />
         </div>
     );
 }
 
 
-
-function MarkDeleteUser({ setAlert }: AdminActionType) {
-    const inputs: FormInputType[] = [
-        { title: 'NetId', name: 'netId', type: 'text' }
-    ];
-
-    const banUser = async (formData: FormData) => {
-        const netId = formData.get('netId');
-        const data = { netId };
-        const operation = 'MARK_DELETE_USER';
-
-        const res = await fetch(`/admin/users/api/`, {
-            method: 'DELETE',
-            body: JSON.stringify({ operation, data }),
-            headers: { 'Content-Type': 'application/json' }
-        });
-        const resJson = await res.json();
-        setAlert(resJson);
-    }
-
-    return (
-        <div className={adminStyles.actionContainer}>
-            <h3>Mark Delete User</h3>
-            <Form action={banUser} inputs={inputs} submitTitle='Delete User' />
-        </div>
-    );
-}
-
-
-
-function BanUser({ setAlert }: AdminActionType) {
-    const inputs: FormInputType[] = [
-        { title: 'NetId', name: 'netId', type: 'text' },
-        { title: 'Ban Message', name: 'msg', type: 'text' },
-        { title: 'Ban Expiration', name: 'expiration', type: 'datetime-local' }
-    ];
-
-    const banUser = async (formData: FormData) => {
-        const netId = formData.get('netId');
-        const msg = formData.get('msg');
-        const expiration = (formData.get('expiration')=='') ? null : formData.get('expiration');
-
-        const data = { netId, msg, expiration };
-        const operation = 'BAN_USER';
-
-        const res = await fetch(`/admin/users/api/`, {
-            method: 'DELETE',
-            body: JSON.stringify({ operation, data }),
-            headers: { 'Content-Type': 'application/json' }
-        });
-        const resJson = await res.json();
-        setAlert(resJson);
-    }
-
-    return (
-        <div className={adminStyles.actionContainer}>
-            <h3>Ban User</h3>
-            <Form action={banUser} inputs={inputs} submitTitle='Ban User' />
-        </div>
-    );
-}
-
-
-
-function UnbanUser({ setAlert }: AdminActionType) {
-    const inputs: FormInputType[] = [
-        { title: 'NetId', name: 'netId', type: 'text' }
-    ];
-
-    const attemptUnbanUser = async (formData: FormData) => {
-        const netId = formData.get('netId');
-
-        const data = { netId };
-        const operation = 'UNBAN_USER';
-
-        const res = await fetch(`/admin/users/api/`, {
-            method: 'PUT',
-            body: JSON.stringify({ operation, data }),
-            headers: { 'Content-Type': 'application/json' }
-        });
-        const resJson = await res.json();
-        setAlert(resJson);
-    }
-
-    return (
-        <div className={adminStyles.actionContainer}>
-            <h3>Unban User</h3>
-            <Form action={attemptUnbanUser} inputs={inputs} submitTitle='Unban User' />
-        </div>
-    );
-}

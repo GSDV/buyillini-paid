@@ -135,3 +135,27 @@ export const banUser = async (where: any, msg: string, expiration: Date | null) 
 
 
 
+
+
+/*********
+ * PROMO *
+ *********/
+
+
+export const makePromoCode = async (code: string, eligibleUsers: string[], freeMonths: number) => {
+    await prisma.promoCode.create({
+        data: {
+            code: code.toUpperCase(),
+            eligibleUsers,
+            freeMonths
+        }
+    });
+}
+
+
+
+export const deletePromoCode = async (code: string) => {
+    await prisma.promoCode.delete({
+        where: { code }
+    });
+}
