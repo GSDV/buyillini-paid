@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
         if (userPrisma.promoCodes.includes(promoCode)) return NextResponse.json({ cStatus: 421, msg: `You already claimed this promo code.` }, { status: 400 });
 
-        const promoCodePrisma = await getPromoCode(promoCode);
+        const promoCodePrisma = await getPromoCode(promoCode.toUpperCase());
         if (!promoCodePrisma) return NextResponse.json({ cStatus: 420, msg: `Promo code does not exist.` }, { status: 400 });
 
         const eligibleUsers = promoCodePrisma.eligibleUsers;
