@@ -5,10 +5,9 @@ import { useState } from 'react';
 import VerticalLayout from '@components/containers/VerticalLayout';
 import { AdminActionType, CheckIfAdmin } from '@components/pages/admin/Admin';
 import Form, { FormInputType } from '@components/Form';
-import DisplayUser from '@components/pages/admin/DisplayUser';
 import { Alert, AlertType } from '@components/Alert';
 
-import { User } from '@prisma/client';
+import { PromoCode, User } from '@prisma/client';
 
 import adminStyles from '@styles/pages/admin.module.css';
 
@@ -43,7 +42,7 @@ function Actions() {
 
 
 function GetPromo({ setAlert }: AdminActionType) {
-    const [user, setUser] = useState<User | null>(null);
+    const [promo, setPromo] = useState<PromoCode | null>(null);
 
     const inputs: FormInputType[] = [
         { title: 'NetId', name: 'netId', type: 'text' }
@@ -60,7 +59,7 @@ function GetPromo({ setAlert }: AdminActionType) {
             method: 'GET'
         });
         const resJson = await res.json();
-        setUser(resJson.user);
+        setPromo(resJson.data.promo);
         setAlert(resJson);
     }
 
@@ -68,8 +67,8 @@ function GetPromo({ setAlert }: AdminActionType) {
         <div className={adminStyles.actionContainer}>
             <h3>Get Promo Code</h3>
             <Form action={getUser} inputs={inputs} submitTitle='Get User' />
-            {user && <div>
-                <DisplayUser user={user} />
+            {promo && <div>
+                <h3>{promo.code}</h3>
             </div>}
         </div>
     );

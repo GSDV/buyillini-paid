@@ -4,7 +4,7 @@ import { PromoCode } from '@prisma/client';
 
 
 
-export const getPromoCodePrisma = async (promoCode: string) => {
+export const getPromoCode = async (promoCode: string) => {
     const promoCodePrisma = await prisma.promoCode.findFirst({
         where: { code: promoCode }
     });

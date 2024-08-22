@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 import { getUser, isAdmin, makePromoCode, deletePromoCode } from '@util/prisma/actions/admin';
+import { getPromoCode } from '@util/prisma/actions/promo';
 
 
 
@@ -15,16 +16,19 @@ export async function GET(req: NextRequest) {
         const operation = searchParams.get('operation');
         const encodedData = searchParams.get('data');
         const data = JSON.parse(encodedData as string);
+        
+        const responseData: { [key: string]: any } = {};
 
         switch (operation) {
             case 'GET_PROMO':
-                const userPrisma = await getUser({ netId: data.netId });
-                return NextResponse.json({ cStatus: 200, msg: `Success.`, user: userPrisma }, { status: 200 });
+                const promoPrisma = await getPromoCode(data.promoCode);
+                responseData.promo = promoPrisma;
+                break;
             default:
                 return NextResponse.json({ cStatus: 110, msg: `Unknown operation.` }, { status: 400 });
         }
 
-        return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
+        return NextResponse.json({ cStatus: 200, msg: `Success.`, data: responseData }, { status: 200 });
     }  catch (err) {
         return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
     }
