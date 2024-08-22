@@ -54,8 +54,9 @@ export default function Page({ params }: { params: { postId: string } }) {
             {loading ?
                 <Loading />
             :
-                <NeedsToBeLoggedIn content={<Create pastPost={post} freeMonths={0} pastImages={postImages} />} />
+                <NeedsToBeLoggedIn content={<ExisitngPost post={post as Post} postImages={postImages} alert={alert} />} />
             }
+                <NeedsToBeLoggedIn content={<Create pastPost={post} freeMonths={0} pastImages={postImages} />} />
             {/* <NeedsToBeLoggedIn content={<ExisitngPost post={post as Post} postImages={postImages} alert={alert} />} /> */}
         </CenterLayout>
     )
