@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
         if (!promoCode || promoCode==='') return NextResponse.json({ cStatus: 101, msg: `Please enter a promo code.` }, { status: 400 });
 
-        const code = promoCode.toUpperCase();
+        const code = promoCode.toUpperCase().trim() ;
 
         const authTokenCookie = cookies().get('authtoken');
         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
