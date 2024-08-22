@@ -103,7 +103,7 @@ export const createSuperPost = async (postData: SuperPostData, adminId: string) 
         imageUrls.push(imgUrl);
     }
     const { images, months, ...cleanedData } = postData;
-    const createData = { sellerId: adminId, ...cleanedData, images: imageUrls, duration: months, freeMonthsUsed: 0, isPaid: false, expireDate: expiration };
+    const createData = { sellerId: adminId, ...cleanedData, images: imageUrls, duration: months, freeMonthsUsed: 0, isPaid: false, expireDate: expiration, active: true };
 
     const res = await prisma.post.create({
         data: createData
