@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
 
 import { Post } from '@prisma/client';
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, formatDate } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, formatDate } from '@util/global';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 import { Alert, AlertType } from '@components/Alert';
@@ -46,10 +46,10 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
     }
 
     const setCategoryField = (value: string) => {
-        if (value=='other') {
+        if (NO_SIZE_GENDER_CATEGORIES.includes(value)) {
             setSize('');
             setGender('Unisex');
-        } else if (category=='other' && value!='other') {
+        } else if (NO_SIZE_GENDER_CATEGORIES.includes(category) && NO_SIZE_GENDER_CATEGORIES.includes(value)) {
             setSize(CLOTHING_SIZES[0]);
             setGender('Unisex');
         }
@@ -122,7 +122,7 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
                     </select>
                 </div>
 
-                {category!='other' &&
+                {!NO_SIZE_GENDER_CATEGORIES.includes(category) &&
                     <div className={createPostStyles.formItem}>
                         <h4>Size</h4>
                         <select value={size} onChange={(e)=>setSize(e.target.value)}>
@@ -133,7 +133,7 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
                     </div>
                 }
 
-                {category!='other' &&
+                {!NO_SIZE_GENDER_CATEGORIES.includes(category) &&
                     <div className={createPostStyles.formItem}>
                         <h4>Gender</h4>
                         <select value={gender} onChange={(e)=>setGender(e.target.value)}>

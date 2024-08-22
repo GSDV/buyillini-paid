@@ -95,7 +95,7 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
                     <h4>Category</h4>
                     <select value={category} onChange={(e)=>setCategoryField(e.target.value)}>
                         {CATEGORIES.map((cat, i) => (
-                            <option key={i} value={cat.title}>{cat.title}</option>
+                            <option key={i} value={cat.link}>{cat.title}</option>
                         ))}
                     </select>
                 </div>

@@ -63,6 +63,12 @@ export const CATEGORIES = [
 ] as const;
 export type CategoryType = typeof CATEGORIES[number];
 
+export const NO_SIZE_GENDER_CATEGORIES = [
+    'hats',
+    'accessories',
+    'apartment',
+    'other'
+];
 
 export const CLOTHING_SIZES = [
     'XS',
