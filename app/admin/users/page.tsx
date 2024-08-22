@@ -30,15 +30,15 @@ function Actions() {
     return (
         <div className={adminStyles.dashboard}>
             <h1>User Actions</h1>
-                {alert && <Alert alert={alert} variations={[]} />}
-                <div className={adminStyles.actionsContainer}>
+            {alert && <Alert alert={alert} variations={[]} />}
+            <div className={adminStyles.actionsContainer}>
                 <GetAndUpdateUser setAlert={setAlert} />
                 <DeleteUser setAlert={setAlert} />
                 <MarkDeleteUser setAlert={setAlert} />
                 <BanUser setAlert={setAlert} />
                 <UnbanUser setAlert={setAlert} />
                 <AddFreeMonths setAlert={setAlert} />
-        </div>
+            </div>
         </div>
     );
 }

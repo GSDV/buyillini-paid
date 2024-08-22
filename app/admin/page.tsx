@@ -3,6 +3,8 @@
 import CenterLayout from '@components/containers/CenterLayout';
 import { CheckIfAdmin, Subsection } from '@components/pages/admin/Admin';
 
+import adminStyles from '@styles/pages/admin.module.css';
+
 
 
 export default function Page() {
@@ -18,9 +20,13 @@ export default function Page() {
 
 function Dashboard() {
     return (
-        <div>
+        <div className={adminStyles.actionContainer}>
             <h1>Admin Dashboard</h1>
-            <Subsection title='Users' link='/admin/users/' />
+            <div className={adminStyles.actionsContainer}>
+                <Subsection title='Users' link='/admin/users/' />
+                <Subsection title='Posts' link='/admin/posts/' />
+                <Subsection title='Promo' link='/admin/promos/' />
+            </div>
         </div>
     );
 }
