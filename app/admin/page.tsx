@@ -20,7 +20,7 @@ export default function Page() {
 
 function Dashboard() {
     return (
-        <div className={adminStyles.actionContainer}>
+        <div className={adminStyles.dashboard}>
             <h1>Admin Dashboard</h1>
             <div className={adminStyles.actionsContainer}>
                 <Subsection title='Users' link='/admin/users/' />
