@@ -86,10 +86,7 @@ function MakePromo({ setAlert }: AdminActionType) {
 
     const attemptMakePromo = async (formData: FormData) => {
         const promoCode = formData.get('code');
-        console.log("A", formData.get('eligible'))
-        console.log("B", formData.get('eligible')==='')
-        console.log("C", typeof formData.get('eligible'))
-        const eligibleUsers = (formData.get('eligible') as string).split(',');
+        const eligibleUsers = formData.get('eligible')=='' ? [] : (formData.get('eligible') as string).split(',');
         const freeMonths = Number(formData.get('freeMonths'));
 
         const data = { promoCode, eligibleUsers, freeMonths };

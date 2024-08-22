@@ -156,6 +156,6 @@ export const makePromoCode = async (code: string, eligibleUsers: string[], freeM
 
 export const deletePromoCode = async (code: string) => {
     await prisma.promoCode.delete({
-        where: { code }
+        where: { code: code.toUpperCase() }
     });
 }
