@@ -117,8 +117,8 @@ function DeletePromo({ setAlert }: AdminActionType) {
     ];
 
     const attemptDeletePromo = async (formData: FormData) => {
-        const promo = formData.get('code');
-        const data = { promo };
+        const promoCode = formData.get('code');
+        const data = { promoCode };
         const operation = 'DELETE_PROMO';
 
         const res = await fetch(`/admin/promos/api/`, {
