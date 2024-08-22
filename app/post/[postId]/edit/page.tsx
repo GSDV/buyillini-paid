@@ -26,7 +26,6 @@ export default function Page({ params }: { params: { postId: string } }) {
         setAlert(resJson);
         if (resJson.cStatus==200) {
             setPost(resJson.post);
-            console.log("post", post)
 
             const imgFiles: File[] = [];
             if (resJson.post!=null) {
