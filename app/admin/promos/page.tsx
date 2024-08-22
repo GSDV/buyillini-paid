@@ -7,7 +7,7 @@ import { AdminActionType, CheckIfAdmin } from '@components/pages/admin/Admin';
 import Form, { FormInputType } from '@components/Form';
 import { Alert, AlertType } from '@components/Alert';
 
-import { PromoCode, User } from '@prisma/client';
+import { PromoCode } from '@prisma/client';
 
 import adminStyles from '@styles/pages/admin.module.css';
 
@@ -31,10 +31,10 @@ function Actions() {
             <h1>User Actions</h1>
                 {alert && <Alert alert={alert} variations={[]} />}
                 <div className={adminStyles.actionsContainer}>
-                <GetPromo setAlert={setAlert} />
-                <MakePromo setAlert={setAlert} />
-                <DeletePromo setAlert={setAlert} />
-        </div>
+                    <GetPromo setAlert={setAlert} />
+                    <MakePromo setAlert={setAlert} />
+                    <DeletePromo setAlert={setAlert} />
+            </div>
         </div>
     );
 }
