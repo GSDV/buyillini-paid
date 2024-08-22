@@ -16,7 +16,7 @@ export default function Page() {
     const [postId, setPostId] = useState<string>('');
     
     const action = async (postData: FormData) => {
-        const res = await fetch(`/admin/post/super/api/`, {
+        const res = await fetch(`/admin/posts/super/api/`, {
             method: 'POST',
             body: postData,
         });
