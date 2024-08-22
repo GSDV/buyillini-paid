@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { IoIosArrowDropleftCircle, IoIosArrowDroprightCircle, IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 

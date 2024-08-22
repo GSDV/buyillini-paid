@@ -70,22 +70,26 @@ export const NO_SIZE_GENDER_CATEGORIES = [
     'other'
 ];
 
+// Is this category one with Size and Gender fields?
+export const isRegCat = (cat: string) => !NO_SIZE_GENDER_CATEGORIES.includes(cat);
+
+
+
 export const CLOTHING_SIZES = [
     'XS',
     'S',
     'M',
     'L',
     'XL'
-] as const;
-export type SizeType = typeof CLOTHING_SIZES[number];
+];
+// export type SizeType = typeof CLOTHING_SIZES[number];
 
 
 export const GENDERS = [
     'Unisex',
     'Female',
     'Male'
-] as const;
-export type GenderType = typeof GENDERS[number];
+];
 
 
 export const POST_PER_PAGE = 15;

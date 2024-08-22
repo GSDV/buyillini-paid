@@ -2,7 +2,7 @@
 
 import { UserFiltersType } from '@components/pages/shop/Filters';
 import { hasBuyerInterestExpired } from '@util/api/posts';
-import { MONTH_TO_MILLI, POST_PER_PAGE, SizeType, POST_PER_PAGE_ACCOUNT } from '@util/global';
+import { MONTH_TO_MILLI, POST_PER_PAGE, POST_PER_PAGE_ACCOUNT } from '@util/global';
 import { prisma } from '@util/prisma/client';
 import { deleteFromS3, uploadPostPicture } from '@util/s3/aws';
 
@@ -36,7 +36,7 @@ export interface EditPostData {
     title: string,
     description: string,
     category: string,
-    size: SizeType,
+    size: string,
     gender: string,
     price: number,
     images: File[]
@@ -77,7 +77,7 @@ export interface PostData {
     title: string,
     description: string,
     category: string,
-    size: SizeType,
+    size: string,
     gender: string,
     price: number,
     images: File[],

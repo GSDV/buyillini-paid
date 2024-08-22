@@ -5,6 +5,8 @@ import { prisma } from '@util/prisma/client';
 import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { RedactedUser } from '@util/prisma/types';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { MONTH_TO_MILLI } from '@util/global';
+import { uploadPostPicture } from '@util/s3/aws';
 
 
 export const isAdmin = async (authTokenCookie: RequestCookie | undefined) => {
@@ -81,7 +83,6 @@ export const banUser = async (where: any, msg: string, expiration: Date | null) 
  * POSTS *
  *********/
 
-
 // export const updateAllUsersPost = async (sellerId: string, data: any) => {
 //     await prisma.post.updateMany({
 //         where: { sellerId: sellerId },
@@ -137,6 +138,8 @@ export const banUser = async (where: any, msg: string, expiration: Date | null) 
 
 
 
+
+
 /*********
  * PROMO *
  *********/
@@ -158,4 +161,33 @@ export const deletePromoCode = async (code: string) => {
     await prisma.promoCode.delete({
         where: { code: code.toUpperCase() }
     });
+}
+
+
+
+export interface SuperPostData {
+    title: string,
+    description: string,
+    category: string,
+    size: string,
+    gender: string,
+    price: number,
+    images: File[],
+    months: number,
+}
+
+export const createSuperPost = async (postData: SuperPostData, adminId: string) => {
+    const expiration = new Date(Date.now() + postData.months*MONTH_TO_MILLI);
+    const imageUrls: string[] = [];
+    for (let i=0; i<postData.images.length; i++) {
+        const imgUrl = await uploadPostPicture(postData.images[i]);
+        imageUrls.push(imgUrl);
+    }
+    const { images, months, ...cleanedData } = postData;
+    const createData = { sellerId: adminId, ...cleanedData, images: imageUrls, duration: months, freeMonthsUsed: 0, isPaid: false, expireDate: expiration };
+
+    const res = await prisma.post.create({
+        data: createData
+    });
+    return res.id;
 }

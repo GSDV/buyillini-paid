@@ -51,5 +51,5 @@ function ChooseView({ post, cStatus, alert}: { post: PostWithRedactedUser, cStat
 
     if (post.deleted && cStatus==202) return <CheckIfAlert alert={alert} variations={[]} content={<DisplayPost post={post} cStatus={cStatus} />} />;
 
-    return <Alert alert={{cStatus: 400, msg: 'This post has been deleted'}} variations={[]} />;
+    return <Alert alert={{cStatus: 400, msg: 'This post has been deleted.'}} variations={[]} />;
 }

@@ -121,7 +121,7 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
                         ))}
                     </select>
                 </div>
-
+                <input type='number' />
                 {!NO_SIZE_GENDER_CATEGORIES.includes(category) &&
                     <div className={createPostStyles.formItem}>
                         <h4>Size</h4>

@@ -88,6 +88,7 @@ function DeleteUser({ setAlert }: AdminActionType) {
 
     const banUser = async (formData: FormData) => {
         const netId = formData.get('netId');
+    
         const data = { netId };
         const operation = 'DELETE_USER';
 

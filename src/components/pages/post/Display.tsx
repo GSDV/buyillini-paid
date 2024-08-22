@@ -33,7 +33,7 @@ export default function DisplayPost({ post, cStatus }: { post: PostWithRedactedU
             <ViewPost post={post} />
 
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '20px', width: '100%', padding: '10px 40px' }}>
-                {cStatus==202 && <>
+                {(cStatus==202 && !post.deleted) && <>
                     <button onClick={()=>router.push(`/post/${post.id}/edit`)}>Edit</button>
                     <button style={{ backgroundColor: 'var(--red)' }} onClick={promptDeletePost}>Delete</button>
                 </>}
