@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         const postPrisma = await getPost(postId);
         if (!postPrisma) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
         if (adminPrisma.id != postPrisma.sellerId) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
-        // const postId = await createSuperPost(postData, adminPrisma.id);
+
         await createSuperPost(postId, postData, adminPrisma.id);
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
@@ -83,10 +83,6 @@ const isValidSuperPostData = (postData: SuperPostData) => {
     if (!isValidPrice(price)) msg = `Price must be between $0 and $9,999.99.`;
 
     if (images.length<=0 || images.length>5) msg = `Must provide 1 to 5 images.`;
-    for (let i=0; i<images.length; i++) {
-        const resValidPost = isValidPostDataImage(images[i]);
-        if (!resValidPost.valid) msg = (resValidPost.nextres as any).msg;
-    }
 
     if (months<=0) msg = `Listing period must be over 0.`;
 
