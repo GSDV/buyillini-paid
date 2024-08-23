@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
-import { getDraftedPost } from '@util/prisma/actions/posts';
+import { createDraftedPost, getDraftedPost } from '@util/prisma/actions/posts';
 
 import { isValidUser } from '@util/api/auth';
 
@@ -18,6 +18,11 @@ export async function GET(req: NextRequest) {
         if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
 
         const draftedPostPrisma = await getDraftedPost(user.id);
+
+        if (!draftedPostPrisma) {
+            const newDraftedPostPrisma = await createDraftedPost(user.id);
+            return NextResponse.json({ cStatus: 200, msg: `Success (made new draft post).`, freeMonths: user.freeMonths, draftedPost: newDraftedPostPrisma }, { status: 200 });
+        }
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, freeMonths: user.freeMonths, draftedPost: draftedPostPrisma }, { status: 200 });
     } catch (err) {

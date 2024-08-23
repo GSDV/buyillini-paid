@@ -1,6 +1,7 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 
 
@@ -58,4 +59,19 @@ export const deleteFromS3 = async (key: string) => {
     }
     const cmd = new DeleteObjectCommand(params);
     await s3Client.send(cmd);
+}
+
+
+
+export const getSignedS3Url = async (prefix: string, type: string) => {
+    const key = prefix + uuidv4();
+
+    const command = new PutObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: key,
+        ContentType: type
+    });
+
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    return {signedUrl, key};
 }

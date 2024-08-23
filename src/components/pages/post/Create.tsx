@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -12,22 +14,23 @@ import { Alert, AlertType } from '@components/Alert';
 import createPostStyles from '@styles/pages/create-post.module.css';
 import { colorScheme } from '@styles/colors';
 import Loading from '@components/Loading';
+import { DisplayStringImage } from '@components/DisplayImage';
 
 
 
-export default function Create({ freeMonths, pastPost, pastImages }: { freeMonths: number, pastPost: Post | null, pastImages: File[] }) {
+export default function Create({ freeMonths, draftedPost }: { freeMonths: number, draftedPost: Post }) {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [alert, setAlert] = useState<AlertType | null>(null);
 
-    const [title, setTitle] = useState<string>(!pastPost ? '' : pastPost.title);
-    const [description, setDescription] = useState<string>(!pastPost ? '' : pastPost.description);
-    const [category, setCategory] = useState<string>(!pastPost ? CATEGORIES[0].link : pastPost.category);
-    const [size, setSize] = useState<string>(!pastPost ? CLOTHING_SIZES[0] : pastPost.size);
-    const [gender, setGender] = useState<string>(!pastPost ? GENDERS[0] : pastPost.gender);
-    const [price, setPrice] = useState<number>(!pastPost ? 0.00 : Number(pastPost.price));
-    const [images, setImages] = useState<File[]>(pastImages);
-    const [months, setMonths] = useState<number>(!pastPost ? 1 : pastPost.duration);
+    const [title, setTitle] = useState<string>(draftedPost.title);
+    const [description, setDescription] = useState<string>(draftedPost.description);
+    const [category, setCategory] = useState<string>(draftedPost.category);
+    const [size, setSize] = useState<string>(draftedPost.size);
+    const [gender, setGender] = useState<string>(draftedPost.gender);
+    const [price, setPrice] = useState<number>(Number(draftedPost.price));
+    const [images, setImages] = useState<string[]>(draftedPost.images);
+    const [months, setMonths] = useState<number>(Number(draftedPost.duration));
     const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
 
 
@@ -152,7 +155,7 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
                     </div>
                 </div>
 
-                <Images images={images} setImages={setImages} />
+                <Images value={images} setValue={setImages} postId={draftedPost.id} />
 
                 <ListingPeriod months={months} setMonths={setMonths} />
 
@@ -170,60 +173,97 @@ export default function Create({ freeMonths, pastPost, pastImages }: { freeMonth
 
 
 
+// value and setValue is for the string[]
 
-function Images({ images, setImages }: { images: File[], setImages: React.Dispatch<React.SetStateAction<File[]>>}) {
+// Do not keep track of files
+export function Images({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
     const msContext = useMenuShadowContext();
     const imgRef = useRef<HTMLInputElement | null>(null);
 
-    const handleUpload = (img: File | undefined) => {
-        if (images.length >= 5 || img==undefined) return;
-        const newImages = [...images, img];
-        setImages(newImages);
+    const [loading, setLoading] = useState<boolean>(false);
+
+
+    const handleUpload = async (img: File | undefined) => {
+        if (value.length >= 5 || img==undefined) return;
+
+
+        const res = await fetch(`/api`, {
+            method: 'POST',
+            body: JSON.stringify({ postId, fileType: img.type, fileSize: img.size }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const resJson = await res.json();
+        console.log(resJson)
+        if (resJson.cStatus==200) {
+            const ee = await fetch(resJson.signedUrl, {
+                method: 'PUT',
+                body: img,
+                headers: { 'Content-Type': img.type },
+            });
+            const eeJson = await ee.json();
+            console.log(eeJson)
+        }
+
+
+        const newImages = [...value, resJson.key];
+        setValue(newImages);
         if (imgRef.current) imgRef.current.value = '';
     };
 
-    const handleDelete = (idx: number) => {
-        const newImages = [...images];
-        newImages.splice(idx, 1);
-        setImages(newImages);
+    const handleDelete = async (idx: number) => {
+        setLoading(true);
+        const newImages = [...value];
+        const deletedImg = newImages.splice(idx, 1)[0];
+        
+        await fetch(`/api`, {
+            method: 'DELETE',
+            body: JSON.stringify({ deletedImg, postId }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        setValue(newImages);
+        setLoading(false);
     }
 
     const openImage = (idx: number) => {
-        msContext.setContent(<DisplayImage img={images[idx]} />);
+        msContext.setContent(<DisplayStringImage img={value[idx]} />);
         msContext.openMenu();
     }
 
     return (
-            <div className={createPostStyles.formItem} style={{width: '100%'}}>
-                <h4>Images</h4>
+        <div className={createPostStyles.formItem} style={{width: '100%'}}>
+            <h4>Images</h4>
 
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
-                    {images.map((img, i) => (
-                        <div key={i} className={createPostStyles.imgWrapper}>
-                            <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                            <img src={URL.createObjectURL(img)} onClick={() => openImage(i)} />
-                        </div>
-                    ))}
+            {loading ?
+                <Loading />
+            :
+            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
+                {value.map((img: any, i: any) => (
+                    <div key={i} className={createPostStyles.imgWrapper}>
+                        <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
+                        <img src={(img)} onClick={() => openImage(i)} />
+                    </div>
+                ))}
 
-                    {images.length<5 &&
-                        <>
-                            <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
-                            <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={(e) => handleUpload(e.target.files?.[0])} style={{display: 'none'}} />
-                        </>
-                    }
-                </div>
-
+                {value.length<5 && <>
+                    <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
+                    <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={(e) => handleUpload(e.target.files?.[0])} style={{display: 'none'}} />
+                </>}
             </div>
-    );
-}
-
-function DisplayImage({ img }: { img: File }) {
-    return (
-        <div style={{ position: 'relative', width: '180px', height: '315px', backgroundColor: 'black' }} >
-            <img src={URL.createObjectURL(img)} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+        }
         </div>
     );
 }
+
+
+
+// function DisplayImage({ img }: { img: File }) {
+//     return (
+//         <div style={{ position: 'relative', width: '180px', height: '315px', backgroundColor: 'black' }} >
+//             <img src={URL.createObjectURL(img)} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+//         </div>
+//     );
+// }
 
 
 

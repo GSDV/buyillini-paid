@@ -2,9 +2,10 @@
 
 import { UserFiltersType } from '@components/pages/shop/Filters';
 import { hasBuyerInterestExpired } from '@util/api/posts';
-import { MONTH_TO_MILLI, POST_PER_PAGE, POST_PER_PAGE_ACCOUNT } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, MONTH_TO_MILLI, POST_PER_PAGE, POST_PER_PAGE_ACCOUNT } from '@util/global';
 import { prisma } from '@util/prisma/client';
 import { deleteFromS3, uploadPostPicture } from '@util/s3/aws';
+import { emitWarning } from 'process';
 
 
 
@@ -125,6 +126,26 @@ export const getDraftedPost = async (id: string) => {
     return postPrisma;
 }
 
+export const createDraftedPost = async (id: string) => {
+    const postPrisma = await prisma.post.create({
+        data: {
+            sellerId: id,
+            title: '',
+            description: '',
+            category: CATEGORIES[0].link,
+            size: CLOTHING_SIZES[0],
+            gender: GENDERS[0],
+            price: 0,
+            images: [],
+            duration: 1,
+            isPaid: true,
+            freeMonthsUsed: 0,
+            expireDate: new Date(Date.now() + MONTH_TO_MILLI),
+        }
+    });
+    return postPrisma;
+}
+
 export const deleteDraftedPosts = async (id: string) => {
     const posts = await prisma.post.findMany({
         where: { sellerId: id, active: false }
@@ -236,3 +257,30 @@ export const didUserBuyPostRecently = async (buyerId: string, postId: string) =>
 
 
 
+// export const deletePostImage = async (postId: string, imageKey: string) => {
+//     const updatedPost = await prisma.post.update({
+//         where: { id: postId },
+//         data: {
+//             images: {
+//                 set: { images: { array_remove: imageKey } }
+//             }
+//         }
+//     })
+  
+// }
+
+
+
+export const updatePostImagesArr = async (postId: string, images: string[]) => {
+    await prisma.post.update({
+        where: { id: postId }, 
+        data: { images: images }
+    });
+}
+
+export const addImageKeyToPost = async (postId: string, imgKey: string) => {
+    await prisma.post.update({
+        where: { id: postId }, 
+        data: { images: { push: imgKey } }
+    });
+}
