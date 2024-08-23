@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 import { ACCEPTED_FILES, CONTACT_EMAIL, DOMAIN } from '@util/global';
 
-import { deleteFromS3, uploadPfp } from '@util/s3/aws';
+// import { deleteFromS3, uploadPfp } from '@util/s3/aws';
 
 import { getRedactedUserFromAuth, getRedactedUserWithItems, markUserAsDeleted, updateUser } from '@util/prisma/actions/user';
 
@@ -42,56 +42,56 @@ export async function GET(req: NextRequest, { params }: { params: { netId: strin
 
 
 
-// Update account (settings form)
-export async function POST(req: NextRequest) {
-    try {
-        const data = await req.formData();
+// // Update account (settings form)
+// export async function POST(req: NextRequest) {
+//     try {
+//         const data = await req.formData();
 
-        const authTokenCookie = cookies().get('authtoken');
-        if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+//         const authTokenCookie = cookies().get('authtoken');
+//         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
-        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
-        if (!userPrisma) return NextResponse.json({ cStatus: 404, msg: `User does not exist. Sign up.` }, { status: 400 });
+//         const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
+//         if (!userPrisma) return NextResponse.json({ cStatus: 404, msg: `User does not exist. Sign up.` }, { status: 400 });
 
-        const resValidUser = isValidUser(userPrisma);
-        if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
+//         const resValidUser = isValidUser(userPrisma);
+//         if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
 
-        if (!data) return NextResponse.json({ cStatus: 101, msg: `No data provided. Refresh this page.` }, { status: 400 });
+//         if (!data) return NextResponse.json({ cStatus: 101, msg: `No data provided. Refresh this page.` }, { status: 400 });
 
-        const userUpdateData: any = {};
+//         const userUpdateData: any = {};
 
-        // DISPLAY NAME
-        const displayName = data.get('displayName');
-        if (!displayName) return NextResponse.json({ cStatus: 101, msg: `Display name is required.` }, { status: 400 });
-        userUpdateData.displayName = displayName;
+//         // DISPLAY NAME
+//         const displayName = data.get('displayName');
+//         if (!displayName) return NextResponse.json({ cStatus: 101, msg: `Display name is required.` }, { status: 400 });
+//         userUpdateData.displayName = displayName;
 
-        // PHONE NUMBER
-        const phoneNumber = data.get('phoneNumber');
-        if (phoneNumber != null) {
-            const phoneStr = phoneNumber as string;
-            if (!isValidPhoneNumber(phoneStr)) return NextResponse.json({ cStatus: 101, msg: `Phone number not valid. Enter 10 numbers.` }, { status: 400 });
-            userUpdateData.phoneNumber = phoneStr.replace(/[() "-]/g, '');
-        }
+//         // PHONE NUMBER
+//         const phoneNumber = data.get('phoneNumber');
+//         if (phoneNumber != null) {
+//             const phoneStr = phoneNumber as string;
+//             if (!isValidPhoneNumber(phoneStr)) return NextResponse.json({ cStatus: 101, msg: `Phone number not valid. Enter 10 numbers.` }, { status: 400 });
+//             userUpdateData.phoneNumber = phoneStr.replace(/[() "-]/g, '');
+//         }
 
-        // PFP
-        const pfp = data.get('pfp');
-        if (pfp instanceof File) {
-            if (!ACCEPTED_FILES.includes(pfp.type)) return NextResponse.json({ cStatus: 102, msg: `Please upload a png, jpg, or webp file.` }, { status: 400 });
-            if (pfp.size > 5000000) return NextResponse.json({ cStatus: 102, msg: `Please upload a picture under 5 MBs.` }, { status: 400 });
+//         // PFP
+//         const pfp = data.get('pfp');
+//         if (pfp instanceof File) {
+//             if (!ACCEPTED_FILES.includes(pfp.type)) return NextResponse.json({ cStatus: 102, msg: `Please upload a png, jpg, or webp file.` }, { status: 400 });
+//             if (pfp.size > 5000000) return NextResponse.json({ cStatus: 102, msg: `Please upload a picture under 5 MBs.` }, { status: 400 });
 
-            const pfpBytes = await pfp.arrayBuffer();
-            const buffer = Buffer.from(pfpBytes);
-            if (userPrisma.profilePicture != '') await deleteFromS3(userPrisma.profilePicture);
-            const pfpKey = await uploadPfp(buffer, pfp.type);
-            userUpdateData.profilePicture = pfpKey;
-        }
+//             const pfpBytes = await pfp.arrayBuffer();
+//             const buffer = Buffer.from(pfpBytes);
+//             if (userPrisma.profilePicture != '') await deleteFromS3(userPrisma.profilePicture);
+//             const pfpKey = await uploadPfp(buffer, pfp.type);
+//             userUpdateData.profilePicture = pfpKey;
+//         }
         
-        await updateUser(userPrisma.id, userUpdateData);
-        return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
-    } catch (err) {
-        return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
-    }
-}
+//         await updateUser(userPrisma.id, userUpdateData);
+//         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
+//     } catch (err) {
+//         return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
+//     }
+// }
 
 
 

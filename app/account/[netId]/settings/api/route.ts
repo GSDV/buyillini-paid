@@ -3,17 +3,19 @@ import { cookies } from 'next/headers';
 
 import { getRedactedUserFromAuth, updateUser } from '@util/prisma/actions/user';
 import { ACCEPTED_FILES, IMG_SIZE_LIMIT, PFP_IMG_PREFIX } from '@util/global';
-import { deleteFromS3, getSignedS3Url } from '@util/s3/aws';
+import { cropPfpBuffer, cropPostBuffer, deleteFromS3, getFromS3, getSignedS3Url, uploadToS3 } from '@util/s3/aws';
 import { isValidUser } from '@util/api/auth';
 import { isValidPhoneNumber } from '@util/api/user';
+
+// we may not need this, it shoudla wlasy be webp
+import {fileTypeFromBuffer} from 'file-type';
+import { getPost } from '@util/prisma/actions/posts';
 
 
 
 // Get a signed AWS S3 URL to use for a profile picture upload
 
 // do not fetch this route right after user upoads. Wait until they hit submit
-
-// consider adding the display name and phone number to this route too.
 
 // CHECK OTHER TIME WE DO FILE UPLOAD FROM CLIENT. NEED TO SEE IF THE ACCOUNT IS ACTIVE, UNBANNED, and NOT DELETED
 export async function POST(req: NextRequest) {
@@ -45,7 +47,6 @@ export async function POST(req: NextRequest) {
             if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
             if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 5mb.` }, { status: 400 });
 
-        // test deleting a pfp that doesnt actually exist from s3 bucket
             const [resS3, resDelete] = await Promise.all([
                 getSignedS3Url(PFP_IMG_PREFIX, fileType),
                 deleteFromS3(userPrisma.id),
@@ -65,3 +66,51 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
     }
 }
+
+
+
+// Crop the newly uploaded image
+// Need server environment for "sharp" library. Consider cropping in client in the future.
+export async function PUT(req: NextRequest) {
+    try {
+        const { operation, key, postId } = await req.json();
+
+        if (!operation || !key) return NextResponse.json({ cStatus: 101, msg: `Missing operation or key.` }, { status: 400 });
+
+
+        
+        const authTokenCookie = cookies().get(`authtoken`);
+        if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
+        if (!userPrisma) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+        const resValidUser = isValidUser(userPrisma);
+        if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
+
+
+
+        const res = await getFromS3(key);
+        const arrayBuffer = await res.Body?.transformToByteArray();
+        if (!arrayBuffer) return NextResponse.json({ cStatus: 102, msg: `Could not find image.` }, { status: 400 });
+        const buffer = Buffer.from(arrayBuffer);
+
+        if (operation=='CROP_PFP') {
+            if (key!=userPrisma.profilePicture) return NextResponse.json({ cStatus: 401, msg: `Not your profile picture.` }, { status: 400 });
+            await cropPfpBuffer(buffer);
+        } else if (operation=='CROP_POST') {
+            const postPrisma = await getPost(postId);
+            if (!postPrisma || postPrisma.sellerId!=userPrisma.id || postPrisma.deleted || !postPrisma.active || !postPrisma.images.includes(key)) return NextResponse.json({ cStatus: 401, msg: `Not your post.` }, { status: 400 });
+            await cropPostBuffer(buffer);
+        }
+
+        const type = await fileTypeFromBuffer(buffer);
+        console.log("type: ", type)
+
+        await uploadToS3(buffer, key, (type as any).ext);
+
+        return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
+    } catch (err) {
+        return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
+    }
+}
+
+
