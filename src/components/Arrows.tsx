@@ -16,6 +16,8 @@ export default function PageArrows({ page, max, setPage }: { page: number, max: 
         [arrowStyles.hidden]: (page>=max)
     });
 
+    console.log("max: ", max);
+    
     return (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
             <IoIosArrowBack className={arrowLeft} onClick={()=>setPage(page-1)} />
