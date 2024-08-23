@@ -173,9 +173,7 @@ export default function Create({ freeMonths, draftedPost }: { freeMonths: number
 
 
 
-// value and setValue is for the string[]
 
-// Do not keep track of files
 export function Images({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
     const msContext = useMenuShadowContext();
     const imgRef = useRef<HTMLInputElement | null>(null);
@@ -194,15 +192,14 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
         });
 
         const resJson = await res.json();
-        console.log(resJson)
+        console.log("resJson B: ", resJson)
         if (resJson.cStatus==200) {
             const ee = await fetch(resJson.signedUrl, {
                 method: 'PUT',
                 body: img,
                 headers: { 'Content-Type': img.type },
             });
-            const eeJson = await ee.json();
-            console.log(eeJson)
+            console.log(ee)
         }
 
 
