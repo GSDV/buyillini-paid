@@ -194,17 +194,13 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
         });
 
         const resJson = await res.json();
-        console.log("resJson B: ", resJson)
         if (resJson.cStatus==200) {
             const ee = await fetch(resJson.signedUrl, {
                 method: 'PUT',
                 body: img,
                 headers: { 'Content-Type': img.type },
             });
-            console.log(ee)
         }
-
-
         const newImages = [...value, resJson.key];
         setValue(newImages);
         if (imgRef.current) imgRef.current.value = '';
@@ -215,11 +211,13 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
         const newImages = [...value];
         const deletedImg = newImages.splice(idx, 1)[0];
         
-        await fetch(`/api`, {
+        const resDelete = await fetch(`/api`, {
             method: 'DELETE',
             body: JSON.stringify({ deletedImg, postId }),
             headers: { 'Content-Type': 'application/json' }
         });
+        const resDeleteJson = await resDelete.json();
+        console.log("resDeleteJson C: ", resDeleteJson)
         setValue(newImages);
         setLoading(false);
     }
