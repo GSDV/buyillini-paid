@@ -15,3 +15,7 @@ export function CheckIfLoading({ loading, content }: { loading: boolean, content
     if (loading) return <Loading />;
     return <>{content}</>;
 }
+
+export function LoadingIconBlack() {
+    return <LoadingIcons.TailSpin stroke={colorScheme.black} />;
+}

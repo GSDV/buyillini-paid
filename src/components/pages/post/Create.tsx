@@ -13,7 +13,7 @@ import { Alert, AlertType } from '@components/Alert';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
 import { colorScheme } from '@styles/colors';
-import Loading from '@components/Loading';
+import Loading, { LoadingIconBlack } from '@components/Loading';
 import { DisplayStringImage } from '@components/DisplayImage';
 
 
@@ -232,7 +232,7 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
             <h4>Images</h4>
 
             {loading ?
-                <Loading />
+                <LoadingIconBlack />
             :
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
                 {value.map((img: any, i: any) => (
