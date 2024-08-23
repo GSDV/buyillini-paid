@@ -32,7 +32,7 @@ export const cropPostBuffer = async (buffer: Buffer) => {
 }
 
 export const cropPfpBuffer = async (buffer: Buffer) => {
-    const croppedBuffer = await sharp(buffer).resize({ width: 250, height: 250, fit: 'contain' }).flatten({background: { r: 0, g: 0, b: 0 }}).webp({ quality: 80, effort: 6 }).toBuffer();
+    const croppedBuffer = await sharp(buffer).resize({ width: 250, height: 250, fit: 'cover' }).flatten({background: { r: 0, g: 0, b: 0 }}).webp({ quality: 80, effort: 6 }).toBuffer();
     return croppedBuffer;
 }
 
