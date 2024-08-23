@@ -6,7 +6,7 @@ import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { RedactedUser } from '@util/prisma/types';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { MONTH_TO_MILLI } from '@util/global';
-import { uploadPostPicture } from '@util/s3/aws';
+// import { uploadPostPicture } from '@util/s3/aws';
 
 
 
