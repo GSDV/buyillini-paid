@@ -5,7 +5,6 @@ import { hasBuyerInterestExpired } from '@util/api/posts';
 import { CATEGORIES, CLOTHING_SIZES, GENDERS, MONTH_TO_MILLI, POST_PER_PAGE, POST_PER_PAGE_ACCOUNT } from '@util/global';
 import { prisma } from '@util/prisma/client';
 import { deleteFromS3 } from '@util/s3/aws';
-import { emitWarning } from 'process';
 
 
 

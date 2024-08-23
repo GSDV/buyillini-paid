@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
         }
 
         let signedUrl = '';
+        let key = '';
         if (fileType != undefined && fileSize != undefined) {
             if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
             if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 5mb.` }, { status: 400 });
@@ -53,14 +54,15 @@ export async function POST(req: NextRequest) {
             ]);
 
             userUpdateData.profilePicture = resS3.key;
-            signedUrl = resS3.signedUrl
+            signedUrl = resS3.signedUrl;
+            key = resS3.key;
         }
         
         
         await updateUser(userPrisma.id, userUpdateData);
         
         // User has uploaded new profile picture
-        if (signedUrl!=='') return NextResponse.json({ cStatus: 204, msg: `Success.`, signedUrl: signedUrl }, { status: 200 });
+        if (signedUrl!=='') return NextResponse.json({ cStatus: 204, msg: `Success.`, signedUrl: signedUrl, key: key }, { status: 200 });
         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });

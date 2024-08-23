@@ -83,7 +83,7 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
 
     const attemptUpdate = async () => {
         setLoading(true);
-        const res = await fetch('/account/netId/settings/api/', {
+        const res = await fetch(`/account/netId/settings/api`, {
             method: 'POST',
             body: JSON.stringify({ displayName, phoneNumber, fileType: uploadedPfp?.type, fileSize: uploadedPfp?.size })
         });
@@ -94,6 +94,10 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
                 method: 'PUT',
                 body: uploadedPfp,
                 headers: { 'Content-Type': uploadedPfp.type },
+            });
+            await fetch(`/account/netId/settings/api`, {
+                method: 'PUT',
+                body: JSON.stringify({ operation: 'CROP_PFP', key: resJson.key })
             });
         }
 
