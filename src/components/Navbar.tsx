@@ -68,20 +68,23 @@ function NavProfile() {
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchInfo = async () => {
+        console.log("AAA")
         setLoading(true);
+        console.log("BBB")
         const res = await fetch(`/api`, { method: 'GET' });
         const resJson = await res.json();
+        console.log("CCC")
         if (resJson.user != null) {
             const pfpUrl = getPfpUrl(resJson.user.profilePicture);
             setNetId(resJson.user.netId);
             setPfp(pfpUrl);
             console.log(resJson.user.netId, pfpUrl);
         }
+        console.log("DDD", resJson)
         setLoading(false);
     }
 
     useEffect(() => {
-        console.log("AAA")
         fetchInfo();
     }, [authContext.authToken]);
 
