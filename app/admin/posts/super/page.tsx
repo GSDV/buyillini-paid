@@ -55,7 +55,7 @@ export default function Page() {
                 {alert && <Alert alert={alert} variations={[]} />}
                     {postId!='' && <h4><b>LINK: </b> <Link href={postId}>postId</Link></h4>}
                     <h3>Create Super Post</h3>
-                    <CreateSuperPost action={action} draftedPost={draftedPost as Post} />
+                    {draftedPost && <CreateSuperPost action={action} draftedPost={draftedPost} />}
                 </>
             }
         </VerticalLayout>
