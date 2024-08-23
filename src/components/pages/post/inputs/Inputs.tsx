@@ -233,9 +233,16 @@ export function ListingPeriod({ value, setValue }: InputValue) {
 
     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        const val = e.target.value==='' ? '' : e.target.value;
-        setValue(val);
-        const newMonths = val==='' ? 1 : Number(val);
+        let newMonths: number = 1;
+
+        if (e.target.value==='') {
+            setValue('');
+            newMonths = 1;
+        } else {
+            const val = Math.min(Math.max(1, Number(e.target.value)), MAX_LISTING_PERIOD);
+            setValue(val.toString());
+            newMonths = val;
+        }
         const offset = newMonths * MONTH_TO_MILLI;
         const expiration = new Date(Date.now() + offset);
         setExpires(expiration);
