@@ -47,20 +47,6 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         return postData;
     }
 
-    // const getData = () => {
-    //     const postData: Record<string, any> = {};
-    //     postData.title = title;
-    //     postData.description = description;
-    //     postData.category = category;
-    //     postData.size = size;
-    //     postData.gender = gender;
-    //     postData.price = String(price);
-    //     postData.images = images;
-    //     postData.months = String(months);
-    //     postData.userFreeMonths = String(userFreeMonths);
-    //     return postData;
-    // }
-
     const setCategoryField = (value: string) => {
         if (NO_SIZE_GENDER_CATEGORIES.includes(value)) {
             setSize('');
