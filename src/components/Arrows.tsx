@@ -16,8 +16,16 @@ export default function PageArrows({ page, max, setPage }: { page: number, max: 
         [arrowStyles.hidden]: (page>=max)
     });
 
-    console.log("max: ", max);
-    
+
+    // No results found, so display a 1 only
+    if (max==0) {
+        return (
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+                <h5>1</h5>
+            </div>
+        );
+    }
+
     return (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
             <IoIosArrowBack className={arrowLeft} onClick={()=>setPage(page-1)} />
