@@ -5,6 +5,7 @@ import { isAdmin, createSuperPost, SuperPostData } from '@util/prisma/actions/ad
 import { CATEGORIES, CLOTHING_SIZES, GENDERS, isRegCat } from '@util/global';
 import { isValidPostDataImage, isValidPrice } from '@util/api/posts';
 import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
+import { getPost } from '@util/prisma/actions/posts';
 
 
 
@@ -15,6 +16,7 @@ export async function POST(req: NextRequest) {
         if (!resPermissions) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
 
         const data = await req.formData();
+        const postId = data.get('postId');
         const postData = getSuperPostData(data);
         if (!postData) return NextResponse.json({ cStatus: 101, msg: `Some fields are missing or invalid.` }, { status: 400 });
         const resValidPost = isValidSuperPostData(postData);
@@ -22,7 +24,14 @@ export async function POST(req: NextRequest) {
 
         const adminPrisma = await getRedactedUserFromAuth((authTokenCookie as any).value);
         if (!adminPrisma) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
-        const postId = await createSuperPost(postData, adminPrisma.id);
+
+        if (!(typeof postId === 'string')) return NextResponse.json({ cStatus: 400, msg: `PostId null.` }, { status: 400 });
+
+        const postPrisma = await getPost(postId);
+        if (!postPrisma) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
+        if (adminPrisma.id != postPrisma.sellerId) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
+        // const postId = await createSuperPost(postData, adminPrisma.id);
+        await createSuperPost(postId, postData, adminPrisma.id);
 
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {
@@ -39,7 +48,7 @@ const getSuperPostData = (formData: FormData) => {
     const size = formData.get('size');
     const gender = formData.get('gender');
     const price = formData.get('price');
-    const images = formData.getAll('images') as File[];
+    const images = formData.getAll('images') as string[];
     const months = formData.get('months');
 
     if (!title || !description || !category || (isRegCat(category) && (!size || !gender)) || !price || !images || !months) return null;

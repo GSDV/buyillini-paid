@@ -91,21 +91,17 @@ export interface SuperPostData {
     size: string,
     gender: string,
     price: number,
-    images: File[],
+    images: string[],
     months: number,
 }
 
-export const createSuperPost = async (postData: SuperPostData, adminId: string) => {
+export const createSuperPost = async (postId: string, postData: SuperPostData, adminId: string) => {
     const expiration = new Date(Date.now() + postData.months*MONTH_TO_MILLI);
-    const imageUrls: string[] = [];
-    for (let i=0; i<postData.images.length; i++) {
-        const imgUrl = await uploadPostPicture(postData.images[i]);
-        imageUrls.push(imgUrl);
-    }
-    const { images, months, ...cleanedData } = postData;
-    const createData = { sellerId: adminId, ...cleanedData, images: imageUrls, duration: months, freeMonthsUsed: 0, isPaid: false, expireDate: expiration, active: true };
+    const { months, ...cleanedData } = postData;
+    const createData = { sellerId: adminId, ...cleanedData, duration: months, freeMonthsUsed: 0, isPaid: false, expireDate: expiration, active: true };
 
-    const res = await prisma.post.create({
+    const res = await prisma.post.update({
+        where: { id: postId },
         data: createData
     });
     return res.id;
