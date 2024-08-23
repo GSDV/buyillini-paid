@@ -30,33 +30,33 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
 
 
-    // const getData = () => {
-    //     const postData = new FormData();
-    //     postData.set('title', title);
-    //     postData.set('description', description);
-    //     postData.set('category', category);
-    //     postData.set('size', size);
-    //     postData.set('gender', gender);
-    //     postData.set('price', String(price));
-    //     for (let i=0; i<images.length; i++) postData.append('images', images[i]);
-    //     postData.set('months', String(months));
-    //     postData.set('userFreeMonths', String(userFreeMonths));
-    //     return postData;
-    // }
-
     const getData = () => {
-        const postData: Record<string, any> = {};
-        postData.title = title;
-        postData.description = description;
-        postData.category = category;
-        postData.size = size;
-        postData.gender = gender;
-        postData.price = String(price);
-        postData.images = images;
-        postData.months = String(months);
-        postData.userFreeMonths = String(userFreeMonths);
+        const postData = new FormData();
+        postData.set('title', title);
+        postData.set('description', description);
+        postData.set('category', category);
+        postData.set('size', size);
+        postData.set('gender', gender);
+        postData.set('price', String(price));
+        for (let i=0; i<images.length; i++) postData.append('images', images[i]);
+        postData.set('months', String(months));
+        postData.set('userFreeMonths', String(userFreeMonths));
         return postData;
     }
+
+    // const getData = () => {
+    //     const postData: Record<string, any> = {};
+    //     postData.title = title;
+    //     postData.description = description;
+    //     postData.category = category;
+    //     postData.size = size;
+    //     postData.gender = gender;
+    //     postData.price = String(price);
+    //     postData.images = images;
+    //     postData.months = String(months);
+    //     postData.userFreeMonths = String(userFreeMonths);
+    //     return postData;
+    // }
 
     const setCategoryField = (value: string) => {
         if (NO_SIZE_GENDER_CATEGORIES.includes(value)) {
