@@ -292,13 +292,13 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
 // }
 export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
     const { value, setValue } = iv;
-    const max = Math.max(MAX_LISTING_PERIOD, freeMonths);
+    const max = Math.min(MAX_LISTING_PERIOD, freeMonths);
     // const [inputValue, setInputValue] = useState<string>(value);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const val = e.target.value;
-        const newVal = Math.max(max, Number(val)).toString();
+        const newVal = Math.min(max, Number(val)).toString();
         setValue(newVal);
         // setInputValue(val);
         // if (val === '') setValue('');

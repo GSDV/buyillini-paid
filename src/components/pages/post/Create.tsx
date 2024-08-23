@@ -27,7 +27,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const [price, setPrice] = useState<number>(Number(draftedPost.price));
     const [images, setImages] = useState<string[]>(draftedPost.images);
     const [months, setMonths] = useState<number>(Number(draftedPost.duration));
-    const [userFreeMonths, setUserFreeMonths] = useState<string>('');
+    const [userFreeMonths, setUserFreeMonths] = useState<string>('0');
     // const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
 
 
