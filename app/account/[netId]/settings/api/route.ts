@@ -94,20 +94,23 @@ export async function PUT(req: NextRequest) {
         const arrayBuffer = await res.Body?.transformToByteArray();
         if (!arrayBuffer) return NextResponse.json({ cStatus: 102, msg: `Could not find image.` }, { status: 400 });
         const buffer = Buffer.from(arrayBuffer);
+        let croppedBuffer: Buffer;
 
         if (operation=='CROP_PFP') {
             if (key!=userPrisma.profilePicture) return NextResponse.json({ cStatus: 401, msg: `Not your profile picture.` }, { status: 400 });
-            await cropPfpBuffer(buffer);
+            croppedBuffer = await cropPfpBuffer(buffer);
         } else if (operation=='CROP_POST') {
             const postPrisma = await getPost(postId);
             if (!postPrisma || postPrisma.sellerId!=userPrisma.id || postPrisma.deleted || !postPrisma.active || !postPrisma.images.includes(key)) return NextResponse.json({ cStatus: 401, msg: `Not your post.` }, { status: 400 });
-            await cropPostBuffer(buffer);
+            croppedBuffer = await cropPostBuffer(buffer);
+        } else {
+            return NextResponse.json({ cStatus: 102, msg: `Wrong operation.` }, { status: 400 });
         }
 
         const type = await fileTypeFromBuffer(buffer);
         console.log("type: ", type)
 
-        await uploadToS3(buffer, key, (type as any).ext);
+        await uploadToS3(croppedBuffer, key, (type as any).ext);
 
         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
     } catch (err) {

@@ -95,10 +95,12 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
                 body: uploadedPfp,
                 headers: { 'Content-Type': uploadedPfp.type },
             });
-            await fetch(`/account/netId/settings/api`, {
+            const resCrop = await fetch(`/account/netId/settings/api`, {
                 method: 'PUT',
                 body: JSON.stringify({ operation: 'CROP_PFP', key: resJson.key })
             });
+            const resCropJson = await resCrop.json();
+            console.log("resCropJson: ", resCropJson)
         }
 
         if (resJson.cStatus==200 || resJson.cStatus==204) {
