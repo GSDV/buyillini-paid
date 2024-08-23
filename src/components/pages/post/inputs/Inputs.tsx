@@ -186,46 +186,74 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
 
 
 
+// export function ListingPeriod({ value, setValue }: InputValue) {
+//     const [expires, setExpires] = useState<Date>(new Date(Date.now() + MONTH_TO_MILLI));
+//     // const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
+//     // const maxValue = value === '' ? '' : value;
+
+//     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
+//         const newMonths = Number(e.target.value);
+//         const offset = newMonths * MONTH_TO_MILLI;
+//         const expiration = new Date(Date.now() + offset);
+//         setExpires(expiration);
+
+//         setValue(newMonths);
+//     }
+
+//     // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     //     e.preventDefault();
+//     //     const val = e.target.value;
+//     //     if (val === '') {
+//     //         setInputValue(val);
+//     //         setValue('');
+//     //     } else {
+//     //         const numVal = Number(val);
+//     //         setInputValue(val);
+//     //         setValue((MAX_LISTING_PERIOD < numVal) ? MAX_LISTING_PERIOD : numVal);
+//     //     }
+//     // }
+
+//     return (
+//         <div className={createPostStyles.formItem}>
+//             <h4>Listing Period</h4>
+            
+//             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
+//                 <input type='number' min='1' step='1' max='10' style={{width: 'fit-content'}} value={value} onChange={calcExpiration} />
+//                 <h4>{value==1 ? 'month' : 'months'}</h4>
+//             </div>
+            
+//             <h5 className={createPostStyles.subText}>Post will expire {formatDate(expires)}</h5>
+//         </div>
+//     );
+// }
+
+
 export function ListingPeriod({ value, setValue }: InputValue) {
     const [expires, setExpires] = useState<Date>(new Date(Date.now() + MONTH_TO_MILLI));
-    // const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
-    // const maxValue = value === '' ? '' : value;
 
     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newMonths = Number(e.target.value);
+        e.preventDefault();
+        const val = e.target.value==='' ? '' : e.target.value;
+        setValue(val);
+        const newMonths = val==='' ? 1 : Number(val);
         const offset = newMonths * MONTH_TO_MILLI;
         const expiration = new Date(Date.now() + offset);
         setExpires(expiration);
-
-        setValue(newMonths);
     }
-
-    // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     e.preventDefault();
-    //     const val = e.target.value;
-    //     if (val === '') {
-    //         setInputValue(val);
-    //         setValue('');
-    //     } else {
-    //         const numVal = Number(val);
-    //         setInputValue(val);
-    //         setValue((MAX_LISTING_PERIOD < numVal) ? MAX_LISTING_PERIOD : numVal);
-    //     }
-    // }
 
     return (
         <div className={createPostStyles.formItem}>
             <h4>Listing Period</h4>
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                <input type='number' min='1' step='1' max='10' style={{width: 'fit-content'}} value={value} onChange={calcExpiration} />
-                <h4>{value==1 ? 'month' : 'months'}</h4>
+                <input type='number' placeholder='1' min='1' step='1' max={MAX_LISTING_PERIOD} style={{width: '100px'}} value={value} onChange={calcExpiration} />
             </div>
             
             <h5 className={createPostStyles.subText}>Post will expire {formatDate(expires)}</h5>
         </div>
     );
 }
+
 
 
 
@@ -245,7 +273,7 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
             <h4>Super Listing Period</h4>
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                <input type='number' min='1' step='1' style={{width: '100px'}} value={value} onChange={calcExpiration} />
+                <input type='number' placeholder='1' min='1' step='1' style={{width: '100px'}} value={value} onChange={calcExpiration} />
                 <h4>{value==1 ? 'month' : 'months'}</h4>
             </div>
             
@@ -256,44 +284,9 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
 
 
 
-// export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
-//     const { value, setValue } = iv;
-//     const max = Math.max(MAX_LISTING_PERIOD, freeMonths);
-//     const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
-
-//     // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     //     e.preventDefault();
-//     //     const val = Number(e.target.value);
-//     //     setValue((max < val) ? max : val);
-//     // }
-//     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-//         e.preventDefault();
-//         const val = e.target.value;
-//         setInputValue(val);
-//         if (val === '') setValue('');
-//         else setValue(Math.max(max, Number(val)));
-//     }
-
-//     const maxValue = value === '' ? '' : value;
-    
-//     return (
-//         <div className={createPostStyles.formItem}>
-//             <h4>Free Months</h4>
-            
-//             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-//                 <h4>Use</h4>
-//                 <input type='number' placeholder='0' min='0' step='1' max={max} style={{width: 'fit-content'}} value={inputValue} onChange={handleInput} />
-//                 <h4>free {maxValue === '1' ? 'month' : 'months'}</h4>
-//             </div>
-            
-//             <h5 className={createPostStyles.subText}>You have {freeMonths} free {freeMonths==1 ? 'month' : 'months'} left.</h5>
-//         </div>
-//     );
-// }
 export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
     const { value, setValue } = iv;
     const max = Math.min(MAX_LISTING_PERIOD, freeMonths);
-    // const [inputValue, setInputValue] = useState<string>(value);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -306,7 +299,7 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
         }
     }
 
-    const maxValue = value === '' ? '' : value;
+    // const maxValue = value === '' ? '' : value;
     
     return (
         <div className={createPostStyles.formItem}>
@@ -315,7 +308,7 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
                 <h4>Use</h4>
                 <input type='number' placeholder='0' min='0' step='1' max={max} style={{width: 'fit-content'}} value={value} onChange={handleInput} />
-                <h4>free {maxValue === '1' ? 'month' : 'months'}</h4>
+                <h4>free {value === '1' ? 'month' : 'months'}</h4>
             </div>
             
             <h5 className={createPostStyles.subText}>You have {freeMonths} free {freeMonths==1 ? 'month' : 'months'} left.</h5>
