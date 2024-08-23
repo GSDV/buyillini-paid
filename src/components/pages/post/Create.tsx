@@ -74,7 +74,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         const postData = getData();
         const res = await fetch(`/create/free/postId/api/`, {
             method: 'POST',
-            body: JSON.stringify(postData)
+            body: postData
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
@@ -91,7 +91,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         const postData = getData();
         const res = await fetch(`/create/paid/postId/api/`, {
             method: 'POST',
-            body: JSON.stringify(postData)
+            body: postData
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
