@@ -127,6 +127,7 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
             });
             const newImages = [...value, resJson.key];
             setValue(newImages);
+            setAlert(null);
         } else {
             setAlert(resJson);
         }
@@ -174,7 +175,9 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
                         <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
                     </>}
                 </div>
-                {alert && <Alert alert={alert} variations={[]} />}
+                <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                    {alert && <Alert alert={alert} variations={[]} />}
+                </div>
             </>
             }
         </div>

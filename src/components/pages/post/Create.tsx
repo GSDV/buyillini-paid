@@ -344,7 +344,6 @@ export default function Create({ freeMonths, draftedPost }: { freeMonths: number
 
                 <Category value={category} setValue={setCategory} />
 
-            
                 {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} /> }
 
                 {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Gender value={gender} setValue={setGender} /> }
