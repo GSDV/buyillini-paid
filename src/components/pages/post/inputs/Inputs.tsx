@@ -10,6 +10,7 @@ import createPostStyles from '@styles/pages/create-post.module.css';
 import { colorScheme } from '@styles/colors';
 import DisplayImage from '@components/DisplayImage';
 import { LoadingIconBlack } from '@components/Loading';
+import { Alert, AlertType } from '@components/Alert';
 
 
 
@@ -104,6 +105,7 @@ export function Price({ value, setValue }: InputValue) {
 export function Images({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
     const msContext = useMenuShadowContext();
     const imgRef = useRef<HTMLInputElement | null>(null);
+    const [alert, setAlert] = useState<AlertType | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
 
@@ -125,6 +127,8 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
             });
             const newImages = [...value, resJson.key];
             setValue(newImages);
+        } else {
+            setAlert(resJson);
         }
         if (imgRef.current) imgRef.current.value = '';
         setLoading(false);
@@ -156,6 +160,7 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
             {loading ?
                 <LoadingIconBlack />
             :
+            <>
                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
                     {value.map((img: any, i: any) => (
                         <div key={i} className={createPostStyles.imgWrapper}>
@@ -169,6 +174,8 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
                         <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
                     </>}
                 </div>
+                {alert && <Alert alert={alert} variations={[]} />}
+            </>
             }
         </div>
     );

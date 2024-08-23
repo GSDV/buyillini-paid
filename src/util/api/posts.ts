@@ -34,10 +34,6 @@ export const isValidPostData = (postData: PostData) => {
     if (!isValidPrice(price)) msg = `Price must be between $0 and $9,999.99.`;
 
     if (images.length<=0 || images.length>5) msg = `Must provide 1 to 5 images.`;
-    for (let i=0; i<images.length; i++) {
-        const resValidPost = isValidPostDataImage(images[i]);
-        if (!resValidPost.valid) return { valid: false, nextres: resValidPost.nextres };
-    }
 
     if (months<=0 || months>10) msg = `Listing period must be between 1 and 10.`;
     if (userFreeMonths<0 || userFreeMonths>10) msg = `Free months used must be between 0 and 10.`;
@@ -54,12 +50,6 @@ export const isValidPrice = (price: number) => {
 
 
 
-export const isValidPostDataImage = (img: any) => {
-    if (!(img instanceof File)) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a png, jpg, or webp file.`} };
-    if (!ACCEPTED_FILES.includes(img.type)) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a png, jpg, or webp file.`} };
-    if (img.size > 5000000) return { valid: false, nextres: {cStatus: 102, msg: `Please upload a picture under 5 MBs.`} };
-    return { valid: true };
-}
 
 
 

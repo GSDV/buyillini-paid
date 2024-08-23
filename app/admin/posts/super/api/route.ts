@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 import { isAdmin, createSuperPost, SuperPostData } from '@util/prisma/actions/admin';
 import { CATEGORIES, CLOTHING_SIZES, GENDERS, isRegCat } from '@util/global';
-import { isValidPostDataImage, isValidPrice } from '@util/api/posts';
+import { isValidPrice } from '@util/api/posts';
 import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { getPost } from '@util/prisma/actions/posts';
 

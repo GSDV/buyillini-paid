@@ -236,21 +236,17 @@
 
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
-
 import { Post } from '@prisma/client';
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, formatDate, imgUrl } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, formatDate } from '@util/global';
 
-import { useMenuShadowContext } from '@components/providers/MenuShadow';
 import { Alert, AlertType } from '@components/Alert';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
-import { colorScheme } from '@styles/colors';
-import Loading, { LoadingIconBlack } from '@components/Loading';
-import { Title } from './inputs/Inputs';
+import Loading from '@components/Loading';
+import { Category, Description, Gender, Images, Price, Size, Title } from './inputs/Inputs';
 
 
 
@@ -344,51 +340,18 @@ export default function Create({ freeMonths, draftedPost }: { freeMonths: number
 
                 <Title value={title} setValue={setTitle} />
 
-                <div className={createPostStyles.formItem}>
-                    <h4>Description</h4>
-                    <textarea placeholder='Describe your item' value={description} onChange={(e)=>setDescription(e.target.value)} />
-                </div>
+                <Description value={description} setValue={setDescription} />
 
-                <div className={createPostStyles.formItem}>
-                    <h4>Category</h4>
-                    <select value={category} onChange={(e)=>setCategoryField(e.target.value)}>
-                        {CATEGORIES.map((cat, i) => (
-                            <option key={i} value={cat.link}>{cat.title}</option>
-                        ))}
-                    </select>
-                </div>
+                <Category value={category} setValue={setCategory} />
+
             
-                {!NO_SIZE_GENDER_CATEGORIES.includes(category) &&
-                    <div className={createPostStyles.formItem}>
-                        <h4>Size</h4>
-                        <select value={size} onChange={(e)=>setSize(e.target.value)}>
-                            {CLOTHING_SIZES.map((size, i) => (
-                                <option key={i} value={size}>{size}</option>
-                            ))}
-                        </select>
-                    </div>
-                }
+                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} /> }
 
-                {!NO_SIZE_GENDER_CATEGORIES.includes(category) &&
-                    <div className={createPostStyles.formItem}>
-                        <h4>Gender</h4>
-                        <select value={gender} onChange={(e)=>setGender(e.target.value)}>
-                            {GENDERS.map((gender, i) => (
-                                <option key={i} value={gender}>{gender}</option>
-                            ))}
-                        </select>
-                    </div>
-                }
+                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Gender value={gender} setValue={setGender} /> }
 
-                <div className={createPostStyles.formItem}>
-                    <h4>Price</h4>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                        <h4>$</h4>
-                        <input type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' value={price} onChange={(e)=>setPrice(Number(e.target.value))} />
-                    </div>
-                </div>
-{/* 
-                <Images value={images} setValue={setImages} postId={draftedPost.id} /> */}
+                <Price value={price} setValue={setPrice} />
+
+                <Images value={images} setValue={setImages} postId={draftedPost.id} />
 
                 <ListingPeriod months={months} setMonths={setMonths} />
 
