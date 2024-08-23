@@ -8,7 +8,8 @@ import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
 import { colorScheme } from '@styles/colors';
-import { DisplayFileImage } from '@components/DisplayImage';
+import DisplayImage from '@components/DisplayImage';
+import { LoadingIconBlack } from '@components/Loading';
 
 
 
@@ -100,25 +101,51 @@ export function Price({ value, setValue }: InputValue) {
 
 
 
-export function Images({ value, setValue }: InputValue) {
+export function Images({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
     const msContext = useMenuShadowContext();
     const imgRef = useRef<HTMLInputElement | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const handleUpload = (img: File | undefined) => {
+
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const img = e.target.files?.[0];
+        setLoading(true);
         if (value.length >= 5 || img==undefined) return;
-        const newImages = [...value, img];
-        setValue(newImages);
+        const res = await fetch(`/api`, {
+            method: 'POST',
+            body: JSON.stringify({ postId, fileType: img.type, fileSize: img.size }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const resJson = await res.json();
+        if (resJson.cStatus==200) {
+            await fetch(resJson.signedUrl, {
+                method: 'PUT',
+                body: img,
+                headers: { 'Content-Type': img.type },
+            });
+            const newImages = [...value, resJson.key];
+            setValue(newImages);
+        }
         if (imgRef.current) imgRef.current.value = '';
+        setLoading(false);
     };
 
-    const handleDelete = (idx: number) => {
+
+    const handleDelete = async (idx: number) => {
+        setLoading(true);
         const newImages = [...value];
-        newImages.splice(idx, 1);
+        const deletedImgKey = newImages.splice(idx, 1)[0];
+        await fetch(`/api`, {
+            method: 'DELETE',
+            body: JSON.stringify({ deletedImgKey, postId }),
+            headers: { 'Content-Type': 'application/json' }
+        });
         setValue(newImages);
+        setLoading(false);
     }
 
     const openImage = (idx: number) => {
-        msContext.setContent(<DisplayFileImage img={value[idx]} />);
+        msContext.setContent(<DisplayImage img={value[idx]} />);
         msContext.openMenu();
     }
 
@@ -126,104 +153,26 @@ export function Images({ value, setValue }: InputValue) {
         <div className={createPostStyles.formItem} style={{width: '100%'}}>
             <h4>Images</h4>
 
-            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
-                {value.map((img: any, i: any) => (
-                    <div key={i} className={createPostStyles.imgWrapper}>
-                        <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                        <img src={URL.createObjectURL(img)} onClick={() => openImage(i)} />
-                    </div>
-                ))}
+            {loading ?
+                <LoadingIconBlack />
+            :
+                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
+                    {value.map((img: any, i: any) => (
+                        <div key={i} className={createPostStyles.imgWrapper}>
+                            <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
+                            <img src={imgUrl(img)} onClick={() => openImage(i)} />
+                        </div>
+                    ))}
 
-                {value.length<5 && <>
-                    <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
-                    <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={(e) => handleUpload(e.target.files?.[0])} style={{display: 'none'}} />
-                </>}
-            </div>
+                    {value.length<5 && <>
+                        <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
+                        <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
+                    </>}
+                </div>
+            }
         </div>
     );
 }
-
-
-// export function StringImages({ value, setValue }: InputValue) {
-//     const msContext = useMenuShadowContext();
-//     const imgRef = useRef<HTMLInputElement | null>(null);
-//     const [loading, setLoading] = useState<boolean>(false);
-
-//     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-//         e.preventDefault();
-//         setLoading(true);
-
-//         const img = e.target.files?.[0];
-//         if (value.length >= 5 || img==undefined) return;
-
-//         img.size
-
-
-//         try {
-//             const res = await fetch('/api', {
-//                 method: 'POST',
-//                 headers: { 'Content-Type': 'application/json' },
-//                 body: JSON.stringify({ fileType: img.type, fileSize: img.size })
-//             });
-
-//             if (!res.ok) {
-//                 const errorData = await response.json();
-//                 throw new Error(errorData.message);
-//             }
-
-//         const { signedUrl } = await response.json();
-
-//         // Upload to S3
-//         await fetch(signedUrl, {
-//             method: 'PUT',
-//             body: img,
-//             headers: { 'Content-Type': img.type },
-//         });
-
-      
-
-
-
-
-        // const newImages = [...value, img];
-        // setValue(newImages);
-        // if (imgRef.current) imgRef.current.value = '';
-
-    //     setLoading(false);
-    // };
-
-
-//     const handleDelete = (idx: number) => {
-//         const newImages = [...value];
-//         newImages.splice(idx, 1);
-//         setValue(newImages);
-//     }
-
-//     const openImage = (idx: number) => {
-//         msContext.setContent(<DisplayFileImage img={value[idx]} />);
-//         msContext.openMenu();
-//     }
-
-//     return (
-//         <div className={createPostStyles.formItem} style={{width: '100%'}}>
-//             <h4>Images</h4>
-
-//             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
-//                 {value.map((img: any, i: any) => (
-//                     <div key={i} className={createPostStyles.imgWrapper}>
-//                         <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-//                         <img src={imgUrl(img)} onClick={() => openImage(i)} />
-//                     </div>
-//                 ))}
-
-//                 {value.length<5 && <>
-//                     <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
-//                     <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
-//                 </>}
-//             </div>
-//         </div>
-//     );
-// }
 
 
 

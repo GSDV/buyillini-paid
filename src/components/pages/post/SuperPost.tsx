@@ -6,20 +6,21 @@ import Loading from '@components/Loading';
 import { CATEGORIES, CLOTHING_SIZES, GENDERS, NO_SIZE_GENDER_CATEGORIES } from '@util/global';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
+import { Post } from '@prisma/client';
 
 
 
-export default function CreateSuperPost({ action }: { action: (data: FormData)=>void }) {
+export default function CreateSuperPost({ draftedPost, action }: { draftedPost: Post, action: (data: FormData)=>void }) {
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [title, setTitle] = useState<string>('');
-    const [description, setDescription] = useState<string>('');
-    const [category, setCategory] = useState<string>(CATEGORIES[0].link);
-    const [size, setSize] = useState<string>(CLOTHING_SIZES[0]);
-    const [gender, setGender] = useState<string>(GENDERS[0]);
-    const [price, setPrice] = useState<number>(0.00);
-    const [images, setImages] = useState<File[]>([]);
-    const [months, setMonths] = useState<number>(1);
+    const [title, setTitle] = useState<string>(draftedPost.title);
+    const [description, setDescription] = useState<string>(draftedPost.description);
+    const [category, setCategory] = useState<string>(draftedPost.category);
+    const [size, setSize] = useState<string>(draftedPost.size);
+    const [gender, setGender] = useState<string>(draftedPost.gender);
+    const [price, setPrice] = useState<number>(Number(draftedPost.price));
+    const [images, setImages] = useState<string[]>(draftedPost.images);
+    const [months, setMonths] = useState<number>(Number(draftedPost.duration));
 
 
     const getData = () => {
@@ -72,7 +73,7 @@ export default function CreateSuperPost({ action }: { action: (data: FormData)=>
 
                 <Price value={price} setValue={setPrice} />
 
-                <Images value={images} setValue={setImages} />
+                <Images value={images} setValue={setImages} postId={draftedPost.id} />
 
                 <SuperListingPeriod value={months} setValue={setMonths} />
 
