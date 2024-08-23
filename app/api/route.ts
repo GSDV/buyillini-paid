@@ -68,7 +68,7 @@ export async function DELETE(req: NextRequest) {
         const postPrisma = await getPost(postId);
         if (!postPrisma) return NextResponse.json({ cStatus: 400, msg: `Post does not exist.` }, { status: 400 });
         if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 400, msg: `Not your post.` }, { status: 400 });
-        if (!postPrisma.images.includes(deletedImgKey)) return NextResponse.json({ cStatus: 400, msg: `Image does not exist on post.` }, { status: 400 });
+        if (!postPrisma.images.includes(deletedImgKey)) return NextResponse.json({ cStatus: 400, msg: `Image does not exist on post.`, deletedImgKey, images: postPrisma.images }, { status: 400 });
 
         const newImages = postPrisma.images.filter(img => img !== deletedImgKey);
 
