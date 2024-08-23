@@ -204,7 +204,8 @@ function DeleteAccount({ netId }: { netId: string }) {
             console.log(resJson)
             console.log("BEFORE: ", authContext.authToken)
             authContext.fetchCookie();
-            authContext.authToken = '';
+            // authContext.authToken = '';
+            authContext.setAuthToken('');
             console.log("AFTER: ", authContext.authToken)
             console.log
             msContext.closeMenu();
