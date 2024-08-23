@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
 
 import { Post } from '@prisma/client';
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, formatDate } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, formatDate, imgUrl } from '@util/global';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 import { Alert, AlertType } from '@components/Alert';
@@ -180,6 +180,8 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
 
     const [loading, setLoading] = useState<boolean>(false);
 
+    console.log("value ", value)
+
 
     const handleUpload = async (img: File | undefined) => {
         if (value.length >= 5 || img==undefined) return;
@@ -238,7 +240,7 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
                 {value.map((img: any, i: any) => (
                     <div key={i} className={createPostStyles.imgWrapper}>
                         <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                        <img src={(img)} onClick={() => openImage(i)} />
+                        <img src={imgUrl(img)} onClick={() => openImage(i)} />
                     </div>
                 ))}
 
