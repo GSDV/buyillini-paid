@@ -243,6 +243,12 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
 export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
     const { value, setValue } = iv;
     const max = 10 < freeMonths ? 10 : freeMonths;
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const val = Number(e.target.value);
+        setValue((max < val) ? max : val);
+    }
     
     return (
         <div className={createPostStyles.formItem}>
@@ -250,7 +256,7 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
                 <h4>Use</h4>
-                <input type='number' min='0' step='1' max={max} style={{width: 'fit-content'}} value={value} onChange={(e)=>setValue(Number(e.target.value))} />
+                <input type='number' min='0' step='1' max={max} style={{width: 'fit-content'}} value={value} onChange={handleInput} />
                 <h4>free {value==1 ? 'month' : 'months'}</h4>
             </div>
             

@@ -4,7 +4,7 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
-import { formatDate, formatPrice, getCategoryTitle, imgUrl } from '@util/global';
+import { NO_SIZE_GENDER_CATEGORIES, formatDate, formatPrice, getCategoryTitle, imgUrl } from '@util/global';
 
 import { Post } from '@prisma/client';
 
@@ -22,8 +22,8 @@ export default function ViewPost({ post }: { post: Post }) {
                 <h4>{post.description}</h4>
                 <h3>{formatPrice(Number(post.price))}</h3>
                 <h3>Category: {getCategoryTitle(post.category)}</h3>
-                {post.category!='other' && <h3>Size: {post.size}</h3>}
-                {post.category!='other' && <h3>Gender: {post.gender}</h3>}
+                {!NO_SIZE_GENDER_CATEGORIES.includes(post.category) && <h3>Size: {post.size}</h3>}
+                {!NO_SIZE_GENDER_CATEGORIES.includes(post.category) && <h3>Gender: {post.gender}</h3>}
                 <h3>Expires on {formatDate(new Date(post.expireDate))}</h3>
             </div>
         </div>

@@ -1,5 +1,5 @@
 import { BuyerInterest, Post } from '@prisma/client';
-import { ACCEPTED_FILES, BUYER_INTEREST_EXPIRATION, CATEGORIES, CLOTHING_SIZES } from '@util/global';
+import { ACCEPTED_FILES, BUYER_INTEREST_EXPIRATION, CATEGORIES, CLOTHING_SIZES, GENDERS, NO_SIZE_GENDER_CATEGORIES } from '@util/global';
 import { EditPostData, PostData } from '@util/prisma/actions/posts';
 
 
@@ -28,8 +28,8 @@ export const isValidPostData = (postData: PostData) => {
     if (description.length==300) msg = `Description must be less than 300 characters.`;
 
     if (!CATEGORIES.some(c => c.link===category)) msg = `Specify category.`;
-    if (!CLOTHING_SIZES.includes(size) && category!='other') msg = `Specify clothing size.`;
-    if (gender!="Male" && gender!="Female" && gender!="Unisex") msg = `Specify gender.`;
+    if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !CLOTHING_SIZES.includes(size)) msg = `Specify clothing size.`;
+    if (!GENDERS.includes(gender)) msg = `Specify gender.`;
 
     if (!isValidPrice(price)) msg = `Price must be between $0 and $9,999.99.`;
 
@@ -89,7 +89,7 @@ export const getPostData = (formData: FormData) => {
     const months = formData.get('months');
     const userFreeMonths = formData.get('userFreeMonths');
 
-    if (!title || !description || !category || (category!='other' && (!size || !gender)) || !price || !images || !months) return null;
+    if (!title || !description || !category || (!NO_SIZE_GENDER_CATEGORIES.includes(category as string) && (!size || !gender)) || !price || !images || !months) return null;
 
     const postData: PostData = {
         title: title as string,
