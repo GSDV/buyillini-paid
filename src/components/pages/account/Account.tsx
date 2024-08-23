@@ -94,7 +94,7 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
             });
         }
 
-        if (resJson.cStatus==200) {
+        if (resJson.cStatus==200 || resJson.cStatus==204) {
             msContext.closeMenu();
             window.location.reload();
         }
