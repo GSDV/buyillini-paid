@@ -247,6 +247,9 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const val = Number(e.target.value);
+        console.log("A", val);
+        console.log("B", max);
+        console.log("C", (max < val) ? max : val);
         setValue((max < val) ? max : val);
     }
     
