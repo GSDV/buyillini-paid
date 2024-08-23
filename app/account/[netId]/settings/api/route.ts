@@ -87,7 +87,6 @@ export async function PUT(req: NextRequest) {
 
         if (!operation || !key) return NextResponse.json({ cStatus: 101, msg: `Missing operation or key.` }, { status: 400 });
 
-
         
         const authTokenCookie = cookies().get(`authtoken`);
         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
