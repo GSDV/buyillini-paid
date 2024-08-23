@@ -69,19 +69,19 @@ export interface PostData {
     size: string,
     gender: string,
     price: number,
-    images: File[],
+    images: string[],
     months: number,
     userFreeMonths: number
 }
 export const createFreePost = async (postData: PostData, userId: string) => {
     const expiration = new Date(Date.now() + postData.months*MONTH_TO_MILLI);
-    const imageUrls: string[] = [];
-    for (let i=0; i<postData.images.length; i++) {
-        const imgUrl = await uploadPostPicture(postData.images[i]);
-        imageUrls.push(imgUrl);
-    }
-    const { images, userFreeMonths, months, ...cleanedData } = postData;
-    const createData = { sellerId: userId, ...cleanedData, images: imageUrls, duration: months, freeMonthsUsed: userFreeMonths, isPaid: false, expireDate: expiration };
+    // const imageUrls: string[] = [];
+    // for (let i=0; i<postData.images.length; i++) {
+    //     const imgUrl = await uploadPostPicture(postData.images[i]);
+    //     imageUrls.push(imgUrl);
+    // }
+    const { userFreeMonths, months, ...cleanedData } = postData;
+    const createData = { sellerId: userId, ...cleanedData, duration: months, freeMonthsUsed: userFreeMonths, isPaid: false, expireDate: expiration };
 
     const res = await prisma.post.create({
         data: createData
@@ -91,13 +91,13 @@ export const createFreePost = async (postData: PostData, userId: string) => {
 
 export const createPaidPost = async (postData: PostData, userId: string) => {
     const expiration = new Date(Date.now() + postData.months*MONTH_TO_MILLI);
-    const imageUrls: string[] = [];
-    for (let i=0; i<postData.images.length; i++) {
-        const imgUrl = await uploadPostPicture(postData.images[i]);
-        imageUrls.push(imgUrl);
-    }
-    const { images, userFreeMonths, months, ...cleanedData } = postData;
-    const createData = { sellerId: userId, ...cleanedData, images: imageUrls, duration: months, freeMonthsUsed: userFreeMonths, isPaid: true, expireDate: expiration };
+    // const imageUrls: string[] = [];
+    // for (let i=0; i<postData.images.length; i++) {
+    //     const imgUrl = await uploadPostPicture(postData.images[i]);
+    //     imageUrls.push(imgUrl);
+    // }
+    const { userFreeMonths, months, ...cleanedData } = postData;
+    const createData = { sellerId: userId, ...cleanedData, duration: months, freeMonthsUsed: userFreeMonths, isPaid: true, expireDate: expiration };
 
     const res = await prisma.post.create({
         data: createData
@@ -135,10 +135,13 @@ export const createDraftedPost = async (id: string) => {
 }
 
 export const deleteDraftedPosts = async (id: string) => {
-    const posts = await prisma.post.findMany({
+    await prisma.post.deleteMany({
         where: { sellerId: id, active: false }
     });
-    for (let i=0; i<posts.length; i++) await deletePost(posts[i].id);
+    // const posts = await prisma.post.findMany({
+    //     where: { sellerId: id, active: false }
+    // });
+    // for (let i=0; i<posts.length; i++) await deletePost(posts[i].id);
 }
 
 

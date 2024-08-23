@@ -14,7 +14,7 @@ import { Category, Description, Gender, Images, ListingPeriod, Price, Size, Titl
 
 
 
-export default function Create({ freeMonths, draftedPost }: { freeMonths: number, draftedPost: Post }) {
+export default function Create({ draftedPost, freeMonths }: { draftedPost: Post, freeMonths: number }) {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [alert, setAlert] = useState<AlertType | null>(null);
@@ -30,17 +30,31 @@ export default function Create({ freeMonths, draftedPost }: { freeMonths: number
     const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
 
 
+    // const getData = () => {
+    //     const postData = new FormData();
+    //     postData.set('title', title);
+    //     postData.set('description', description);
+    //     postData.set('category', category);
+    //     postData.set('size', size);
+    //     postData.set('gender', gender);
+    //     postData.set('price', String(price));
+    //     for (let i=0; i<images.length; i++) postData.append('images', images[i]);
+    //     postData.set('months', String(months));
+    //     postData.set('userFreeMonths', String(userFreeMonths));
+    //     return postData;
+    // }
+
     const getData = () => {
-        const postData = new FormData();
-        postData.set('title', title);
-        postData.set('description', description);
-        postData.set('category', category);
-        postData.set('size', size);
-        postData.set('gender', gender);
-        postData.set('price', String(price));
-        for (let i=0; i<images.length; i++) postData.append('images', images[i]);
-        postData.set('months', String(months));
-        postData.set('userFreeMonths', String(userFreeMonths));
+        const postData: Record<string, any> = {};
+        postData.title = title;
+        postData.description = description;
+        postData.category = category;
+        postData.size = size;
+        postData.gender = gender;
+        postData.price = String(price);
+        postData.images = images;
+        postData.months = String(months);
+        postData.userFreeMonths = String(userFreeMonths);
         return postData;
     }
 
@@ -60,7 +74,7 @@ export default function Create({ freeMonths, draftedPost }: { freeMonths: number
         const postData = getData();
         const res = await fetch(`/create/free/postId/api/`, {
             method: 'POST',
-            body: postData
+            body: JSON.stringify(postData)
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
@@ -77,9 +91,8 @@ export default function Create({ freeMonths, draftedPost }: { freeMonths: number
         const postData = getData();
         const res = await fetch(`/create/paid/postId/api/`, {
             method: 'POST',
-            body: postData
+            body: JSON.stringify(postData)
         });
-
         const resJson = await res.json();
         if (resJson.cStatus==200) {
             router.push(`/create/paid/${resJson.postId}`);

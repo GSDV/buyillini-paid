@@ -71,7 +71,7 @@ export const getEditPostData = (formData: FormData) => {
         size: size as any,
         gender: gender as string,
         price: Math.round(Number(price)*100)/100,
-        images: formData.getAll('images') as File[]
+        images: formData.getAll('images') as string[]
     }
     return postData;
 }
@@ -85,7 +85,7 @@ export const getPostData = (formData: FormData) => {
     const size = formData.get('size');
     const gender = formData.get('gender');
     const price = formData.get('price');
-    const images = formData.getAll('images') as File[];
+    const images = formData.getAll('images') as string[];
     const months = formData.get('months');
     const userFreeMonths = formData.get('userFreeMonths');
 
