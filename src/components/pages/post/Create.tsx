@@ -184,8 +184,8 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
 
 
     const handleUpload = async (img: File | undefined) => {
+        setLoading(true);
         if (value.length >= 5 || img==undefined) return;
-
 
         const res = await fetch(`/api`, {
             method: 'POST',
@@ -195,7 +195,7 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
 
         const resJson = await res.json();
         if (resJson.cStatus==200) {
-            const ee = await fetch(resJson.signedUrl, {
+            await fetch(resJson.signedUrl, {
                 method: 'PUT',
                 body: img,
                 headers: { 'Content-Type': img.type },
@@ -204,7 +204,9 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
         const newImages = [...value, resJson.key];
         setValue(newImages);
         if (imgRef.current) imgRef.current.value = '';
+        setLoading(false);
     };
+
 
     const handleDelete = async (idx: number) => {
         setLoading(true);
@@ -217,7 +219,6 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
             headers: { 'Content-Type': 'application/json' }
         });
         const resDeleteJson = await resDelete.json();
-        console.log("resDeleteJson C: ", resDeleteJson)
         setValue(newImages);
         setLoading(false);
     }
