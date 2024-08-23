@@ -75,12 +75,13 @@ function NavProfile() {
             const pfpUrl = getPfpUrl(resJson.user.profilePicture);
             setNetId(resJson.user.netId);
             setPfp(pfpUrl);
-        console.log(resJson.user.netId, pfpUrl);
+            console.log(resJson.user.netId, pfpUrl);
         }
         setLoading(false);
     }
 
     useEffect(() => {
+        console.log("AAA")
         fetchInfo();
     }, [authContext.authToken]);
 
