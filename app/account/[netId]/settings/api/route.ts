@@ -107,7 +107,7 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ cStatus: 102, msg: `Wrong operation.` }, { status: 400 });
         }
 
-        const type = await fileTypeFromBuffer(buffer);
+        const type = await fileTypeFromBuffer(croppedBuffer);
         console.log("type: ", type)
 
         await uploadToS3(croppedBuffer, key, (type as any).ext);
