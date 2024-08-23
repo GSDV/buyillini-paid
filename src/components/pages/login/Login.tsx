@@ -13,7 +13,7 @@ import formStyles from '@styles/ui/form.module.css';
 
 export default function Login() {
     const router = useRouter();
-    const authContext = useAuthContext();
+    const { fetchCookie } = useAuthContext();
 
     const inputs: FormInputType[] = [
         {title: 'Email', type: 'text', name: 'email'},
@@ -39,9 +39,7 @@ export default function Login() {
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
-            console.log("BEFORE: ", authContext.authToken)
-            authContext.fetchCookie();
-            console.log("AFTER: ", authContext.authToken)
+            fetchCookie();
             router.push(`/account/${resJson.netId}`);
         }
         setAlert(resJson);

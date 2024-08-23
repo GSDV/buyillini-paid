@@ -48,14 +48,22 @@ export async function POST(req: NextRequest) {
             if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
             if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 5mb.` }, { status: 400 });
 
-            const [resS3, resDelete] = await Promise.all([
-                getSignedS3Url(PFP_IMG_PREFIX, fileType),
-                deleteFromS3(userPrisma.profilePicture),
-            ]);
+            let resUploadS3: any;
 
-            userUpdateData.profilePicture = resS3.key;
-            signedUrl = resS3.signedUrl;
-            key = resS3.key;
+            if (userPrisma.profilePicture!='') {
+                const [resS3, resDelete] = await Promise.all([
+                    getSignedS3Url(PFP_IMG_PREFIX, fileType),
+                    deleteFromS3(userPrisma.profilePicture),
+                ]);
+                resUploadS3 = resS3;
+            } else {
+                const resS3 = await getSignedS3Url(PFP_IMG_PREFIX, fileType);
+                resUploadS3 = resS3;
+            }
+            
+            userUpdateData.profilePicture = resUploadS3.key;
+            signedUrl = resUploadS3.signedUrl;
+            key = resUploadS3.key;
         }
         
         

@@ -187,7 +187,7 @@ function Buttons({ freeMonths }: { freeMonths: number }) {
 
 
 function DeleteAccount({ netId }: { netId: string }) {
-    const authContext = useAuthContext();
+    const { fetchCookie } = useAuthContext();
     const msContext = useMenuShadowContext();
 
     const router = useRouter();
@@ -201,13 +201,7 @@ function DeleteAccount({ netId }: { netId: string }) {
          });
          const resJson = await res.json();
          if (resJson.cStatus==200) {
-            console.log(resJson)
-            console.log("BEFORE: ", authContext.authToken)
-            authContext.fetchCookie();
-            // authContext.authToken = '';
-            authContext.setAuthToken('');
-            console.log("AFTER: ", authContext.authToken)
-            console.log
+            fetchCookie();
             msContext.closeMenu();
             router.push(`/`);
         }
