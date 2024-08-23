@@ -27,7 +27,8 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const [price, setPrice] = useState<number>(Number(draftedPost.price));
     const [images, setImages] = useState<string[]>(draftedPost.images);
     const [months, setMonths] = useState<number>(Number(draftedPost.duration));
-    const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
+    const [userFreeMonths, setUserFreeMonths] = useState<string>('');
+    // const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
 
 
     const getData = () => {
@@ -40,7 +41,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         postData.set('price', String(price));
         for (let i=0; i<images.length; i++) postData.append('images', images[i]);
         postData.set('months', String(months));
-        postData.set('userFreeMonths', String(userFreeMonths));
+        postData.set('userFreeMonths', userFreeMonths);
         return postData;
     }
 
@@ -134,8 +135,8 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
                 {freeMonths!=0 && <UseFreeMonths iv={{value: userFreeMonths, setValue: setUserFreeMonths}} freeMonths={freeMonths} />}
 
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
-                    {months<=userFreeMonths && <button onClick={attemptFreePost}>Create Post (Use {months} free {months==1 ? 'month' : 'months'})</button>}
-                    {months>userFreeMonths && <button onClick={attemptPaidPost}>Create Post (Pay ${months-userFreeMonths})</button>}
+                    {months<=Number(userFreeMonths) && <button onClick={attemptFreePost}>Create Post (Use {months} free {months==1 ? 'month' : 'months'})</button>}
+                    {months>Number(userFreeMonths) && <button onClick={attemptPaidPost}>Create Post (Pay ${months-Number(userFreeMonths)})</button>}
                 </div>
             </>}
         </div>
