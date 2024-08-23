@@ -1,6 +1,5 @@
 'use client'
 
-import sharp from 'sharp';
 
 import { Post } from '@prisma/client';
 import { RedactedUser } from '@util/prisma/types';
