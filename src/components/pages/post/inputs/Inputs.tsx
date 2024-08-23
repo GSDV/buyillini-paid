@@ -125,10 +125,12 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
                 body: img,
                 headers: { 'Content-Type': img.type },
             });
-            await fetch(`/account/netId/settings/api`, {
+            const ress = await fetch(`/account/netId/settings/api`, {
                 method: 'PUT',
                 body: JSON.stringify({ operation: 'CROP_POST', key: resJson.key, postId: postId })
             });
+            console.log(ress)
+            console.log(await ress.json())
             const newImages = [...value, resJson.key];
             setValue(newImages);
             setAlert(null);
