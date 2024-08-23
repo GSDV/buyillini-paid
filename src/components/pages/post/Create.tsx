@@ -41,9 +41,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         postData.set('price', String(price));
         for (let i=0; i<images.length; i++) postData.append('images', images[i]);
         postData.set('months', String(months));
-        postData.set('userFreeMonths', userFreeMonths);
-        console.log("postData: ", postData)
-        console.log("userFreeMonths: ", postData.get('userFreeMonths'))
+        postData.set('userFreeMonths', (userFreeMonths=='' ? '0' : userFreeMonths));
         return postData;
     }
 

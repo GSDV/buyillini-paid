@@ -89,7 +89,7 @@ export const getPostData = (formData: FormData) => {
     const months = formData.get('months');
     const userFreeMonths = formData.get('userFreeMonths');
 
-    if (!title || !description || !category || (!NO_SIZE_GENDER_CATEGORIES.includes(category as string) && (!size || !gender)) || !price || !images || !months || userFreeMonths==='') return null;
+    if (!title || !description || !category || (!NO_SIZE_GENDER_CATEGORIES.includes(category as string) && (!size || !gender)) || !price || !images || !months) return null;
 
     const postData: PostData = {
         title: title as string,
