@@ -108,11 +108,7 @@ export async function PUT(req: NextRequest) {
             croppedBuffer = await cropPfpBuffer(buffer);
         } else if (operation=='CROP_POST') {
             const postPrisma = await getPost(postId);
-            console.log("AAA")
-            console.log(!postPrisma)
-            if (!postPrisma) return NextResponse.json({ cStatus: 401, msg: `Not your post.` }, { status: 400 });
-            console.log(postPrisma.sellerId!=userPrisma.id, postPrisma.deleted, !postPrisma.active, !postPrisma.images.includes(key))
-            if (!postPrisma || postPrisma.sellerId!=userPrisma.id || postPrisma.deleted || !postPrisma.active || !postPrisma.images.includes(key)) return NextResponse.json({ cStatus: 401, msg: `Not your post.` }, { status: 400 });
+            if (!postPrisma || postPrisma.sellerId!=userPrisma.id || postPrisma.deleted || !postPrisma.images.includes(key)) return NextResponse.json({ cStatus: 401, msg: `Not your post.` }, { status: 400 });
             croppedBuffer = await cropPostBuffer(buffer);
         } else {
             return NextResponse.json({ cStatus: 102, msg: `Invalid operation.` }, { status: 400 });
