@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
 
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, formatDate, imgUrl } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MAX_LISTING_PERIOD, MONTH_TO_MILLI, formatDate, imgUrl } from '@util/global';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
@@ -188,14 +188,30 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
 
 export function ListingPeriod({ value, setValue }: InputValue) {
     const [expires, setExpires] = useState<Date>(new Date(Date.now() + MONTH_TO_MILLI));
+    // const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
+    // const maxValue = value === '' ? '' : value;
 
     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newMonths = Number(e.target.value);
         const offset = newMonths * MONTH_TO_MILLI;
         const expiration = new Date(Date.now() + offset);
         setExpires(expiration);
+
         setValue(newMonths);
     }
+
+    // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     e.preventDefault();
+    //     const val = e.target.value;
+    //     if (val === '') {
+    //         setInputValue(val);
+    //         setValue('');
+    //     } else {
+    //         const numVal = Number(val);
+    //         setInputValue(val);
+    //         setValue((MAX_LISTING_PERIOD < numVal) ? MAX_LISTING_PERIOD : numVal);
+    //     }
+    // }
 
     return (
         <div className={createPostStyles.formItem}>
@@ -242,7 +258,7 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
 
 export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
     const { value, setValue } = iv;
-    const max = 10 < freeMonths ? 10 : freeMonths;
+    const max = Math.max(MAX_LISTING_PERIOD, freeMonths);
     const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
 
     // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -253,14 +269,9 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const val = e.target.value;
-        if (val === '') {
-            setInputValue(val);  // keep the input value as an empty string
-            setValue('');        // keep the value as an empty string to denote no selection
-        } else {
-            const numVal = Number(val);
-            setInputValue(val);
-            setValue((max < numVal) ? max : numVal);
-        }
+        setInputValue(val);
+        if (val === '') setValue('');
+        else setValue(Math.max(max, Number(val)));
     }
 
     const maxValue = value === '' ? '' : value;

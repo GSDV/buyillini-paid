@@ -43,6 +43,10 @@ export const RP_TOKEN_EXPIRATION = 60*5;
 export const BUYER_INTEREST_EXPIRATION = 60*24;
 
 
+
+export const MAX_LISTING_PERIOD = 10;
+
+
 // BuyIllini defines a "month" as 30 consecutive days.
 export const DEFINED_MONTH = 30
 export const MONTH_TO_MILLI = DEFINED_MONTH * 24 * 60 * 60 * 1000;
