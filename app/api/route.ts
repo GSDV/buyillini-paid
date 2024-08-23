@@ -40,7 +40,6 @@ export async function POST(req: NextRequest) {
         
         const postPrisma = await getPost(postId);
         if (!postPrisma) return NextResponse.json({ cStatus: 400, msg: `Post does not exist.` }, { status: 400 });
-        console.log()
         if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 400, msg: `Not your post.` }, { status: 400 });
         if (postPrisma.images.length >= 5) return NextResponse.json({ cStatus: 400, msg: `Post must have between 1 and 5 photos.` }, { status: 400 });
 

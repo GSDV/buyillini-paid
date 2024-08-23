@@ -1,0 +1,67 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+
+import { getRedactedUserFromAuth, updateUser } from '@util/prisma/actions/user';
+import { ACCEPTED_FILES, IMG_SIZE_LIMIT, PFP_IMG_PREFIX } from '@util/global';
+import { deleteFromS3, getSignedS3Url } from '@util/s3/aws';
+import { isValidUser } from '@util/api/auth';
+import { isValidPhoneNumber } from '@util/api/user';
+
+
+
+// Get a signed AWS S3 URL to use for a profile picture upload
+
+// do not fetch this route right after user upoads. Wait until they hit submit
+
+// consider adding the display name and phone number to this route too.
+
+// CHECK OTHER TIME WE DO FILE UPLOAD FROM CLIENT. NEED TO SEE IF THE ACCOUNT IS ACTIVE, UNBANNED, and NOT DELETED
+export async function POST(req: NextRequest) {
+    try {
+        const { displayName, phoneNumber, fileType, fileSize } = await req.json();
+        
+        const authTokenCookie = cookies().get(`authtoken`);
+        if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
+        if (!userPrisma) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+        const resValidUser = isValidUser(userPrisma);
+        if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
+
+        const userUpdateData: any = {};
+
+
+        if (!displayName) return NextResponse.json({ cStatus: 101, msg: `Display name is required.` }, { status: 400 });
+        userUpdateData.displayName = displayName;
+    
+
+        if (phoneNumber != null) {
+            const phoneStr = phoneNumber as string;
+            if (!isValidPhoneNumber(phoneStr)) return NextResponse.json({ cStatus: 101, msg: `Phone number not valid. Enter 10 numbers.` }, { status: 400 });
+            userUpdateData.phoneNumber = phoneStr.replace(/[() "-]/g, '');
+        }
+
+        let signedUrl = '';
+        if (fileType != undefined && fileSize != undefined) {
+            if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
+            if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 5mb.` }, { status: 400 });
+
+        // test deleting a pfp that doesnt actually exist from s3 bucket
+            const [resS3, resDelete] = await Promise.all([
+                getSignedS3Url(PFP_IMG_PREFIX, fileType),
+                deleteFromS3(userPrisma.id),
+            ]);
+
+            userUpdateData.profilePicture = resS3.key;
+            signedUrl = resS3.signedUrl
+        }
+        
+        
+        await updateUser(userPrisma.id, userUpdateData);
+        
+        // User has uploaded new profile picture
+        if (signedUrl!=='') return NextResponse.json({ cStatus: 204, msg: `Success.`, signedUrl: signedUrl }, { status: 200 });
+        return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
+    } catch (err) {
+        return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
+    }
+}

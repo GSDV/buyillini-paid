@@ -28,7 +28,6 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const [images, setImages] = useState<string[]>(draftedPost.images);
     const [months, setMonths] = useState<string>(draftedPost.duration.toString());
     const [userFreeMonths, setUserFreeMonths] = useState<string>('0');
-    // const [userFreeMonths, setUserFreeMonths] = useState<number>(0);
 
 
     const getData = () => {

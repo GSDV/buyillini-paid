@@ -223,16 +223,23 @@ export function ListingPeriod({ value, setValue }: InputValue) {
 
 
 
-
 export function SuperListingPeriod({ value, setValue }: InputValue) {
     const [expires, setExpires] = useState<Date>(new Date(Date.now() + MONTH_TO_MILLI));
 
     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newMonths = Number(e.target.value);
+        e.preventDefault();
+        let newMonths: number = 1;
+        if (e.target.value==='') {
+            setValue('');
+            newMonths = 1;
+        } else {
+            const val = Math.max(1, Number(e.target.value));
+            setValue(val.toString());
+            newMonths = val;
+        }
         const offset = newMonths * MONTH_TO_MILLI;
         const expiration = new Date(Date.now() + offset);
         setExpires(expiration);
-        setValue(newMonths);
     }
 
     return (
@@ -240,8 +247,7 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
             <h4>Super Listing Period</h4>
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                <input type='number' placeholder='1' min='1' step='1' style={{width: '100px'}} value={value} onChange={calcExpiration} />
-                <h4>{value==1 ? 'month' : 'months'}</h4>
+                <input type='number' placeholder='1' min='1' step='1' max={MAX_LISTING_PERIOD} style={{width: '100px'}} value={value} onChange={calcExpiration} />
             </div>
             
             <h5 className={createPostStyles.subText}>Post will expire {formatDate(expires)}</h5>
@@ -251,13 +257,13 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
 
 
 
+
 export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
     const { value, setValue } = iv;
     const max = Math.min(MAX_LISTING_PERIOD, freeMonths);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        let newMonths: number = 1;
         if (e.target.value==='') {
             setValue('');
         } else {
@@ -265,8 +271,6 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
             setValue(val.toString());
         }
     }
-
-    // const maxValue = value === '' ? '' : value;
     
     return (
         <div className={createPostStyles.formItem}>

@@ -79,24 +79,28 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
     const [alert, setAlert] = useState<AlertType | null>(null);
 
     const attemptUpdate = async () => {
-        const data = new FormData();
-        if (uploadedPfp != undefined) data.set('pfp', uploadedPfp);
-        data.set('displayName', displayName);
-        data.set('phoneNumber', phoneNumber);
-
         setLoading(true);
-        const res = await fetch('/account/netId/api/', {
+        const res = await fetch('/account/netId/settings/api/', {
             method: 'POST',
-            body: data
+            body: JSON.stringify({ displayName, phoneNumber, fileType: uploadedPfp?.type, fileSize: uploadedPfp?.size })
         });
         const resJson = await res.json();
-        setLoading(false);
 
-        setAlert(resJson);
+        if (resJson.cStatus==204 && uploadedPfp!=null) {
+            await fetch(resJson.signedUrl, {
+                method: 'PUT',
+                body: uploadedPfp,
+                headers: { 'Content-Type': uploadedPfp.type },
+            });
+        }
+
         if (resJson.cStatus==200) {
             msContext.closeMenu();
             window.location.reload();
         }
+
+        setAlert(resJson);
+        setLoading(false);
     }
 
     const promptDeleteAccount = () => {
