@@ -12,6 +12,7 @@ import { Alert, AlertType } from '@components/Alert';
 import createPostStyles from '@styles/pages/create-post.module.css';
 import { colorScheme } from '@styles/colors';
 import Loading from '@components/Loading';
+import { Category, Description, Gender, Images, Price, Size, Title } from './inputs/Inputs';
 
 
 
@@ -40,12 +41,6 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
         for (let i=0; i<images.length; i++) postData.append('images', images[i]);
         return postData;
     }
-
-    const handleKeyDown = (e: any) => {
-        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            e.preventDefault(); // Prevent the arrow keys from incrementing or decrementing the number
-        }
-    };
 
 
     const setCategoryField = (value: string) => {
@@ -88,56 +83,19 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
 
                 <h2 className={createPostStyles.title}>Edit Post</h2>
 
-                <div className={createPostStyles.formItem}>
-                    <h4>Title</h4>
-                    <input type='text' placeholder='Post title' value={title} onChange={(e)=>setTitle(e.target.value)} />
-                </div>
+                <Title value={title} setValue={setTitle} />
 
-                <div className={createPostStyles.formItem}>
-                    <h4>Description</h4>
-                    <textarea placeholder='Describe your item' value={description} onChange={(e)=>setDescription(e.target.value)} />
-                </div>
+                <Description value={description} setValue={setDescription} />
 
-                <div className={createPostStyles.formItem}>
-                    <h4>Category</h4>
-                    <select value={category} onChange={(e)=>setCategoryField(e.target.value)}>
-                        {CATEGORIES.map((cat, i) => (
-                            <option key={i} value={cat.link}>{cat.title}</option>
-                        ))}
-                    </select>
-                </div>
+                <Category value={category} setValue={setCategoryField} />
 
-                {NO_SIZE_GENDER_CATEGORIES.includes(category) &&
-                    <div className={createPostStyles.formItem}>
-                        <h4>Size</h4>
-                        <select value={size} onChange={(e)=>setSize(e.target.value)}>
-                            {CLOTHING_SIZES.map((size, i) => (
-                                <option key={i} value={size}>{size}</option>
-                            ))}
-                        </select>
-                    </div>
-                }
+                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} /> }
 
-                {NO_SIZE_GENDER_CATEGORIES.includes(category) &&
-                    <div className={createPostStyles.formItem}>
-                        <h4>Gender</h4>
-                        <select value={gender} onChange={(e)=>setGender(e.target.value)}>
-                            {GENDERS.map((gender, i) => (
-                                <option key={i} value={gender}>{gender}</option>
-                            ))}
-                        </select>
-                    </div>
-                }
+                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Gender value={gender} setValue={setGender} /> }
+                
+                <Price value={price} setValue={setPrice} />
 
-                <div className={createPostStyles.formItem}>
-                    <h4>Price</h4>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                        <h4>$</h4>
-                        <input type='number' placeholder='0.01' min='0.00' step='0.01' max='9999.99' value={price} onChange={(e)=>setPrice(Number(e.target.value))} />
-                    </div>
-                </div>
-
-                <Images images={images} setImages={setImages} />
+                <Images value={images} setValue={setImages} postId={post.id} />
 
                 <button onClick={attemptEditPost}>Save Updates</button>
             </>}
@@ -145,60 +103,3 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
     );
 }
 
-
-
-
-
-function Images({ images, setImages }: { images: File[], setImages: React.Dispatch<React.SetStateAction<File[]>>}) {
-    const msContext = useMenuShadowContext();
-    const imgRef = useRef<HTMLInputElement | null>(null);
-
-    const handleUpload = (img: File | undefined) => {
-        if (images.length >= 5 || img==undefined) return;
-        const newImages = [...images, img];
-        setImages(newImages);
-        if (imgRef.current) imgRef.current.value = '';
-    };
-
-    const handleDelete = (idx: number) => {
-        const newImages = [...images];
-        newImages.splice(idx, 1);
-        setImages(newImages);
-    }
-
-    const openImage = (idx: number) => {
-        msContext.setContent(<DisplayImage img={images[idx]} />);
-        msContext.openMenu();
-    }
-
-    return (
-            <div className={createPostStyles.formItem} style={{width: '100%'}}>
-                <h4>Images</h4>
-
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
-                    {images.map((img, i) => (
-                        <div key={i} className={createPostStyles.imgWrapper}>
-                            <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                            <img src={URL.createObjectURL(img)} onClick={() => openImage(i)} />
-                        </div>
-                    ))}
-
-                    {images.length<5 &&
-                        <>
-                            <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
-                            <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={(e) => handleUpload(e.target.files?.[0])} style={{display: 'none'}} />
-                        </>
-                    }
-                </div>
-
-            </div>
-    );
-}
-
-function DisplayImage({ img }: { img: File }) {
-    return (
-        <div style={{ position: 'relative', width: '180px', height: '315px', backgroundColor: 'black' }} >
-            <img src={URL.createObjectURL(img)} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-        </div>
-    );
-}

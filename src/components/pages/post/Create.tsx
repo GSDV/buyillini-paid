@@ -342,7 +342,7 @@ export default function Create({ freeMonths, draftedPost }: { freeMonths: number
 
                 <Description value={description} setValue={setDescription} />
 
-                <Category value={category} setValue={setCategory} />
+                <Category value={category} setValue={setCategoryField} />
 
                 {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} /> }
 
