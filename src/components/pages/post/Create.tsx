@@ -209,11 +209,11 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
     const handleDelete = async (idx: number) => {
         setLoading(true);
         const newImages = [...value];
-        const deletedImg = newImages.splice(idx, 1)[0];
+        const deletedImgKey = newImages.splice(idx, 1)[0];
         
         const resDelete = await fetch(`/api`, {
             method: 'DELETE',
-            body: JSON.stringify({ deletedImg, postId }),
+            body: JSON.stringify({ deletedImgKey, postId }),
             headers: { 'Content-Type': 'application/json' }
         });
         const resDeleteJson = await resDelete.json();
