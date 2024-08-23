@@ -144,41 +144,41 @@ export function Images({ value, setValue }: InputValue) {
 }
 
 
-export function StringImages({ value, setValue }: InputValue) {
-    const msContext = useMenuShadowContext();
-    const imgRef = useRef<HTMLInputElement | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+// export function StringImages({ value, setValue }: InputValue) {
+//     const msContext = useMenuShadowContext();
+//     const imgRef = useRef<HTMLInputElement | null>(null);
+//     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        setLoading(true);
+//     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//         e.preventDefault();
+//         setLoading(true);
 
-        const img = e.target.files?.[0];
-        if (value.length >= 5 || img==undefined) return;
+//         const img = e.target.files?.[0];
+//         if (value.length >= 5 || img==undefined) return;
 
-        img.size
+//         img.size
 
 
-        try {
-            const res = await fetch('/api', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fileType: img.type, fileSize: img.size })
-            });
+//         try {
+//             const res = await fetch('/api', {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({ fileType: img.type, fileSize: img.size })
+//             });
 
-            if (!res.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message);
-            }
+//             if (!res.ok) {
+//                 const errorData = await response.json();
+//                 throw new Error(errorData.message);
+//             }
 
-        const { signedUrl } = await response.json();
+//         const { signedUrl } = await response.json();
 
-        // Upload to S3
-        await fetch(signedUrl, {
-            method: 'PUT',
-            body: img,
-            headers: { 'Content-Type': img.type },
-        });
+//         // Upload to S3
+//         await fetch(signedUrl, {
+//             method: 'PUT',
+//             body: img,
+//             headers: { 'Content-Type': img.type },
+//         });
 
       
 
@@ -189,41 +189,41 @@ export function StringImages({ value, setValue }: InputValue) {
         // setValue(newImages);
         // if (imgRef.current) imgRef.current.value = '';
 
-        setLoading(false);
-    };
+    //     setLoading(false);
+    // };
 
 
-    const handleDelete = (idx: number) => {
-        const newImages = [...value];
-        newImages.splice(idx, 1);
-        setValue(newImages);
-    }
+//     const handleDelete = (idx: number) => {
+//         const newImages = [...value];
+//         newImages.splice(idx, 1);
+//         setValue(newImages);
+//     }
 
-    const openImage = (idx: number) => {
-        msContext.setContent(<DisplayFileImage img={value[idx]} />);
-        msContext.openMenu();
-    }
+//     const openImage = (idx: number) => {
+//         msContext.setContent(<DisplayFileImage img={value[idx]} />);
+//         msContext.openMenu();
+//     }
 
-    return (
-        <div className={createPostStyles.formItem} style={{width: '100%'}}>
-            <h4>Images</h4>
+//     return (
+//         <div className={createPostStyles.formItem} style={{width: '100%'}}>
+//             <h4>Images</h4>
 
-            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
-                {value.map((img: any, i: any) => (
-                    <div key={i} className={createPostStyles.imgWrapper}>
-                        <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                        <img src={imgUrl(img)} onClick={() => openImage(i)} />
-                    </div>
-                ))}
+//             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
+//                 {value.map((img: any, i: any) => (
+//                     <div key={i} className={createPostStyles.imgWrapper}>
+//                         <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
+//                         <img src={imgUrl(img)} onClick={() => openImage(i)} />
+//                     </div>
+//                 ))}
 
-                {value.length<5 && <>
-                    <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
-                    <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
-                </>}
-            </div>
-        </div>
-    );
-}
+//                 {value.length<5 && <>
+//                     <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
+//                     <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
+//                 </>}
+//             </div>
+//         </div>
+//     );
+// }
 
 
 
