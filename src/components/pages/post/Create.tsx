@@ -121,10 +121,19 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
                 {freeMonths!=0 && <UseFreeMonths iv={{value: userFreeMonths, setValue: setUserFreeMonths}} freeMonths={freeMonths} />}
 
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
-                    {Number(months) <= Number(userFreeMonths) && <button onClick={attemptFreePost}>Create Post (Use {months} free {Number(months)==1 ? 'month' : 'months'})</button>}
-                    {Number(months) > Number(userFreeMonths) && <button onClick={attemptPaidPost}>Create Post (Pay ${Number(months)-Number(userFreeMonths)})</button>}
+                    {numMonths(months) <= numFreeMonths(userFreeMonths) && <button onClick={attemptFreePost}>Create Post (Use {months} free {numFreeMonths(months)==1 ? 'month' : 'months'})</button>}
+                    {numMonths(months) > numFreeMonths(userFreeMonths) && <button onClick={attemptPaidPost}>Create Post (Pay ${numMonths(months)-numFreeMonths(userFreeMonths)})</button>}
                 </div>
             </>}
         </div>
     );
+}
+
+
+function numMonths(months: string) {
+    return (months==='') ? 1 : Number(months);
+}
+
+function numFreeMonths(userFreeMonths: string) {
+    return (userFreeMonths==='') ? 0 : Number(userFreeMonths);
 }
