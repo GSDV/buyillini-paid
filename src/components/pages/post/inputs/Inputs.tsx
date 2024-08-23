@@ -186,46 +186,7 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
 
 
 
-// export function ListingPeriod({ value, setValue }: InputValue) {
-//     const [expires, setExpires] = useState<Date>(new Date(Date.now() + MONTH_TO_MILLI));
-//     // const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
-//     // const maxValue = value === '' ? '' : value;
 
-//     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
-//         const newMonths = Number(e.target.value);
-//         const offset = newMonths * MONTH_TO_MILLI;
-//         const expiration = new Date(Date.now() + offset);
-//         setExpires(expiration);
-
-//         setValue(newMonths);
-//     }
-
-//     // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     //     e.preventDefault();
-//     //     const val = e.target.value;
-//     //     if (val === '') {
-//     //         setInputValue(val);
-//     //         setValue('');
-//     //     } else {
-//     //         const numVal = Number(val);
-//     //         setInputValue(val);
-//     //         setValue((MAX_LISTING_PERIOD < numVal) ? MAX_LISTING_PERIOD : numVal);
-//     //     }
-//     // }
-
-//     return (
-//         <div className={createPostStyles.formItem}>
-//             <h4>Listing Period</h4>
-            
-//             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-//                 <input type='number' min='1' step='1' max='10' style={{width: 'fit-content'}} value={value} onChange={calcExpiration} />
-//                 <h4>{value==1 ? 'month' : 'months'}</h4>
-//             </div>
-            
-//             <h5 className={createPostStyles.subText}>Post will expire {formatDate(expires)}</h5>
-//         </div>
-//     );
-// }
 
 
 export function ListingPeriod({ value, setValue }: InputValue) {
@@ -234,7 +195,6 @@ export function ListingPeriod({ value, setValue }: InputValue) {
     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         let newMonths: number = 1;
-
         if (e.target.value==='') {
             setValue('');
             newMonths = 1;
@@ -297,12 +257,12 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        const val = e.target.value;
-        if (val === '') {
+        let newMonths: number = 1;
+        if (e.target.value==='') {
             setValue('');
         } else {
-            const newVal = Math.min(max, Number(val)).toString();
-            setValue(newVal);
+            const val = Math.min(Math.max(0, Number(e.target.value)), max);
+            setValue(val.toString());
         }
     }
 
