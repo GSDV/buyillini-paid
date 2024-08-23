@@ -90,12 +90,9 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
         const resJson = await res.json();
 
         if (resJson.cStatus==204 && uploadedPfp!=null) {
-            const imgBytes = await uploadedPfp.arrayBuffer();
-            const imgBuffer = Buffer.from(imgBytes);
-            const croppedBuffer = await sharp(imgBuffer).resize({ width: 250, height: 250, fit: 'cover' }).toBuffer();
             await fetch(resJson.signedUrl, {
                 method: 'PUT',
-                body: croppedBuffer,
+                body: uploadedPfp,
                 headers: { 'Content-Type': uploadedPfp.type },
             });
         }
