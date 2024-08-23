@@ -95,12 +95,10 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
                 body: uploadedPfp,
                 headers: { 'Content-Type': uploadedPfp.type },
             });
-            const resCrop = await fetch(`/account/netId/settings/api`, {
+            await fetch(`/account/netId/settings/api`, {
                 method: 'PUT',
                 body: JSON.stringify({ operation: 'CROP_PFP', key: resJson.key })
             });
-            const resCropJson = await resCrop.json();
-            console.log("resCropJson: ", resCropJson)
         }
 
         if (resJson.cStatus==200 || resJson.cStatus==204) {
@@ -203,8 +201,9 @@ function DeleteAccount({ netId }: { netId: string }) {
          });
          const resJson = await res.json();
          if (resJson.cStatus==200) {
+            console.log(resJson)
+            fetchCookie();
             msContext.closeMenu();
-            fetchCookie()
             router.push(`/`);
         }
          setAlert(resJson);

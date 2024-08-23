@@ -77,10 +77,6 @@ export default function CreateSuperPost({ draftedPost, action }: { draftedPost: 
 
                 <SuperListingPeriod value={months} setValue={setMonths} />
 
-
-                {/* <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
-                    {months<=userFreeMonths && <button onClick={attemptFreePost}>Create Post (Use {months} free {months==1 ? 'month' : 'months'})</button>}
-                </div> */}
                 <button onClick={attemptSuperPost}>Create</button>
             </>}
         </div>
