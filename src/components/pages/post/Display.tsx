@@ -13,6 +13,7 @@ import Form, { FormInputType } from '@components/Form';
 import { BsXCircle } from 'react-icons/bs';
 import { colorScheme } from '@styles/colors';
 import formStyles from '@styles/ui/form.module.css';
+import { CheckIfLoading } from '@components/Loading';
 
 
 
@@ -144,9 +145,11 @@ function ReportPost({ postId, setAlert }: { postId: string, setAlert: React.Disp
 
 function BuyPost({ postId, setAlert }: { postId: string, setAlert: React.Dispatch<React.SetStateAction<AlertType | null>> }) {
     const msContext = useMenuShadowContext();
+    const [loading, setLoading] = useState<boolean>(false);
     const [hasBought, setHasBought] = useState<boolean>(false);
 
     const attemptBuyPost = async (msg: string) => {
+        setLoading(true);
         const res = await fetch(`/post/${postId}/api`, {
             method: 'PUT',
             body: JSON.stringify({msg}),
@@ -156,6 +159,7 @@ function BuyPost({ postId, setAlert }: { postId: string, setAlert: React.Dispatc
         if (resJson.cStatus==200) setHasBought(true);
         else setAlert(resJson);
         msContext.closeMenu();
+        setLoading(false);
     }
 
     const promptContactMessage = async () => {
@@ -167,7 +171,7 @@ function BuyPost({ postId, setAlert }: { postId: string, setAlert: React.Dispatc
         <>{hasBought ?
             <h4 style={{color: 'var(--grey)'}}>Email has been sent!</h4>
         :
-            <button style={{ backgroundColor: 'var(--orangePrimary)' }} onClick={promptContactMessage}>Contact Seller</button>
+            <CheckIfLoading loading={loading} content={<button style={{ backgroundColor: 'var(--orangePrimary)' }} onClick={promptContactMessage}>Contact Seller</button>} />
         }</>
     );
 }
