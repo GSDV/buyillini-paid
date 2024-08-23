@@ -7,8 +7,8 @@ import { cropPfpBuffer, cropPostBuffer, deleteFromS3, getFromS3, getSignedS3Url,
 import { isValidUser } from '@util/api/auth';
 import { isValidPhoneNumber } from '@util/api/user';
 
-// we may not need this, it shoudla wlasy be webp
-import {fileTypeFromBuffer} from 'file-type';
+
+
 import { getPost } from '@util/prisma/actions/posts';
 
 
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
             const [resS3, resDelete] = await Promise.all([
                 getSignedS3Url(PFP_IMG_PREFIX, fileType),
-                deleteFromS3(userPrisma.id),
+                deleteFromS3(userPrisma.profilePicture),
             ]);
 
             userUpdateData.profilePicture = resS3.key;
@@ -107,10 +107,7 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ cStatus: 102, msg: `Wrong operation.` }, { status: 400 });
         }
 
-        const type = await fileTypeFromBuffer(croppedBuffer);
-        console.log("type: ", type)
-
-        await uploadToS3(croppedBuffer, key, (type as any).ext);
+        await uploadToS3(croppedBuffer, key, 'webp');
 
         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
     } catch (err) {
