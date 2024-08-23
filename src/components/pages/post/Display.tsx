@@ -13,7 +13,7 @@ import Form, { FormInputType } from '@components/Form';
 import { BsXCircle } from 'react-icons/bs';
 import { colorScheme } from '@styles/colors';
 import formStyles from '@styles/ui/form.module.css';
-import { CheckIfLoading } from '@components/Loading';
+import { CheckIfLoading, LoadingIconBlack } from '@components/Loading';
 
 
 
@@ -171,7 +171,11 @@ function BuyPost({ postId, setAlert }: { postId: string, setAlert: React.Dispatc
         <>{hasBought ?
             <h4 style={{color: 'var(--grey)'}}>Email has been sent!</h4>
         :
-            <CheckIfLoading loading={loading} content={<button style={{ backgroundColor: 'var(--orangePrimary)' }} onClick={promptContactMessage}>Contact Seller</button>} />
+            <>{loading ?
+                <LoadingIconBlack />
+            :
+                <button style={{ backgroundColor: 'var(--orangePrimary)' }} onClick={promptContactMessage}>Contact Seller</button>
+            }</>
         }</>
     );
 }
