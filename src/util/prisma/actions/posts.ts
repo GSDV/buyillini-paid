@@ -40,24 +40,12 @@ export interface EditPostData {
     size: string,
     gender: string,
     price: number,
-    images: File[]
+    images: string[]
 }
 export const updatePost = async (postId: string, postData: EditPostData) => {
-    const imageUrls: string[] = [];
-    for (let i=0; i<postData.images.length; i++) {
-        // const imgBytes = await postData.images[i].arrayBuffer();
-        // const imgBuffer = Buffer.from(imgBytes);
-        // const imgUrl = await uploadPostPicture(imgBuffer, postData.images[i].type);
-        // imageUrls.push(imgUrl);
-        const imgUrl = await uploadPostPicture(postData.images[i]);
-        imageUrls.push(imgUrl);
-    }
-    const { images, ...cleanedData } = postData;
-    const dataWithImages = { ...cleanedData, images: imageUrls };
-
     const postPrisma = await prisma.post.update({
         where: { id: postId },
-        data: dataWithImages
+        data: postData
     });
     return postPrisma;
 }
