@@ -243,15 +243,27 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
 export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
     const { value, setValue } = iv;
     const max = 10 < freeMonths ? 10 : freeMonths;
+    const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
 
+    // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     e.preventDefault();
+    //     const val = Number(e.target.value);
+    //     setValue((max < val) ? max : val);
+    // }
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        const val = Number(e.target.value);
-        console.log("A", val);
-        console.log("B", max);
-        console.log("C", (max < val) ? max : val);
-        setValue((max < val) ? max : val);
+        const val = e.target.value;
+        if (val === '') {
+            setInputValue(val);  // keep the input value as an empty string
+            setValue('');        // keep the value as an empty string to denote no selection
+        } else {
+            const numVal = Number(val);
+            setInputValue(val);
+            setValue((max < numVal) ? max : numVal);
+        }
     }
+
+    const maxValue = value === '' ? '' : value;
     
     return (
         <div className={createPostStyles.formItem}>
@@ -259,8 +271,8 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
                 <h4>Use</h4>
-                <input type='number' min='0' step='1' max={max} style={{width: 'fit-content'}} value={value} onChange={handleInput} />
-                <h4>free {value==1 ? 'month' : 'months'}</h4>
+                <input type='number' placeholder='0' min='0' step='1' max={max} style={{width: 'fit-content'}} value={inputValue} onChange={handleInput} />
+                <h4>free {maxValue === '1' ? 'month' : 'months'}</h4>
             </div>
             
             <h5 className={createPostStyles.subText}>You have {freeMonths} free {freeMonths==1 ? 'month' : 'months'} left.</h5>
