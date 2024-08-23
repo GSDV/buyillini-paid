@@ -44,13 +44,12 @@ export default function SignUp() {
             body: JSON.stringify({userData}),
             headers: { 'Content-Type': 'application/json' }
         });
-
         const resJson = await res.json();
-        setAlert(resJson);
         if (resJson.cStatus==200) {
             fetchCookie();
             router.push(`/signup/success/`);
         }
+        setAlert(resJson);
     }
 
     return (

@@ -38,11 +38,11 @@ export default function Login() {
             headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
-        setAlert(resJson);
         if (resJson.cStatus==200) {
             fetchCookie();
             router.push(`/account/${resJson.netId}`);
         }
+        setAlert(resJson);
     }
 
     return (
