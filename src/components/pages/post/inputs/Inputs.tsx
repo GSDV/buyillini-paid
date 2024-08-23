@@ -256,22 +256,53 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
 
 
 
+// export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
+//     const { value, setValue } = iv;
+//     const max = Math.max(MAX_LISTING_PERIOD, freeMonths);
+//     const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
+
+//     // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     //     e.preventDefault();
+//     //     const val = Number(e.target.value);
+//     //     setValue((max < val) ? max : val);
+//     // }
+//     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+//         e.preventDefault();
+//         const val = e.target.value;
+//         setInputValue(val);
+//         if (val === '') setValue('');
+//         else setValue(Math.max(max, Number(val)));
+//     }
+
+//     const maxValue = value === '' ? '' : value;
+    
+//     return (
+//         <div className={createPostStyles.formItem}>
+//             <h4>Free Months</h4>
+            
+//             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
+//                 <h4>Use</h4>
+//                 <input type='number' placeholder='0' min='0' step='1' max={max} style={{width: 'fit-content'}} value={inputValue} onChange={handleInput} />
+//                 <h4>free {maxValue === '1' ? 'month' : 'months'}</h4>
+//             </div>
+            
+//             <h5 className={createPostStyles.subText}>You have {freeMonths} free {freeMonths==1 ? 'month' : 'months'} left.</h5>
+//         </div>
+//     );
+// }
 export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: number }) {
     const { value, setValue } = iv;
     const max = Math.max(MAX_LISTING_PERIOD, freeMonths);
-    const [inputValue, setInputValue] = useState<string>(value !== '' ? value.toString() : '');
+    // const [inputValue, setInputValue] = useState<string>(value);
 
-    // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     e.preventDefault();
-    //     const val = Number(e.target.value);
-    //     setValue((max < val) ? max : val);
-    // }
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const val = e.target.value;
-        setInputValue(val);
-        if (val === '') setValue('');
-        else setValue(Math.max(max, Number(val)));
+        const newVal = Math.max(max, Number(val)).toString();
+        setValue(newVal);
+        // setInputValue(val);
+        // if (val === '') setValue('');
+        // else setValue(Math.max(max, Number(val)));
     }
 
     const maxValue = value === '' ? '' : value;
@@ -282,7 +313,7 @@ export function UseFreeMonths({ iv, freeMonths }: { iv: InputValue, freeMonths: 
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
                 <h4>Use</h4>
-                <input type='number' placeholder='0' min='0' step='1' max={max} style={{width: 'fit-content'}} value={inputValue} onChange={handleInput} />
+                <input type='number' placeholder='0' min='0' step='1' max={max} style={{width: 'fit-content'}} value={value} onChange={handleInput} />
                 <h4>free {maxValue === '1' ? 'month' : 'months'}</h4>
             </div>
             
