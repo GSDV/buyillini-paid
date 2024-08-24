@@ -102,3 +102,7 @@ export const GENDERS = [
 
 export const POST_PER_PAGE = 15;
 export const POST_PER_PAGE_ACCOUNT = 9;
+
+
+
+export const delay = (s: number) => new Promise(resolve => setTimeout(resolve, s*1000));

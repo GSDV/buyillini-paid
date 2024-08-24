@@ -2,7 +2,7 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } fro
 import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { POST_IMG_PREFIX } from '@util/global';
+import { POST_IMG_PREFIX, delay } from '@util/global';
 
 
 
@@ -112,4 +112,11 @@ export const getSignedS3Url = async (prefix: string, type: string) => {
 
     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
     return {signedUrl, key};
+}
+
+
+
+export const delayDeleteFromS3 = async (key: string) => {
+    await delay(15);
+    deleteFromS3(key);
 }

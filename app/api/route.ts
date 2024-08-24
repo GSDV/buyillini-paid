@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 import { getRedactedUserFromAuth, getValidRedactedUserFromAuth, updateUser } from '@util/prisma/actions/user';
 import { ACCEPTED_FILES, IMG_ACCEPTED_FILES, IMG_SIZE_LIMIT, POST_IMG_PREFIX } from '@util/global';
-import { deleteFromS3, getSignedS3Url, uploadPfpPicture, uploadPostPicture, uploadToS3 } from '@util/s3/aws';
+import { delayDeleteFromS3, deleteFromS3, getSignedS3Url, uploadPfpPicture, uploadPostPicture, uploadToS3 } from '@util/s3/aws';
 import { addImageKeyToPost, getPost, updatePost, updatePostImagesArr } from '@util/prisma/actions/posts';
 
 
@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
                     postPrisma==null || 
                     postPrisma.sellerId!=userPrisma.id || 
                     postPrisma.deleted || 
-                    postPrisma.images.length>=5) return; // maybe delete here? maybe wait for a few seconds and then delete?
+                    postPrisma.images.length>=5) delayDeleteFromS3(key); // maybe delete here? maybe wait for a few seconds and then delete?
                 addImageKeyToPost((postPrisma as any).id, key);
             });
 
