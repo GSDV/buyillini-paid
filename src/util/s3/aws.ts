@@ -2,6 +2,7 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } fro
 import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { POST_IMG_PREFIX } from '@util/global';
 
 
 
@@ -13,6 +14,11 @@ export const s3Client = new S3Client({
     }
 });
 
+
+
+
+
+// export const generatePostKey = () => POST_IMG_PREFIX+uuidv4();
 
 
 export const uploadPostPicture = async (file: File) => {
