@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
 
         const authTokenCookie = cookies().get(`authtoken`);
 
-        
+
         if (operation=='UPLOAD_POST') {
             const [resUser, postPrisma, s3Key] = await Promise.all([
                 getValidRedactedUserFromAuth(authTokenCookie?.value),
@@ -120,29 +120,30 @@ export async function POST(req: NextRequest) {
 
 
 
-
-
-
-
-
-
 // Delete an image from a post
 export async function DELETE(req: NextRequest) {
     try {
         const { postId, deletedImgKey } = await req.json();
+        if (!postId || !deletedImgKey) return NextResponse.json({ cStatus: 102, msg: `Missing data.` }, { status: 400 });
 
         const authTokenCookie = cookies().get(`authtoken`);
-        if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
-        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
-        if (!userPrisma) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
 
-        const postPrisma = await getPost(postId);
-        if (!postPrisma) return NextResponse.json({ cStatus: 400, msg: `Post does not exist.` }, { status: 400 });
-        if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 400, msg: `Not your post.` }, { status: 400 });
-        if (!postPrisma.images.includes(deletedImgKey)) return NextResponse.json({ cStatus: 400, msg: `Image does not exist on post.` }, { status: 400 });
+        const [resUser, postPrisma] = await Promise.all([
+            getValidRedactedUserFromAuth(authTokenCookie?.value),
+            getPost(postId),
+        ]);
 
-        const newImages = postPrisma.images.filter(img => img !== deletedImgKey);
+        const userPrisma = resUser.user;
 
+        let nextRes: any = null;
+        if (!resUser.valid || userPrisma==null)         nextRes = resUser.nextRes;
+        else if (postPrisma==null)                      nextRes = {cStatus: 999, msg: `Post does not exist.`};
+        else if (postPrisma.sellerId!=userPrisma.id)    nextRes = {cStatus: 999, msg: `Not your post.`};
+        else if (postPrisma.deleted)                    nextRes = {cStatus: 999, msg: `This post has been deleted.`};
+        else if (!postPrisma.images.includes(deletedImgKey)) nextRes = {cStatus: 999, msg: `Image does not exist on post.`};
+        if (nextRes!=null) return NextResponse.json(nextRes, { status: 400 });
+
+        const newImages = (postPrisma as any).images.filter((img: any) => img !== deletedImgKey);
         const [resS3, resPrisma] = await Promise.all([
             deleteFromS3(deletedImgKey),
             updatePostImagesArr(postId, newImages)
