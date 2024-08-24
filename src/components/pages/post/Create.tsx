@@ -70,7 +70,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
             const resSignAndKeyJson = await resSignAndKey.json();
             if (resSignAndKeyJson.cStatus==200) {
-                fetch(resSignAndKeyJson.signedUrl, { // need waitgroup for this
+                await fetch(resSignAndKeyJson.signedUrl, {
                     method: 'POST',
                     body: croppedPostBlob,
                     headers: { 'Content-Type': 'webp' },
@@ -98,7 +98,9 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
     const attemptFreePost = async () => {
         setLoading(true);
+        console.log("AA")
         const postData = await getData();
+        console.log("CC")
         const res = await fetch(`/create/postId/api/free`, {
             method: 'POST',
             body: JSON.stringify({ postData }),
