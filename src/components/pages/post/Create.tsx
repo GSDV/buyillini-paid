@@ -101,7 +101,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         setLoading(true);
         console.log("AA")
         const inputData = await getData();
-        console.log("CC")
+        console.log("CC ", inputData)
         const res = await fetch(`/create/postId/api/free`, {
             method: 'POST',
             body: JSON.stringify({ inputData }),
