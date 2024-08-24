@@ -245,10 +245,12 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
                 headers: { 'Content-Type': 'webp' },
             })
                 
-            fetch(`/api/upload`, {
+            const resUpload = await fetch(`/api/upload`, {
                 method: 'PUT',
                 body: JSON.stringify({ postId, key: resJson.key })
             });
+            const resUploadJson = await resUpload.json();
+            console.log(resUploadJson);
 
             const newImages = [...value, image];
             setValue(newImages);
