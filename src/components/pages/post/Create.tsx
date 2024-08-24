@@ -54,13 +54,14 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
             const imageFile = images[i];
 
             const [resSignAndKey, croppedPostBlob] = await Promise.all([
-                fetch(`/api/upload`, {
+                fetch(`/api/s3`, {
                     method: 'POST',
                     body: JSON.stringify({ operation: 'UPLOAD_POST_PHOTO', fileType: imageFile.type, fileSize: imageFile.size }),
                     headers: { 'Content-Type': 'application/json' }
                 }),
                 makePostPicture(imageFile)
             ]);
+            console.log("BB")
 
             if (croppedPostBlob == null) {
                 setAlert({cStatus: 400, msg: 'Something went wrong.'});
