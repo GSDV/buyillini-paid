@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
                 
                 console.log("S DDD");
                 addImageKeyToPost((postPrisma as any).id, key);
-            });
+            }).catch(err => console.log(err));
 
             console.log("S EEE ", signedUrl, key);
             return NextResponse.json({ cStatus: 200, msg: `Success.`, key, signedUrl }, { status: 200 });
@@ -192,6 +192,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
     }
 }
+
+
+
 
 
 
