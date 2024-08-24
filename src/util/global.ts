@@ -14,6 +14,11 @@ export const POST_IMG_PREFIX = `post-f-`;
 export const PFP_IMG_PREFIX = `post-f-`;
 
 
+export const POST_WIDTH = 1200;
+export const POST_HEIGHT = 2100;
+export const PFP_LENGTH = 250;
+
+
 // Get the AWS S3 image URL
 export const BUYILLINI_LOGO = `https://buyillini.s3.us-east-2.amazonaws.com/bi-logo`;
 export const DEFAULT_PFP = `/ui/default-profile-picture.png`;

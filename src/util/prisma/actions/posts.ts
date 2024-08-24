@@ -136,7 +136,7 @@ export const deletePost = async (postId: string) => {
         where: { id: postId }
     });
     if (!postPrisma) return null;
-    for (let i=0; i<postPrisma.images.length; i++) await deleteFromS3(postPrisma.images[i]);
+    for (let i=0; i<postPrisma.images.length; i++) deleteFromS3(postPrisma.images[i]);
     return postPrisma;
 }
 

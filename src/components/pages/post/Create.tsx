@@ -61,7 +61,6 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
                 }),
                 makePostPicture(imageFile)
             ]);
-            console.log("BB")
 
             if (croppedPostBlob == null) {
                 setAlert({cStatus: 400, msg: 'Something went wrong.'});
@@ -108,7 +107,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
-            router.push(`/create/free/${resJson.postId}`);
+            router.push(`/create/${resJson.postId}/free`);
         }
         else {
             setAlert(resJson);

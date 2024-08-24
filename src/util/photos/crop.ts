@@ -1,5 +1,9 @@
 'use client';
 
+import { POST_WIDTH, POST_HEIGHT } from "@util/global";
+
+
+
 export const makePostPicture = async (file: File) => {
     const img = new Image();
     const canvas = document.createElement('canvas');
@@ -12,10 +16,10 @@ export const makePostPicture = async (file: File) => {
         img.src = URL.createObjectURL(file);
     });
   
-    canvas.width = 250;
-    canvas.height = 250;
+    canvas.width = POST_WIDTH;
+    canvas.height = POST_HEIGHT;
 
-    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 250, 250);
+    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, POST_WIDTH, POST_HEIGHT);
   
     const webpBlob = await new Promise<Blob | null>((resolve) => {
         canvas.toBlob((blob) => {
