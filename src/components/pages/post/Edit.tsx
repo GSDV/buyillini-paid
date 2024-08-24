@@ -95,7 +95,7 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
                 
                 <Price value={price} setValue={setPrice} />
 
-                <Images value={images} setValue={setImages} postId={post.id} />
+                {/* <Images value={images} setValue={setImages} postId={post.id} /> */}
 
                 <button onClick={attemptEditPost}>Save Updates</button>
             </>}
