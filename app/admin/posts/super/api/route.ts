@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 
 import { isAdmin, createSuperPost, SuperPostData } from '@util/prisma/actions/admin';
 import { CATEGORIES, CLOTHING_SIZES, GENDERS, isRegCat } from '@util/global';
-import { isValidPrice } from '@util/api/posts';
 import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { getPost } from '@util/prisma/actions/posts';
 
@@ -80,7 +79,7 @@ const isValidSuperPostData = (postData: SuperPostData) => {
     if (!CLOTHING_SIZES.includes(size) && !isRegCat(size)) msg = `Specify clothing size.`;
     if (!GENDERS.includes(gender)) msg = `Specify gender.`;
 
-    if (!isValidPrice(price)) msg = `Price must be between $0 and $9,999.99.`;
+    // if (!isValidPrice(price)) msg = `Price must be between $0 and $9,999.99.`;
 
     if (images.length<=0 || images.length>5) msg = `Must provide 1 to 5 images.`;
 
