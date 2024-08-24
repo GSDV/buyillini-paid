@@ -245,7 +245,7 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
                 body: processed,
                 headers: { 'Content-Type': 'webp' },
             });
-            const newImages = [...value, resJson.key];
+            const newImages = [...value, image];
             setValue(newImages);
             setAlert(null);
         } else {
@@ -286,7 +286,7 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
                     {value.map((img: any, i: any) => (
                         <div key={i} className={createPostStyles.imgWrapper}>
                             <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                            <img src={imgUrl(img)} onClick={() => openImage(i)} />
+                            <img src={URL.createObjectURL(img)} onClick={() => openImage(i)} />
                         </div>
                     ))}
 

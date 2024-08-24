@@ -25,7 +25,8 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const [size, setSize] = useState<string>(draftedPost.size);
     const [gender, setGender] = useState<string>(draftedPost.gender);
     const [price, setPrice] = useState<number>(Number(draftedPost.price));
-    const [images, setImages] = useState<string[]>(draftedPost.images);
+    // const [images, setImages] = useState<string[]>(draftedPost.images);
+    const [images, setImages] = useState<File[]>([]);
     const [months, setMonths] = useState<string>(draftedPost.duration.toString());
     const [userFreeMonths, setUserFreeMonths] = useState<string>('0');
 
