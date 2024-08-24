@@ -73,7 +73,7 @@ export default function CreateSuperPost({ draftedPost, action }: { draftedPost: 
 
                 <Price value={price} setValue={setPrice} />
 
-                <Images value={images} setValue={setImages} postId={draftedPost.id} />
+                {/* <Images value={images} setValue={setImages} postId={draftedPost.id} /> */}
 
                 <SuperListingPeriod value={months} setValue={setMonths} />
 
