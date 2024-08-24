@@ -6,9 +6,9 @@ import { Post } from '@prisma/client';
 
 import CenterLayout from '@components/containers/CenterLayout';
 import NeedsToBeLoggedIn from '@components/NeedsToBeLoggedIn';
-import Loading from '@components/Loading';
+import { CheckIfLoading } from '@components/Loading';
+import ConfirmFreePost from '@components/pages/post/confirm/Free';
 import { AlertType, CheckIfAlert } from '@components/Alert';
-import PayForPost from '@components/pages/post/PayForPost';
 
 
 
@@ -18,7 +18,7 @@ export default function Page({ params }: { params: { postId: string } }) {
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchDraftedPost = async () => {
-        const res = await fetch(`/create/paid/${params.postId}/api/`, { method: 'GET' });
+        const res = await fetch(`/create/${params.postId}/api/free`, { method: 'GET' });
         const resJson = await res.json();
         if (resJson.cStatus==200) setPost(resJson.draftedPost);
         else setAlert(resJson);
@@ -31,11 +31,9 @@ export default function Page({ params }: { params: { postId: string } }) {
 
     return (
         <CenterLayout>
-            {loading ?
-                <Loading />
-            :
+            <CheckIfLoading loading={loading} content={
                 <NeedsToBeLoggedIn content={<PostExists post={post as Post} alert={alert} />} />
-            }
+            } />
         </CenterLayout>
     )
 }
@@ -47,7 +45,7 @@ function PostExists({ post, alert}: { post: Post, alert: AlertType | null }) {
         <CheckIfAlert 
             alert={alert}
             variations={[]}
-            content={<PayForPost post={post} />}
+            content={<ConfirmFreePost post={post} />}
         />
     );
 }

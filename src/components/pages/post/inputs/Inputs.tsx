@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
 
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MAX_LISTING_PERIOD, MONTH_TO_MILLI, formatDate, imgUrl } from '@util/global';
+import { ACCEPTED_FILES, CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, IMG_SIZE_LIMIT, MAX_LISTING_PERIOD, MONTH_TO_MILLI, formatDate, imgUrl } from '@util/global';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
@@ -102,162 +102,142 @@ export function Price({ value, setValue }: InputValue) {
 
 
 
-export function Images({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
+// export function Images({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
+//     const msContext = useMenuShadowContext();
+//     const imgRef = useRef<HTMLInputElement | null>(null);
+//     const [alert, setAlert] = useState<AlertType | null>(null);
+//     const [loading, setLoading] = useState<boolean>(false);
+
+
+//     // const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//     //     const img = e.target.files?.[0];
+//     //     setLoading(true);
+//     //     if (value.length >= 5 || img==undefined) return;
+//     //     const res = await fetch(`/api`, {
+//     //         method: 'POST',
+//     //         body: JSON.stringify({ postId, fileType: img.type, fileSize: img.size }),
+//     //         headers: { 'Content-Type': 'application/json' }
+//     //     });
+//     //     const resJson = await res.json();
+//     //     if (resJson.cStatus==200) {
+//     //         await fetch(resJson.signedUrl, {
+//     //             method: 'PUT',
+//     //             body: img,
+//     //             headers: { 'Content-Type': img.type },
+//     //         });
+//     //         await fetch(`/account/netId/settings/api`, {
+//     //             method: 'PUT',
+//     //             body: JSON.stringify({ operation: 'CROP_POST', key: resJson.key, postId: postId })
+//     //         });
+//     //         const newImages = [...value, resJson.key];
+//     //         setValue(newImages);
+//     //         setAlert(null);
+//     //     } else {
+//     //         setAlert(resJson);
+//     //     }
+//     //     if (imgRef.current) imgRef.current.value = '';
+//     //     setLoading(false);
+//     // };
+//     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//         setLoading(true);
+//         const image = e.target.files?.[0];
+//         if (value.length >= 5 || image==undefined) return;
+//         const postData = new FormData();
+//         postData.set('operation', 'UPLOAD_POST');
+//         postData.set('image', image);
+//         postData.set('postId', postId);
+
+//         const res = await fetch(`/api`, {
+//             method: 'POST',
+//             body: postData
+//         });
+//         const resJson = await res.json();
+//         if (resJson.cStatus==200) {
+//             const newImages = [...value, resJson.key];
+//             setValue(newImages);
+//             setAlert(null);
+//         } else {
+//             setAlert(resJson);
+//         }
+//         if (imgRef.current) imgRef.current.value = '';
+//         setLoading(false);
+//     };
+
+
+//     const handleDelete = async (idx: number) => {
+//         setLoading(true);
+//         const newImages = [...value];
+//         const deletedImgKey = newImages.splice(idx, 1)[0];
+//         await fetch(`/api`, {
+//             method: 'DELETE',
+//             body: JSON.stringify({ deletedImgKey, postId }),
+//             headers: { 'Content-Type': 'application/json' }
+//         });
+//         setValue(newImages);
+//         setLoading(false);
+//     }
+
+//     const openImage = (idx: number) => {
+//         msContext.setContent(<DisplayImage img={value[idx]} />);
+//         msContext.openMenu();
+//     }
+
+//     return (
+//         <div className={createPostStyles.formItem} style={{width: '100%'}}>
+//             <h4>Images</h4>
+
+//             {loading ?
+//                 <LoadingIconBlack />
+//             :
+//             <>
+//                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
+//                     {value.map((img: any, i: any) => (
+//                         <div key={i} className={createPostStyles.imgWrapper}>
+//                             <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
+//                             <img src={imgUrl(img)} onClick={() => openImage(i)} />
+//                         </div>
+//                     ))}
+
+//                     {value.length<5 && <>
+//                         <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
+//                         <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
+//                     </>}
+//                 </div>
+//                 <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+//                     {alert && <Alert alert={alert} variations={[]} />}
+//                 </div>
+//             </>
+//             }
+//         </div>
+//     );
+// }
+
+
+
+
+
+
+export function Images({ value, setValue }: InputValue) {
     const msContext = useMenuShadowContext();
     const imgRef = useRef<HTMLInputElement | null>(null);
     const [alert, setAlert] = useState<AlertType | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-
-    // const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const img = e.target.files?.[0];
-    //     setLoading(true);
-    //     if (value.length >= 5 || img==undefined) return;
-    //     const res = await fetch(`/api`, {
-    //         method: 'POST',
-    //         body: JSON.stringify({ postId, fileType: img.type, fileSize: img.size }),
-    //         headers: { 'Content-Type': 'application/json' }
-    //     });
-    //     const resJson = await res.json();
-    //     if (resJson.cStatus==200) {
-    //         await fetch(resJson.signedUrl, {
-    //             method: 'PUT',
-    //             body: img,
-    //             headers: { 'Content-Type': img.type },
-    //         });
-    //         await fetch(`/account/netId/settings/api`, {
-    //             method: 'PUT',
-    //             body: JSON.stringify({ operation: 'CROP_POST', key: resJson.key, postId: postId })
-    //         });
-    //         const newImages = [...value, resJson.key];
-    //         setValue(newImages);
-    //         setAlert(null);
-    //     } else {
-    //         setAlert(resJson);
-    //     }
-    //     if (imgRef.current) imgRef.current.value = '';
-    //     setLoading(false);
-    // };
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLoading(true);
         const image = e.target.files?.[0];
         if (value.length >= 5 || image==undefined) return;
-        const postData = new FormData();
-        postData.set('operation', 'UPLOAD_POST');
-        postData.set('image', image);
-        postData.set('postId', postId);
-
-        const res = await fetch(`/api`, {
-            method: 'POST',
-            body: postData
-        });
-        const resJson = await res.json();
-        if (resJson.cStatus==200) {
-            const newImages = [...value, resJson.key];
-            setValue(newImages);
-            setAlert(null);
-        } else {
-            setAlert(resJson);
+        if (!ACCEPTED_FILES.includes(image.type)) {
+            setAlert({cStatus: 102, msg: 'Please upload a png, jpg, or webp file'});
+            return;
         }
-        if (imgRef.current) imgRef.current.value = '';
-        setLoading(false);
-    };
-
-
-    const handleDelete = async (idx: number) => {
-        setLoading(true);
-        const newImages = [...value];
-        const deletedImgKey = newImages.splice(idx, 1)[0];
-        await fetch(`/api`, {
-            method: 'DELETE',
-            body: JSON.stringify({ deletedImgKey, postId }),
-            headers: { 'Content-Type': 'application/json' }
-        });
+        if (image.size > IMG_SIZE_LIMIT) {
+            setAlert({cStatus: 102, msg: 'Please upload an image smaller than 15mbs'});
+            return;
+        }
+        const newImages = [...value, image];
         setValue(newImages);
-        setLoading(false);
-    }
+        setAlert(null);
 
-    const openImage = (idx: number) => {
-        msContext.setContent(<DisplayImage img={value[idx]} />);
-        msContext.openMenu();
-    }
-
-    return (
-        <div className={createPostStyles.formItem} style={{width: '100%'}}>
-            <h4>Images</h4>
-
-            {loading ?
-                <LoadingIconBlack />
-            :
-            <>
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
-                    {value.map((img: any, i: any) => (
-                        <div key={i} className={createPostStyles.imgWrapper}>
-                            <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                            <img src={imgUrl(img)} onClick={() => openImage(i)} />
-                        </div>
-                    ))}
-
-                    {value.length<5 && <>
-                        <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
-                        <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
-                    </>}
-                </div>
-                <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                    {alert && <Alert alert={alert} variations={[]} />}
-                </div>
-            </>
-            }
-        </div>
-    );
-}
-
-
-
-
-
-
-export function FileImages({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
-    const msContext = useMenuShadowContext();
-    const imgRef = useRef<HTMLInputElement | null>(null);
-    const [alert, setAlert] = useState<AlertType | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLoading(true);
-        const image = e.target.files?.[0];
-        if (value.length >= 5 || image==undefined) return;
-        const data: any = {};
-        data.fileType = image.type;
-        data.fileSize = image.size;
-
-        const res = await fetch(`/api/upload`, {
-            method: 'POST',
-            body: JSON.stringify(data)
-        });
-        const resJson = await res.json();
-
-        if (resJson.cStatus==200) {
-            const processed = await makePfpPicture(image);
-            fetch(resJson.signedUrl, {
-                method: 'PUT',
-                body: processed,
-                headers: { 'Content-Type': 'webp' },
-            })
-                
-            const resUpload = await fetch(`/api/upload`, {
-                method: 'PUT',
-                body: JSON.stringify({ postId, key: resJson.key })
-            });
-            const resUploadJson = await resUpload.json();
-            console.log(resUploadJson);
-
-            const newImages = [...value, image];
-            setValue(newImages);
-            setAlert(null);
-        } else {
-            setAlert(resJson);
-        }
         if (imgRef.current) imgRef.current.value = '';
         setLoading(false);
     };
@@ -266,12 +246,7 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
     const handleDelete = async (idx: number) => {
         setLoading(true);
         const newImages = [...value];
-        const deletedImgKey = newImages.splice(idx, 1)[0];
-        await fetch(`/api`, {
-            method: 'DELETE',
-            body: JSON.stringify({ deletedImgKey, postId }),
-            headers: { 'Content-Type': 'application/json' }
-        });
+        newImages.splice(idx, 1)[0];
         setValue(newImages);
         setLoading(false);
     }
@@ -311,40 +286,8 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
     );
 }
 
-export const makePfpPicture = async (file: File): Promise<Blob> => {
-    const imgBytes = await file.arrayBuffer();
-    
-    // Use the browser's built-in image processing capabilities
-    const img = new Image();
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    if (!ctx) {
-      throw new Error('Could not get canvas context');
-    }
-  
-    await new Promise((resolve) => {
-      img.onload = resolve;
-      img.src = URL.createObjectURL(file);
-    });
-  
-    // Set canvas size
-    canvas.width = 250;
-    canvas.height = 250;
-  
-    // Draw and crop image
-    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 250, 250);
-  
-    // Convert to WebP
-    const webpBlob = await new Promise<Blob>((resolve) => {
-      canvas.toBlob((blob) => {
-        if (blob) resolve(blob);
-        else throw new Error('Failed to create blob');
-      }, 'image/webp', 0.8);
-    });
-  
-    return webpBlob;
-};
+
+
 
 
 

@@ -1,22 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Post } from '@prisma/client';
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, formatDate } from '@util/global';
+import { CLOTHING_SIZES, NO_SIZE_GENDER_CATEGORIES } from '@util/global';
 
 import { Alert, AlertType } from '@components/Alert';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
 import Loading from '@components/Loading';
-import { Category, Description, FileImages, Gender, Images, ListingPeriod, Price, Size, Title, UseFreeMonths } from './inputs/Inputs';
+import { Category, Description, Images, Gender, ListingPeriod, Price, Size, Title, UseFreeMonths } from './inputs/Inputs';
+import { makePostPicture } from '@util/photos/crop';
+import { urlToFile } from '@util/photos/urlToFile';
 
 
 
 export default function Create({ draftedPost, freeMonths }: { draftedPost: Post, freeMonths: number }) {
     const router = useRouter();
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [alert, setAlert] = useState<AlertType | null>(null);
 
     const [title, setTitle] = useState<string>(draftedPost.title);
@@ -25,24 +27,60 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const [size, setSize] = useState<string>(draftedPost.size);
     const [gender, setGender] = useState<string>(draftedPost.gender);
     const [price, setPrice] = useState<number>(Number(draftedPost.price));
-    // const [images, setImages] = useState<string[]>(draftedPost.images);
     const [images, setImages] = useState<File[]>([]);
     const [months, setMonths] = useState<string>(draftedPost.duration.toString());
-    const [userFreeMonths, setUserFreeMonths] = useState<string>('0');
+    const [freeMonthsUsed, setFreeMonthsUsed] = useState<string>('0');
 
 
-    const getData = () => {
-        const postData = new FormData();
-        postData.set('title', title);
-        postData.set('description', description);
-        postData.set('category', category);
-        postData.set('size', size);
-        postData.set('gender', gender);
-        postData.set('price', String(price));
-        for (let i=0; i<images.length; i++) postData.append('images', images[i]);
-        postData.set('months', (months=='' ? '1' : months));
-        postData.set('userFreeMonths', (userFreeMonths=='' ? '0' : userFreeMonths));
+    const getData = async () => {
+        const imageKeys = await uploadImages();
+        const postData = {
+            title: title,
+            description: description,
+            category: category,
+            size: size,
+            gender: gender,
+            price: String(price),
+            images: imageKeys,
+            months: (months=='' ? '1': months),
+            freeMonthsUsed: (freeMonthsUsed=='' ? '0' : freeMonthsUsed)
+        }
         return postData;
+    }
+
+    const uploadImages = async () => {
+        const imageKeys: string[] = [];
+        for (let i=0; i<images.length; i++) {
+            const imageFile = images[i];
+
+            const [resSignAndKey, croppedPostBlob] = await Promise.all([
+                fetch(`/api/upload`, {
+                    method: 'POST',
+                    body: JSON.stringify({ operation: 'UPLOAD_POST_PHOTO', fileType: imageFile.type, fileSize: imageFile.size }),
+                    headers: { 'Content-Type': 'application/json' }
+                }),
+                makePostPicture(imageFile)
+            ]);
+
+            if (croppedPostBlob == null) {
+                setAlert({cStatus: 400, msg: 'Something went wrong.'});
+                return;
+            }
+
+            const resSignAndKeyJson = await resSignAndKey.json();
+            if (resSignAndKeyJson.cStatus==200) {
+                fetch(resSignAndKeyJson.signedUrl, { // need waitgroup for this
+                    method: 'POST',
+                    body: croppedPostBlob,
+                    headers: { 'Content-Type': 'webp' },
+                });
+                imageKeys.push(resSignAndKeyJson.key);
+            } else {
+                setAlert(resSignAndKeyJson);
+                return;
+            }
+        }
+        return imageKeys;
     }
 
     const setCategoryField = (value: string) => {
@@ -56,12 +94,14 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
         setCategory(value);
     }
 
+
     const attemptFreePost = async () => {
         setLoading(true);
-        const postData = getData();
-        const res = await fetch(`/create/free/postId/api/`, {
+        const postData = await getData();
+        const res = await fetch(`/create/postId/api/free`, {
             method: 'POST',
-            body: postData
+            body: JSON.stringify({ postData }),
+            headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
@@ -75,10 +115,11 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
     const attemptPaidPost = async () => {
         setLoading(true);
-        const postData = getData();
-        const res = await fetch(`/create/paid/postId/api/`, {
+        const postData = await getData();
+        const res = await fetch(`/create/postId/api/paid`, {
             method: 'POST',
-            body: postData
+            body: JSON.stringify({ postData }),
+            headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
@@ -89,6 +130,24 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
             setLoading(false);
         }
     }
+
+
+    const convertImageKeysToFiles = async () => {
+        setLoading(true);
+        const urlsToFilesPromises = draftedPost.images.map(key => urlToFile(key));
+        const imageFiles = await Promise.all(urlsToFilesPromises);
+        const nullFileExists = imageFiles.some((file) => file==null);
+        if (nullFileExists) {
+            setAlert({ cStatus: 400, msg: `Something went wrong while fetching past images.` });
+        } else {
+            setImages(imageFiles as any);
+        }
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        convertImageKeysToFiles();
+    }, []);
 
     return (
         <div className={createPostStyles.form}>
@@ -114,15 +173,15 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
                 <Price value={price} setValue={setPrice} />
 
-                <FileImages value={images} setValue={setImages} postId={draftedPost.id} />
+                <Images value={images} setValue={setImages} />
 
                 <ListingPeriod value={months} setValue={setMonths} />
 
-                {freeMonths!=0 && <UseFreeMonths iv={{value: userFreeMonths, setValue: setUserFreeMonths}} freeMonths={freeMonths} />}
+                {freeMonths!=0 && <UseFreeMonths iv={{value: freeMonthsUsed, setValue: setFreeMonthsUsed}} freeMonths={freeMonths} />}
 
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
-                    {numMonths(months) <= numFreeMonths(userFreeMonths) && <button onClick={attemptFreePost}>Create Post (Use {months} free {numFreeMonths(months)==1 ? 'month' : 'months'})</button>}
-                    {numMonths(months) > numFreeMonths(userFreeMonths) && <button onClick={attemptPaidPost}>Create Post (Pay ${numMonths(months)-numFreeMonths(userFreeMonths)})</button>}
+                    {numMonths(months) <= numFreeMonths(freeMonthsUsed) && <button onClick={attemptFreePost}>Create Post (Use {months} free {numFreeMonths(months)==1 ? 'month' : 'months'})</button>}
+                    {numMonths(months) > numFreeMonths(freeMonthsUsed) && <button onClick={attemptPaidPost}>Create Post (Pay ${numMonths(months)-numFreeMonths(freeMonthsUsed)})</button>}
                 </div>
             </>}
         </div>
@@ -134,6 +193,6 @@ function numMonths(months: string) {
     return (months==='') ? 1 : Number(months);
 }
 
-function numFreeMonths(userFreeMonths: string) {
-    return (userFreeMonths==='') ? 0 : Number(userFreeMonths);
+function numFreeMonths(freeMonthsUsed: string) {
+    return (freeMonthsUsed==='') ? 0 : Number(freeMonthsUsed);
 }

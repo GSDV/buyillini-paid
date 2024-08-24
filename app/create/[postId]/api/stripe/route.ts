@@ -11,7 +11,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
 
-// Used to check if the Stripe payment was successful, and then 
+// Used to check if the Stripe payment was successful, and then mark active and subtract free months
 export async function POST(req: NextRequest, { params }: { params: { postId: string } }) {
     try {
         const authTokenCookie = cookies().get('authtoken');
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest, { params }: { params: { postId: str
         const postPrisma = await getPostWithPayment(params.postId);
 
         if (!postPrisma) return NextResponse.json({ cStatus: 430, msg: `Post does not exist.` }, { status: 400 });
+        if (userPrisma.id != postPrisma.sellerId) return NextResponse.json({ cStatus: 999, msg: `Not your post.` }, { status: 400 });
         if (!postPrisma.payment) return NextResponse.json({ cStatus: 601, msg: `Payment intent does not exist.` }, { status: 400 });
         if (postPrisma.payment.successfullyPaid==true) return NextResponse.json({ cStatus: 602, msg: `Post was already paid for.` }, { status: 400 });
 

@@ -110,13 +110,6 @@ export const getSignedS3Url = async (prefix: string, type: string) => {
         ContentType: type
     });
 
-    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 });
     return {signedUrl, key};
-}
-
-
-
-export const delayDeleteFromS3 = async (key: string) => {
-    await delay(15);
-    deleteFromS3(key);
 }

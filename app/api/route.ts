@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 import { getRedactedUserFromAuth, getValidRedactedUserFromAuth, updateUser } from '@util/prisma/actions/user';
 import { ACCEPTED_FILES, IMG_ACCEPTED_FILES, IMG_SIZE_LIMIT, POST_IMG_PREFIX } from '@util/global';
-import { delayDeleteFromS3, deleteFromS3, getSignedS3Url, uploadPfpPicture, uploadPostPicture, uploadToS3 } from '@util/s3/aws';
+import { deleteFromS3, getSignedS3Url, uploadPfpPicture, uploadPostPicture, uploadToS3 } from '@util/s3/aws';
 import { addImageKeyToPost, getPost, updatePost, updatePostImagesArr } from '@util/prisma/actions/posts';
 
 
@@ -149,51 +149,49 @@ export async function GET(req: NextRequest) {
 
 
 
-export async function POST(req: NextRequest) {
-    try {
-        const { operation, postId, fileType, fileSize } = await req.json();
+// export async function POST(req: NextRequest) {
+//     try {
+//         const { operation, postId, fileType, fileSize } = await req.json();
 
-        if (!operation || !postId || !fileType || !fileSize) return NextResponse.json({ cStatus: 101, msg: `Some fields missing.` }, { status: 400 });
+//         if (!operation || !postId || !fileType || !fileSize) return NextResponse.json({ cStatus: 101, msg: `Some fields missing.` }, { status: 400 });
 
-        if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
-        if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 10mb.` }, { status: 400 });
+//         if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
+//         if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 10mb.` }, { status: 400 });
 
-        const authTokenCookie = cookies().get(`authtoken`);
-        console.log("S AAA");
+//         const authTokenCookie = cookies().get(`authtoken`);
+//         console.log("S AAA");
 
-        if (operation=='UPLOAD_POST') {
-            const {signedUrl, key} = await getSignedS3Url(POST_IMG_PREFIX, 'webp');
-            console.log("S BBB");
+//         if (operation=='UPLOAD_POST') {
+//             const {signedUrl, key} = await getSignedS3Url(POST_IMG_PREFIX, 'webp');
+//             console.log("S BBB");
 
-            Promise.all([
-                getValidRedactedUserFromAuth(authTokenCookie?.value),
-                getPost(postId)
-            ])
-            .then(([resUser, postPrisma]) => {
-                console.log("S CCC");
-                const userPrisma = resUser.user;
-                if (!resUser.valid || 
-                    userPrisma==null || 
-                    postPrisma==null || 
-                    postPrisma.sellerId!=userPrisma.id || 
-                    postPrisma.deleted || 
-                    postPrisma.images.length>=5) delayDeleteFromS3(key); // maybe delete here? maybe wait for a few seconds and then delete?
+//             Promise.all([
+//                 getValidRedactedUserFromAuth(authTokenCookie?.value),
+//                 getPost(postId)
+//             ])
+//             .then(([resUser, postPrisma]) => {
+//                 console.log("S CCC");
+//                 const userPrisma = resUser.user;
+//                 if (!resUser.valid || 
+//                     userPrisma==null || 
+//                     postPrisma==null || 
+//                     postPrisma.sellerId!=userPrisma.id || 
+//                     postPrisma.deleted || 
+//                     postPrisma.images.length>=5) delayDeleteFromS3(key); // maybe delete here? maybe wait for a few seconds and then delete?
                 
-                console.log("S DDD");
-                addImageKeyToPost((postPrisma as any).id, key);
-            }).catch(err => console.log(err));
+//                 console.log("S DDD");
+//                 addImageKeyToPost((postPrisma as any).id, key);
+//             }).catch(err => console.log(err));
 
-            console.log("S EEE ", signedUrl, key);
-            return NextResponse.json({ cStatus: 200, msg: `Success.`, key, signedUrl }, { status: 200 });
-        }
-        else if (operation=='UPLOAD_PFP') {
-        }
-    } catch (err) {
-        return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
-    }
-}
-
-
+//             console.log("S EEE ", signedUrl, key);
+//             return NextResponse.json({ cStatus: 200, msg: `Success.`, key, signedUrl }, { status: 200 });
+//         }
+//         else if (operation=='UPLOAD_PFP') {
+//         }
+//     } catch (err) {
+//         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
+//     }
+// }
 
 
 
@@ -202,36 +200,38 @@ export async function POST(req: NextRequest) {
 
 
 
-// Delete an image from a post
-export async function DELETE(req: NextRequest) {
-    try {
-        const { postId, deletedImgKey } = await req.json();
-        if (!postId || !deletedImgKey) return NextResponse.json({ cStatus: 102, msg: `Missing data.` }, { status: 400 });
 
-        const authTokenCookie = cookies().get(`authtoken`);
 
-        const [resUser, postPrisma] = await Promise.all([
-            getValidRedactedUserFromAuth(authTokenCookie?.value),
-            getPost(postId),
-        ]);
+// // Delete an image from a post
+// export async function DELETE(req: NextRequest) {
+//     try {
+//         const { postId, deletedImgKey } = await req.json();
+//         if (!postId || !deletedImgKey) return NextResponse.json({ cStatus: 102, msg: `Missing data.` }, { status: 400 });
 
-        const userPrisma = resUser.user;
+//         const authTokenCookie = cookies().get(`authtoken`);
 
-        let nextRes: any = null;
-        if (!resUser.valid || userPrisma==null)         nextRes = resUser.nextRes;
-        else if (postPrisma==null)                      nextRes = {cStatus: 999, msg: `Post does not exist.`};
-        else if (postPrisma.sellerId!=userPrisma.id)    nextRes = {cStatus: 999, msg: `Not your post.`};
-        else if (postPrisma.deleted)                    nextRes = {cStatus: 999, msg: `This post has been deleted.`};
-        else if (!postPrisma.images.includes(deletedImgKey)) nextRes = {cStatus: 999, msg: `Image does not exist on post.`};
-        if (nextRes!=null) return NextResponse.json(nextRes, { status: 400 });
+//         const [resUser, postPrisma] = await Promise.all([
+//             getValidRedactedUserFromAuth(authTokenCookie?.value),
+//             getPost(postId),
+//         ]);
 
-        const newImages = (postPrisma as any).images.filter((img: any) => img !== deletedImgKey);
-        await updatePostImagesArr(postId, newImages);
-        deleteFromS3(deletedImgKey); // Asynchronous call
-        return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
-    } catch (err) {
-        return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
-    }
-}
+//         const userPrisma = resUser.user;
+
+//         let nextRes: any = null;
+//         if (!resUser.valid || userPrisma==null)         nextRes = resUser.nextRes;
+//         else if (postPrisma==null)                      nextRes = {cStatus: 999, msg: `Post does not exist.`};
+//         else if (postPrisma.sellerId!=userPrisma.id)    nextRes = {cStatus: 999, msg: `Not your post.`};
+//         else if (postPrisma.deleted)                    nextRes = {cStatus: 999, msg: `This post has been deleted.`};
+//         else if (!postPrisma.images.includes(deletedImgKey)) nextRes = {cStatus: 999, msg: `Image does not exist on post.`};
+//         if (nextRes!=null) return NextResponse.json(nextRes, { status: 400 });
+
+//         const newImages = (postPrisma as any).images.filter((img: any) => img !== deletedImgKey);
+//         await updatePostImagesArr(postId, newImages);
+//         deleteFromS3(deletedImgKey); // Asynchronous call
+//         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
+//     } catch (err) {
+//         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
+//     }
+// }
 
 
