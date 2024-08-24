@@ -232,6 +232,7 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
         data.fileType = image.type;
         data.fileSize = image.size;
         data.postId = postId;
+        console.log("\n\n\n")
         console.log("AAA")
         console.log(data)
         console.log(JSON.stringify(data))
@@ -249,6 +250,8 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
                 method: 'PUT',
                 body: processed,
                 headers: { 'Content-Type': 'webp' },
+            }).then(()=>{
+                console.log("FINISHED FETCH");
             });
             console.log("DDD")
             const newImages = [...value, image];
