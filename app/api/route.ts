@@ -121,31 +121,31 @@ export async function GET(req: NextRequest) {
 
 
 
-export async function POeST(req: NextRequest) {
-    try {
-        const { postId, fileType, fileSize } = await req.json();
+// export async function POeST(req: NextRequest) {
+//     try {
+//         const { postId, fileType, fileSize } = await req.json();
         
-        if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
-        if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 5mb.` }, { status: 400 });
+//         if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
+//         if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 5mb.` }, { status: 400 });
 
-        const authTokenCookie = cookies().get(`authtoken`);
-        if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
-        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
-        if (!userPrisma) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+//         const authTokenCookie = cookies().get(`authtoken`);
+//         if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+//         const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
+//         if (!userPrisma) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
         
-        const postPrisma = await getPost(postId);
-        if (!postPrisma) return NextResponse.json({ cStatus: 400, msg: `Post does not exist.` }, { status: 400 });
-        if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 400, msg: `Not your post.` }, { status: 400 });
-        if (postPrisma.images.length >= 5) return NextResponse.json({ cStatus: 400, msg: `Post must have between 1 and 5 photos.` }, { status: 400 });
+//         const postPrisma = await getPost(postId);
+//         if (!postPrisma) return NextResponse.json({ cStatus: 400, msg: `Post does not exist.` }, { status: 400 });
+//         if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 400, msg: `Not your post.` }, { status: 400 });
+//         if (postPrisma.images.length >= 5) return NextResponse.json({ cStatus: 400, msg: `Post must have between 1 and 5 photos.` }, { status: 400 });
 
-        const {signedUrl, key} = await getSignedS3Url(POST_IMG_PREFIX, fileType);
-        await addImageKeyToPost(postId, key);
+//         const {signedUrl, key} = await getSignedS3Url(POST_IMG_PREFIX, fileType);
+//         await addImageKeyToPost(postId, key);
 
-        return NextResponse.json({ cStatus: 200, msg: `Success.`, signedUrl: signedUrl, key: key }, { status: 200 });
-    } catch (err) {
-        return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
-    }
-}
+//         return NextResponse.json({ cStatus: 200, msg: `Success.`, signedUrl: signedUrl, key: key }, { status: 200 });
+//     } catch (err) {
+//         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
+//     }
+// }
 
 
 
