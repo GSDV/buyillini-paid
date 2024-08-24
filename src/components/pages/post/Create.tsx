@@ -71,10 +71,9 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
             const resSignAndKeyJson = await resSignAndKey.json();
             if (resSignAndKeyJson.cStatus==200) {
                 await fetch(resSignAndKeyJson.signedUrl, {
-                    method: 'POST',
+                    method: 'PUT',
                     body: croppedPostBlob,
-                    headers: { 'Content-Type': 'webp' },
-                    mode: 'no-cors'
+                    headers: { 'Content-Type': 'webp' }
                 });
                 imageKeys.push(resSignAndKeyJson.key);
             } else {
