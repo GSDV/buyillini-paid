@@ -40,8 +40,7 @@ export const isValidInputPostData = (inputData: any) => {
         if (!duration) return `Missing listing duration.`;
         if (!freeMonthsUsed) return `Missing free months used.`;
 
-        if (typeof title != 'string' || typeof description != 'string' || typeof category != 'string' || typeof size != 'string' || typeof gender != 'string' || typeof price != 'string' || typeof images != 'string' || typeof duration != 'string' || typeof freeMonthsUsed != 'string') {
-            console.log(typeof title != 'string', typeof description != 'string', typeof category != 'string', typeof size != 'string', typeof gender != 'string', typeof price != 'string', typeof images != 'string', typeof duration != 'string', typeof freeMonthsUsed != 'string')
+        if (typeof title != 'string' || typeof description != 'string' || typeof category != 'string' || typeof size != 'string' || typeof gender != 'string' || typeof price != 'string' || typeof images != 'object' || typeof duration != 'string' || typeof freeMonthsUsed != 'string') {
             return `Something went wrong (incorrect input field types).`;
         }
     
