@@ -13,7 +13,8 @@ import { createPostDataFromInputs, isValidInputPostData } from '@util/api/posts'
 // Used for storing free post data before the post is confirmed.
 export async function POST(req: NextRequest) {
     try {
-        const inputData = await req.json();
+        const { inputData } = await req.json();
+        console.log("inputData: ", inputData)
 
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 

@@ -31,14 +31,14 @@ export const isValidInputPostData = (inputData: any) => {
 
     const msg = function() {
         if (!title) return `Missing title.`;
-        if (description) return `Missing description.`;
-        if (category) return `Missing category.`;
-        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && size) return `Missing size.`;
-        if (gender) return `Missing gender.`;
-        if (price) return `Missing price.`;
-        if (images) return `Missing images.`;
-        if (duration) return `Missing listing duration.`;
-        if (freeMonthsUsed) return `Missing free months used.`;
+        if (!description) return `Missing description.`;
+        if (!category) return `Missing category.`;
+        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !size) return `Missing size.`;
+        if (!gender) return `Missing gender.`;
+        if (!price) return `Missing price.`;
+        if (!images) return `Missing images.`;
+        if (!duration) return `Missing listing duration.`;
+        if (!freeMonthsUsed) return `Missing free months used.`;
 
         if (typeof title != 'string' || typeof description != 'string' || typeof category != 'string' || typeof size != 'string' || typeof gender != 'string' || typeof price != 'string' || typeof images != 'string' || typeof duration != 'string' || typeof freeMonthsUsed) {
             return `Something went wrong (incorrect input field types).`;
