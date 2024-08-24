@@ -144,10 +144,8 @@ export async function DELETE(req: NextRequest) {
         if (nextRes!=null) return NextResponse.json(nextRes, { status: 400 });
 
         const newImages = (postPrisma as any).images.filter((img: any) => img !== deletedImgKey);
-        const [resS3, resPrisma] = await Promise.all([
-            deleteFromS3(deletedImgKey),
-            updatePostImagesArr(postId, newImages)
-        ]);
+        await updatePostImagesArr(postId, newImages);
+        deleteFromS3(deletedImgKey); // Asynchronous call
 
         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
     } catch (err) {
