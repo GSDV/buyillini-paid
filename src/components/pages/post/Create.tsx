@@ -35,14 +35,14 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const getData = async () => {
         const imageKeys = await uploadImages();
         const postData = {
-            title: title,
-            description: description,
-            category: category,
-            size: size,
-            gender: gender,
+            title,
+            description,
+            category,
+            size,
+            gender,
             price: String(price),
             images: imageKeys,
-            months: (duration=='' ? '1': duration),
+            duration: (duration=='' ? '1': duration),
             freeMonthsUsed: (freeMonthsUsed=='' ? '0' : freeMonthsUsed)
         }
         return postData;
