@@ -109,26 +109,50 @@ export function Images({ value, setValue, postId }: { value: any, setValue: (v: 
     const [loading, setLoading] = useState<boolean>(false);
 
 
+    // const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const img = e.target.files?.[0];
+    //     setLoading(true);
+    //     if (value.length >= 5 || img==undefined) return;
+    //     const res = await fetch(`/api`, {
+    //         method: 'POST',
+    //         body: JSON.stringify({ postId, fileType: img.type, fileSize: img.size }),
+    //         headers: { 'Content-Type': 'application/json' }
+    //     });
+    //     const resJson = await res.json();
+    //     if (resJson.cStatus==200) {
+    //         await fetch(resJson.signedUrl, {
+    //             method: 'PUT',
+    //             body: img,
+    //             headers: { 'Content-Type': img.type },
+    //         });
+    //         await fetch(`/account/netId/settings/api`, {
+    //             method: 'PUT',
+    //             body: JSON.stringify({ operation: 'CROP_POST', key: resJson.key, postId: postId })
+    //         });
+    //         const newImages = [...value, resJson.key];
+    //         setValue(newImages);
+    //         setAlert(null);
+    //     } else {
+    //         setAlert(resJson);
+    //     }
+    //     if (imgRef.current) imgRef.current.value = '';
+    //     setLoading(false);
+    // };
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const img = e.target.files?.[0];
         setLoading(true);
-        if (value.length >= 5 || img==undefined) return;
+        const image = e.target.files?.[0];
+        if (value.length >= 5 || image==undefined) return;
+        const postData = new FormData();
+        postData.set('operation', 'UPLOAD_POST');
+        postData.set('image', image);
+        postData.set('postId', postId);
+
         const res = await fetch(`/api`, {
             method: 'POST',
-            body: JSON.stringify({ postId, fileType: img.type, fileSize: img.size }),
-            headers: { 'Content-Type': 'application/json' }
+            body: postData
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
-            await fetch(resJson.signedUrl, {
-                method: 'PUT',
-                body: img,
-                headers: { 'Content-Type': img.type },
-            });
-            await fetch(`/account/netId/settings/api`, {
-                method: 'PUT',
-                body: JSON.stringify({ operation: 'CROP_POST', key: resJson.key, postId: postId })
-            });
             const newImages = [...value, resJson.key];
             setValue(newImages);
             setAlert(null);

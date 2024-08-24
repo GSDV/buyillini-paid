@@ -15,14 +15,23 @@ export const s3Client = new S3Client({
 
 
 
-// export const uploadPostPicture = async (file: File) => {
-//     const imgBytes = await file.arrayBuffer();
-//     const imgBuffer = Buffer.from(imgBytes);
-//     const croppedBuffer = await sharp(imgBuffer).resize({ width: 1200, height: 2100, fit: 'contain' }).flatten({background: { r: 0, g: 0, b: 0 }}).webp({ quality: 80, effort: 6 }).toBuffer();
-//     const key = `post-f-${uuidv4()}`;
-//     await uploadToS3(croppedBuffer, key, file.type);
-//     return key;
-// }
+export const uploadPostPicture = async (file: File) => {
+    const imgBytes = await file.arrayBuffer();
+    const imgBuffer = Buffer.from(imgBytes);
+    const croppedBuffer = await sharp(imgBuffer).resize({ width: 1200, height: 2100, fit: 'contain' }).flatten({background: { r: 0, g: 0, b: 0 }}).webp({ quality: 80, effort: 6 }).toBuffer();
+    const key = `post-f-${uuidv4()}`;
+    await uploadToS3(croppedBuffer, key, 'webp');
+    return key;
+}
+
+export const uploadPfpPicture = async (file: File) => {
+    const imgBytes = await file.arrayBuffer();
+    const imgBuffer = Buffer.from(imgBytes);
+    const croppedBuffer = await sharp(imgBuffer).resize({ width: 250, height: 250, fit: 'cover' }).flatten({background: { r: 0, g: 0, b: 0 }}).webp({ quality: 80, effort: 6 }).toBuffer();
+    const key = `post-f-${uuidv4()}`;
+    await uploadToS3(croppedBuffer, key, 'webp');
+    return key;
+}
 
 
 

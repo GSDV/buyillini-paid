@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@util/prisma/client';
-import { DEFAULT_FREE_MONTHS, DEFAULT_PFP, getPfpUrl, imgUrl } from '@util/global';
+import { CONTACT_EMAIL, DEFAULT_FREE_MONTHS, DEFAULT_PFP, getPfpUrl, imgUrl } from '@util/global';
 import { makePasswordHash } from '@util/api/user';
 
 
@@ -154,4 +154,24 @@ export const addFreeMonthsToUser = async (where: any, freeMonths: number) => {
             freeMonths: { increment: freeMonths }
         }
     });
+}
+
+
+
+
+
+export const getValidRedactedUserFromAuth = async (authtoken: string | undefined) => {
+    if (!authtoken) return { valid: false, nextRes: {cStatus: 404, msg: `You are not logged in.`}, user: null };
+    const authTokenPrisma = await prisma.authToken.findFirst({
+        where: { token: authtoken },
+        include: { user: {
+            omit: { password: true, salt: true  }
+        }}
+    });
+    if (!authTokenPrisma) return { valid: false, nextRes: {cStatus: 404, msg: `You are not logged in.`}, user: null };
+    const userPrisma = authTokenPrisma.user;
+    if (!userPrisma.active) return { valid: false, nextRes: {cStatus: 412, msg: `Your account is not active.`}, user: null };
+    if (userPrisma.banned) return { valid: false, nextRes: {cStatus: 410, msg: `You are not banned.`}, user: null };
+    if (userPrisma.deleted) return { valid: false, nextRes: {cStatus: 411, msg: `Your account has been deleted. Email ${CONTACT_EMAIL} to reactivate it.`}, user: null };
+    return { valid: true, nextRes: {cStatus: 200, msg: ``}, user: userPrisma };
 }
