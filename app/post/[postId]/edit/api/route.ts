@@ -5,7 +5,7 @@ import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { getPost, getPostWithRedactedUser, markPostAsDeleted, updatePost } from '@util/prisma/actions/posts';
 
 import { isValidUser } from '@util/api/auth';
-import { getEditPostData, getPostData, isPostValid, isValidEditPostData, isValidPostData } from '@util/api/posts';
+import { getEditPostData, isPostValid } from '@util/api/posts';
 import { deleteFromS3 } from '@util/s3/aws';
 
 
@@ -61,14 +61,15 @@ export async function POST(req: NextRequest, { params }: { params: { postId: str
         const validPostRes = isPostValid(postPrisma);
         if (!validPostRes.valid) return NextResponse.json(validPostRes.nextres, { status: 400 });
 
-        const resValidPost = isValidEditPostData(postData);
-        if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
+        // const resValidPost = isValidEditPostData(postData);
+        // if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
+        return NextResponse.json({ cStatus: 102, msg: 'this process is down' }, { status: 400 });
 
-        for (let i=0; i<postPrisma.images.length; i++) await deleteFromS3(postPrisma.images[i]);
+        // for (let i=0; i<postPrisma.images.length; i++) await deleteFromS3(postPrisma.images[i]);
 
-        await updatePost(postId, postData);
+        // await updatePost(postId, postData);
 
-        return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
+        // return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
     }
