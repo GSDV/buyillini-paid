@@ -10,7 +10,7 @@ import { Alert, AlertType } from '@components/Alert';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
 import Loading from '@components/Loading';
-import { Category, Description, Gender, Images, ListingPeriod, Price, Size, Title, UseFreeMonths } from './inputs/Inputs';
+import { Category, Description, FileImages, Gender, Images, ListingPeriod, Price, Size, Title, UseFreeMonths } from './inputs/Inputs';
 
 
 
@@ -114,7 +114,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
                 <Price value={price} setValue={setPrice} />
 
-                <Images value={images} setValue={setImages} postId={draftedPost.id} />
+                <FileImages value={images} setValue={setImages} postId={draftedPost.id} />
 
                 <ListingPeriod value={months} setValue={setMonths} />
 
