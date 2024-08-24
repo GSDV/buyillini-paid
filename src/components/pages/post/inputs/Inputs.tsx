@@ -228,32 +228,28 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
         const image = e.target.files?.[0];
         if (value.length >= 5 || image==undefined) return;
         const data: any = {};
-        data.operation = 'UPLOAD_POST';
         data.fileType = image.type;
         data.fileSize = image.size;
-        data.postId = postId;
-        console.log("\n\n\n")
-        console.log("AAA")
-        console.log(data)
-        console.log(JSON.stringify(data))
 
-        const res = await fetch(`/api`, {
+        const res = await fetch(`/api/upload`, {
             method: 'POST',
             body: JSON.stringify(data)
         });
         const resJson = await res.json();
+
         if (resJson.cStatus==200) {
-            console.log("BBB")
             const processed = await makePfpPicture(image);
-            console.log("CCC")
             fetch(resJson.signedUrl, {
                 method: 'PUT',
                 body: processed,
                 headers: { 'Content-Type': 'webp' },
-            }).then(()=>{
-                console.log("FINISHED FETCH");
+            })
+                
+            fetch(`/api/upload`, {
+                method: 'PUT',
+                body: JSON.stringify({ postId, key: resJson.key })
             });
-            console.log("DDD")
+
             const newImages = [...value, image];
             setValue(newImages);
             setAlert(null);
