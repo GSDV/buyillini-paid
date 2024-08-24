@@ -159,15 +159,18 @@ export async function POST(req: NextRequest) {
         if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 10mb.` }, { status: 400 });
 
         const authTokenCookie = cookies().get(`authtoken`);
+        console.log("S AAA");
 
         if (operation=='UPLOAD_POST') {
             const {signedUrl, key} = await getSignedS3Url(POST_IMG_PREFIX, 'webp');
+            console.log("S BBB");
 
             Promise.all([
                 getValidRedactedUserFromAuth(authTokenCookie?.value),
                 getPost(postId)
             ])
             .then(([resUser, postPrisma]) => {
+                console.log("S CCC");
                 const userPrisma = resUser.user;
                 if (!resUser.valid || 
                     userPrisma==null || 
@@ -175,9 +178,12 @@ export async function POST(req: NextRequest) {
                     postPrisma.sellerId!=userPrisma.id || 
                     postPrisma.deleted || 
                     postPrisma.images.length>=5) delayDeleteFromS3(key); // maybe delete here? maybe wait for a few seconds and then delete?
+                
+                console.log("S DDD");
                 addImageKeyToPost((postPrisma as any).id, key);
             });
 
+            console.log("S EEE ", signedUrl, key);
             return NextResponse.json({ cStatus: 200, msg: `Success.`, key, signedUrl }, { status: 200 });
         }
         else if (operation=='UPLOAD_PFP') {
