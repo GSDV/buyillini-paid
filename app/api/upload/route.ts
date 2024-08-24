@@ -32,24 +32,28 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
         const { postId, key } = await req.json();
-
         if (!postId || !key) return NextResponse.json({ cStatus: 101, msg: `Some fields missing.` }, { status: 400 });
 
+        console.log("AAA")
         const authTokenCookie = cookies().get(`authtoken`);
 
         const [resUser, postPrisma] = await Promise.all([
             getValidRedactedUserFromAuth(authTokenCookie?.value),
             getPost(postId)
         ]);
+        console.log("BBB")
 
         const userPrisma = resUser.user;
         if (!resUser.valid || userPrisma==null || postPrisma==null || postPrisma.sellerId!=userPrisma.id || postPrisma.deleted || postPrisma.images.length>=5) {
+            
+            console.log("EEE", !resUser.valid, userPrisma==null, postPrisma==null, (postPrisma as any).sellerId!=(userPrisma as any).id, (postPrisma as any).deleted, (postPrisma as any).images.length>=5)
             delayDeleteFromS3(key);
+
             return NextResponse.json({ cStatus: 999, msg: `Something went wrong.` }, { status: 400 }); 
         }
-
+        console.log("CCC")
         await addImageKeyToPost((postPrisma as any).id, key);
-
+        console.log("DDD")
         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
       
     } catch (err) {
