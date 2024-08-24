@@ -232,6 +232,9 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
         data.fileType = image.type;
         data.fileSize = image.size;
         data.postId = postId;
+        console.log("AAA")
+        console.log(data)
+        console.log(JSON.stringify(data))
 
         const res = await fetch(`/api`, {
             method: 'POST',
@@ -239,12 +242,15 @@ export function FileImages({ value, setValue, postId }: { value: any, setValue: 
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
+            console.log("BBB")
             const processed = await makePfpPicture(image);
+            console.log("CCC")
             fetch(resJson.signedUrl, {
                 method: 'PUT',
                 body: processed,
                 headers: { 'Content-Type': 'webp' },
             });
+            console.log("DDD")
             const newImages = [...value, image];
             setValue(newImages);
             setAlert(null);
