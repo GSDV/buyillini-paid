@@ -28,7 +28,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const [gender, setGender] = useState<string>(draftedPost.gender);
     const [price, setPrice] = useState<number>(Number(draftedPost.price));
     const [images, setImages] = useState<File[]>([]);
-    const [months, setMonths] = useState<string>(draftedPost.duration.toString());
+    const [duration, setDuration] = useState<string>(draftedPost.duration.toString());
     const [freeMonthsUsed, setFreeMonthsUsed] = useState<string>('0');
 
 
@@ -42,7 +42,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
             gender: gender,
             price: String(price),
             images: imageKeys,
-            months: (months=='' ? '1': months),
+            months: (duration=='' ? '1': duration),
             freeMonthsUsed: (freeMonthsUsed=='' ? '0' : freeMonthsUsed)
         }
         return postData;
@@ -179,13 +179,13 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
                 <Images value={images} setValue={setImages} />
 
-                <ListingPeriod value={months} setValue={setMonths} />
+                <ListingPeriod value={duration} setValue={setDuration} />
 
                 {freeMonths!=0 && <UseFreeMonths iv={{value: freeMonthsUsed, setValue: setFreeMonthsUsed}} freeMonths={freeMonths} />}
 
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
-                    {numMonths(months) <= numFreeMonths(freeMonthsUsed) && <button onClick={attemptFreePost}>Create Post (Use {months} free {numFreeMonths(months)==1 ? 'month' : 'months'})</button>}
-                    {numMonths(months) > numFreeMonths(freeMonthsUsed) && <button onClick={attemptPaidPost}>Create Post (Pay ${numMonths(months)-numFreeMonths(freeMonthsUsed)})</button>}
+                    {numMonths(duration) <= numFreeMonths(freeMonthsUsed) && <button onClick={attemptFreePost}>Create Post (Use {duration} free {numFreeMonths(duration)==1 ? 'month' : 'months'})</button>}
+                    {numMonths(duration) > numFreeMonths(freeMonthsUsed) && <button onClick={attemptPaidPost}>Create Post (Pay ${numMonths(duration)-numFreeMonths(freeMonthsUsed)})</button>}
                 </div>
             </>}
         </div>
