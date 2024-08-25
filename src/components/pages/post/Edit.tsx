@@ -94,7 +94,7 @@ export default function Edit({ post }: { post: Post }) {
         setLoading(true);
         const postData = getData();
         const res = await fetch(`/post/${post.id}/edit/api/`, {
-            method: 'POST',
+            method: 'PUT',
             body: JSON.stringify({ postData }),
             headers: { 'Content-Type': 'application/json' }
         });
@@ -109,13 +109,9 @@ export default function Edit({ post }: { post: Post }) {
 
     const convertImageKeysToFiles = async () => {
         setLoading(true);
-        console.log("AAA")
         const urlsToFilesPromises = post.images.map(key => urlToFile(key));
-        console.log("BBB: ", urlsToFilesPromises)
         const imageFiles = await Promise.all(urlsToFilesPromises);
-        console.log("CCC", imageFiles)
         const nullFileExists = imageFiles.some((file) => file==null);
-        console.log("DDD", nullFileExists)
         if (nullFileExists) {
             setAlert({ cStatus: 400, msg: `Something went wrong while fetching past images.` });
         } else {

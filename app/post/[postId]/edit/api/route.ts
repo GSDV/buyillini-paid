@@ -5,7 +5,7 @@ import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { getPost, getPostWithRedactedUser, markPostAsDeleted, updatePost } from '@util/prisma/actions/posts';
 
 import { isValidUser } from '@util/api/auth';
-import { getEditPostData, isPostValid } from '@util/api/posts';
+import { editPostDataFromInputs, getEditPostData, isPostValid, isValidInputEditPostData } from '@util/api/posts';
 import { deleteFromS3 } from '@util/s3/aws';
 
 
@@ -36,11 +36,10 @@ export async function GET(req: NextRequest, { params }: { params: { postId: stri
 
 
 // Submit post edits
-export async function POST(req: NextRequest, { params }: { params: { postId: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { postId: string } }) {
     try {
-        const formData = await req.formData();
-        const postData = getEditPostData(formData);
-        if (!postData) return NextResponse.json({ cStatus: 101, msg: `Some fields are missing or invalid.` }, { status: 400 });
+        const { inputData } = await req.json();
+        if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 
         const postId = params.postId;
         if (!postId) return NextResponse.json({ cStatus: 101, msg: `No postId provided.` }, { status: 400 });
@@ -56,20 +55,19 @@ export async function POST(req: NextRequest, { params }: { params: { postId: str
         const resValidUser = isValidUser(userPrisma);
         if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
 
-        if (userPrisma.id!==postPrisma.seller.id) return NextResponse.json({ cStatus: 430, msg: `This post is not yours.` }, { status: 400 });
+        if (userPrisma.id !== postPrisma.seller.id) return NextResponse.json({ cStatus: 430, msg: `This post is not yours.` }, { status: 400 });
 
         const validPostRes = isPostValid(postPrisma);
         if (!validPostRes.valid) return NextResponse.json(validPostRes.nextres, { status: 400 });
 
-        // const resValidPost = isValidEditPostData(postData);
-        // if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
-        return NextResponse.json({ cStatus: 102, msg: 'this process is down' }, { status: 400 });
 
-        // for (let i=0; i<postPrisma.images.length; i++) await deleteFromS3(postPrisma.images[i]);
+        const resValidInput = isValidInputEditPostData(inputData);
+        if (!resValidInput.valid) return NextResponse.json({ cStatus: 102, msg: resValidInput.msg }, { status: 400 });
+        const postData = editPostDataFromInputs(inputData);
 
-        // await updatePost(postId, postData);
+        await updatePost(postId, postData);
 
-        // return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
+        return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
     } catch(err) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
     }

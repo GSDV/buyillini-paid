@@ -14,7 +14,6 @@ import { createPostDataFromInputs, isValidInputPostData } from '@util/api/posts'
 export async function POST(req: NextRequest) {
     try {
         const { inputData } = await req.json();
-
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 
         const authTokenCookie = cookies().get('authtoken');

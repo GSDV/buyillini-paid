@@ -43,18 +43,18 @@ export const isValidInputPostData = (inputData: any) => {
         if (typeof title != 'string' || typeof description != 'string' || typeof category != 'string' || typeof size != 'string' || typeof gender != 'string' || typeof price != 'string' || typeof images != 'object' || typeof duration != 'string' || typeof freeMonthsUsed != 'string') {
             return `Something went wrong (incorrect input field types).`;
         }
-    
+
         if (title.length==50) return `Title must be less than 50 characters.`;
         if (description.length==300) return `Description must be less than 300 characters.`;
-    
+
         if (!CATEGORIES.some(c => c.link===category)) return `Specify category.`;
         if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !CLOTHING_SIZES.includes(size)) return `Specify clothing size.`;
         if (!GENDERS.includes(gender)) return `Specify gender.`;
-    
+
         if (Number(price)<0 || Number(price)>9999.99) return `Price must be between $0 and $9,999.99.`;
-    
+
         if (images.length<=0 || images.length>5) return `Must provide 1 to 5 images.`;
-    
+
         if (Number(duration)<=0 || Number(duration)>10) return `Listing period must be between 1 and 10.`;
         if (Number(freeMonthsUsed)<0 || Number(freeMonthsUsed)>10) return `Free months used must be between 0 and 10.`;
         if (freeMonthsUsed > duration) return `You specified more free months than listing duration.`;
@@ -133,7 +133,77 @@ export const getEditPostData = (formData: FormData) => {
 // }
 
 
+////
+////
+////
+////
 
+
+
+
+/* * * * * * *
+ * EDIT POST *
+ * * * * * * */
+export interface InputEditPostData {
+    title: string,
+    description: string,
+    category: string,
+    size: string,
+    gender: string,
+    price: string,
+    images: string[]
+}
+export const isValidInputEditPostData = (inputData: any) => {
+    const { title, description, category, size, gender, price, images } = inputData;
+
+    const msg = function() {
+        if (!title) return `Missing title.`;
+        if (!description) return `Missing description.`;
+        if (!category) return `Missing category.`;
+        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !size) return `Missing size.`;
+        if (!gender) return `Missing gender.`;
+        if (!price) return `Missing price.`;
+        if (!images) return `Missing images.`;
+
+        if (typeof title != 'string' || typeof description != 'string' || typeof category != 'string' || typeof size != 'string' || typeof gender != 'string' || typeof price != 'string' || typeof images != 'object') {
+            return `Something went wrong (incorrect input field types).`;
+        }
+
+        if (title.length==50) return `Title must be less than 50 characters.`;
+        if (description.length==300) return `Description must be less than 300 characters.`;
+
+        if (!CATEGORIES.some(c => c.link===category)) return `Specify category.`;
+        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !CLOTHING_SIZES.includes(size)) return `Specify clothing size.`;
+        if (!GENDERS.includes(gender)) return `Specify gender.`;
+
+        if (Number(price)<0 || Number(price)>9999.99) return `Price must be between $0 and $9,999.99.`;
+
+        if (images.length<=0 || images.length>5) return `Must provide 1 to 5 images.`;
+
+        return ``;
+    }();
+
+    return { valid: (msg===``), msg: msg };
+}
+export const editPostDataFromInputs = (data: InputEditPostData) => {
+    const { price, ...overlapData } = data;
+    const postData: EditPostData = {
+        ...overlapData,
+        price: Number(price)
+    }
+    return postData;
+}
+
+
+
+
+
+
+
+/////
+/////
+/////
+////
 
 export const hasBuyerInterestExpired = (buyerInterest: BuyerInterest) => {
     const currentTime = new Date();
