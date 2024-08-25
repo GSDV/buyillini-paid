@@ -109,9 +109,13 @@ export default function Edit({ post }: { post: Post }) {
 
     const convertImageKeysToFiles = async () => {
         setLoading(true);
+        console.log("AAA")
         const urlsToFilesPromises = post.images.map(key => urlToFile(key));
+        console.log("BBB: ", urlsToFilesPromises)
         const imageFiles = await Promise.all(urlsToFilesPromises);
+        console.log("CCC")
         const nullFileExists = imageFiles.some((file) => file==null);
+        console.log("DDD", nullFileExists)
         if (nullFileExists) {
             setAlert({ cStatus: 400, msg: `Something went wrong while fetching past images.` });
         } else {
