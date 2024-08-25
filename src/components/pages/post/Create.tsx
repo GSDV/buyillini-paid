@@ -34,7 +34,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
     const getData = async () => {
         const imageKeys = await uploadImages();
-        const postData = {
+        const inputData = {
             title,
             description,
             category,
@@ -45,7 +45,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
             duration: (duration=='' ? '1': duration),
             freeMonthsUsed: (freeMonthsUsed=='' ? '0' : freeMonthsUsed)
         }
-        return postData;
+        return inputData;
     }
 
     const uploadImages = async () => {

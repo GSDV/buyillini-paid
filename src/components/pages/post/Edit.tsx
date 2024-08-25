@@ -32,7 +32,7 @@ export default function Edit({ post }: { post: Post }) {
 
     const getData = async () => {
         const imageKeys = await uploadImages();
-        const postData = {
+        const inputData = {
             title,
             description,
             category,
@@ -41,7 +41,7 @@ export default function Edit({ post }: { post: Post }) {
             price: String(price),
             images: imageKeys
         }
-        return postData;
+        return inputData;
     }
 
     const uploadImages = async () => {
@@ -92,10 +92,10 @@ export default function Edit({ post }: { post: Post }) {
 
     const attemptEditPost = async () => {
         setLoading(true);
-        const postData = getData();
+        const inputData = getData();
         const res = await fetch(`/post/${post.id}/edit/api/`, {
             method: 'PUT',
-            body: JSON.stringify({ postData }),
+            body: JSON.stringify({ inputData }),
             headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
