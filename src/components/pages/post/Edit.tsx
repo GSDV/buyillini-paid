@@ -113,7 +113,7 @@ export default function Edit({ post }: { post: Post }) {
         const urlsToFilesPromises = post.images.map(key => urlToFile(key));
         console.log("BBB: ", urlsToFilesPromises)
         const imageFiles = await Promise.all(urlsToFilesPromises);
-        console.log("CCC")
+        console.log("CCC", imageFiles)
         const nullFileExists = imageFiles.some((file) => file==null);
         console.log("DDD", nullFileExists)
         if (nullFileExists) {
