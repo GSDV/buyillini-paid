@@ -8,7 +8,8 @@ export const EMAIL_FOOTER = `<p>Thank you for using BuyIllini. Email ${CONTACT_E
 // Used for input elements and api routes.
 export const ACCEPTED_FILES = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 export const IMG_ACCEPTED_FILES = 'image/png, image/jpeg, image/jpg, image/webp'; // rename to IMG_INPUT_ACCEPTED_FILES
-export const IMG_SIZE_LIMIT = 15 * 1000000; // 10mb
+export const IMG_SIZE_LIMIT = 15 * 1000000; // 15mb
+export const IMG_SIZE_LIMIT_TXT = `15mb`;
 
 export const POST_IMG_PREFIX = `post-f-`;
 export const PFP_IMG_PREFIX = `post-f-`;

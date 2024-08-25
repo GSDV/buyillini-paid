@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
 
-import { ACCEPTED_FILES, CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, IMG_SIZE_LIMIT, MAX_LISTING_PERIOD, MONTH_TO_MILLI, formatDate, imgUrl } from '@util/global';
+import { ACCEPTED_FILES, CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, IMG_SIZE_LIMIT, IMG_SIZE_LIMIT_TXT, MAX_LISTING_PERIOD, MONTH_TO_MILLI, formatDate, imgUrl } from '@util/global';
 
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
@@ -227,11 +227,11 @@ export function Images({ value, setValue }: InputValue) {
         const image = e.target.files?.[0];
         if (value.length >= 5 || image==undefined) return;
         if (!ACCEPTED_FILES.includes(image.type)) {
-            setAlert({cStatus: 102, msg: 'Please upload a png, jpg, or webp file'});
+            setAlert({cStatus: 102, msg: `Please upload a png, jpg, or webp file`});
             return;
         }
         if (image.size > IMG_SIZE_LIMIT) {
-            setAlert({cStatus: 102, msg: 'Please upload an image smaller than 15mbs'});
+            setAlert({cStatus: 102, msg: `Please upload an image smaller than ${IMG_SIZE_LIMIT_TXT}s`});
             return;
         }
         const newImages = [...value, image];

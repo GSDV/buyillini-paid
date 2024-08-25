@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { ACCEPTED_FILES, IMG_SIZE_LIMIT, PFP_IMG_PREFIX, POST_IMG_PREFIX } from '@util/global';
+import { ACCEPTED_FILES, IMG_SIZE_LIMIT, IMG_SIZE_LIMIT_TXT, PFP_IMG_PREFIX, POST_IMG_PREFIX } from '@util/global';
 import { deleteFromS3, getSignedS3Url } from '@util/s3/aws';
 import { cookies } from 'next/headers';
 import { getPost, updatePost, updatePostImagesArr } from '@util/prisma/actions/posts';
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
 
         if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
-        if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than 10mb.` }, { status: 400 });
+        if (fileSize > IMG_SIZE_LIMIT) return NextResponse.json({ cStatus: 102, msg: `Upload images less than ${IMG_SIZE_LIMIT_TXT}.` }, { status: 400 });
 
         let prefix: string;
         if (operation=='UPLOAD_POST_PHOTO') prefix = POST_IMG_PREFIX;
