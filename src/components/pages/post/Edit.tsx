@@ -21,6 +21,8 @@ export default function Edit({ post }: { post: Post }) {
     const [loading, setLoading] = useState<boolean>(false);
     const [alert, setAlert] = useState<AlertType | null>(null);
 
+    console.log("post", post)
+    console.log("title", post.title)
     const [title, setTitle] = useState<string>(post.title);
     const [description, setDescription] = useState<string>(post.description);
     const [category, setCategory] = useState<string>(post.category);

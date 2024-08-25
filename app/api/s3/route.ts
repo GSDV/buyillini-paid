@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ACCEPTED_FILES, IMG_SIZE_LIMIT, IMG_SIZE_LIMIT_TXT, PFP_IMG_PREFIX, POST_IMG_PREFIX } from '@util/global';
 import { deleteFromS3, getSignedS3Url } from '@util/s3/aws';
 import { cookies } from 'next/headers';
-import { getPost, updatePost, updatePostImagesArr } from '@util/prisma/actions/posts';
+import { getPost, updatePostImagesArr } from '@util/prisma/actions/posts';
 import { getRedactedUserFromAuth, updateUser } from '@util/prisma/actions/user';
 
 
