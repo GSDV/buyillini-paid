@@ -61,6 +61,7 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
         if (!resValidInput.valid) return NextResponse.json({ cStatus: 102, msg: resValidInput.msg }, { status: 400 });
         const postData = editPostDataFromInputs(inputData);
 
+        postPrisma.images.map((image) => deleteFromS3(image)); // Asynchronously delete old images 
         await updatePost(postId, postData);
 
         return NextResponse.json({ cStatus: 200, msg: `Success.` }, { status: 200 });
