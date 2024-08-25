@@ -7,7 +7,7 @@ import NeedsToBeLoggedIn from '@components/NeedsToBeLoggedIn';
 import Create from '@components/pages/post/Create';
 
 import { Post } from '@prisma/client';
-import Loading from '@components/Loading';
+import { CheckIfLoading } from '@components/Loading';
 
 
 
@@ -32,11 +32,11 @@ export default function Page() {
 
     return (
         <CenterLayout>
-            {loading ?
-                <Loading />
-            :
-                <NeedsToBeLoggedIn content={<Create freeMonths={freeMonths} draftedPost={pastPost as Post} />} />
-            }
+            <CheckIfLoading loading={loading} content={
+                <NeedsToBeLoggedIn content={
+                    <NeedsToBeLoggedIn content={<Create freeMonths={freeMonths} draftedPost={pastPost as Post} />} />
+                }/>
+            }/>
         </CenterLayout>
-    )
+    );
 }

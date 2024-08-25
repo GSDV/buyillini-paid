@@ -120,13 +120,19 @@ export const createDraftedPost = async (id: string) => {
 }
 
 export const deleteDraftedPosts = async (id: string) => {
+    const postsToDelete = await prisma.post.findMany({
+        where: { sellerId: id, active: false }
+    });
+
+    postsToDelete.map((post) => {
+        post.images.map((image) => {
+            deleteFromS3(image); // Asynchronous process
+        });
+    });
+    
     await prisma.post.deleteMany({
         where: { sellerId: id, active: false }
     });
-    // const posts = await prisma.post.findMany({
-    //     where: { sellerId: id, active: false }
-    // });
-    // for (let i=0; i<posts.length; i++) await deletePost(posts[i].id);
 }
 
 

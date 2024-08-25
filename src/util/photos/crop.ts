@@ -1,11 +1,10 @@
 'use client';
 
-import { POST_WIDTH, POST_HEIGHT } from "@util/global";
+import { POST_WIDTH, POST_HEIGHT, PFP_LENGTH } from "@util/global";
 
 
 
-// this is strechting 
-export const nmakePostPicture = async (file: File) => {
+export const makePfpPicture = async (file: File) => {
     const img = new Image();
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -17,10 +16,10 @@ export const nmakePostPicture = async (file: File) => {
         img.src = URL.createObjectURL(file);
     });
   
-    canvas.width = POST_WIDTH;
-    canvas.height = POST_HEIGHT;
+    canvas.width = PFP_LENGTH;
+    canvas.height = PFP_LENGTH;
 
-    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, POST_WIDTH, POST_HEIGHT);
+    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, PFP_LENGTH, PFP_LENGTH);
   
     const webpBlob = await new Promise<Blob | null>((resolve) => {
         canvas.toBlob((blob) => {
@@ -31,7 +30,6 @@ export const nmakePostPicture = async (file: File) => {
 
     return webpBlob;
 };
-
 
 
 

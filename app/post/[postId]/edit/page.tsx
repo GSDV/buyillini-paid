@@ -7,39 +7,22 @@ import NeedsToBeLoggedIn from '@components/NeedsToBeLoggedIn';
 import Edit from '@components/pages/post/Edit';
 
 import { Post } from '@prisma/client';
-import Loading from '@components/Loading';
-import { imgUrl } from '@util/global';
-import { Alert, AlertType } from '@components/Alert';
+import { CheckIfLoading } from '@components/Loading';
+import { AlertType, CheckIfAlert } from '@components/Alert';
 
 
 
 export default function Page({ params }: { params: { postId: string } }) {
     const [loading, setLoading] = useState<boolean>(true);
     const [post, setPost] = useState<Post | null>(null);
-    const [postImages, setPostImages] = useState<File[]>([]);
     const [alert, setAlert] = useState<AlertType | null>(null);
 
     const fetchPost = async () => {
         const res = await fetch(`/post/${params.postId}/edit/api`, { method: 'GET' });
         const resJson = await res.json();
         
-        setAlert(resJson);
-        if (resJson.cStatus==200) {
-            setPost(resJson.post);
-
-            const imgFiles: File[] = [];
-            if (resJson.post!=null) {
-                const imgs = resJson.post.images;
-                for (let i=0; i<imgs.length; i++) {
-                    const response = await fetch(imgUrl(imgs[i]));
-                    const blob = await response.blob();
-                    const file = new File([blob], `image`, { type: blob.type });
-                    imgFiles.push(file);
-                }
-            }
-
-            setPostImages(imgFiles);
-        }
+        if (resJson.cStatus==200) setPost(resJson.post);
+        else setAlert(resJson);
         setLoading(false);
     }
 
@@ -49,22 +32,20 @@ export default function Page({ params }: { params: { postId: string } }) {
 
     return (
         <CenterLayout>
-            {loading ?
-                <Loading />
-            :
-                <NeedsToBeLoggedIn content={<ExisitngPost post={post as Post} postImages={postImages} alert={alert} />} />
-            }
+            <CheckIfLoading loading={loading} content={
+                <NeedsToBeLoggedIn content={
+                    <ExisitngPost post={post as Post} alert={alert} />
+                }/>
+            }/>
         </CenterLayout>
-    )
+    );
 }
 
 
-function ExisitngPost({ post, postImages, alert }: { post: Post, postImages: File[], alert: AlertType | null }) {
+function ExisitngPost({ post, alert }: { post: Post, alert: AlertType | null }) {
     return (
-        <>{(alert && alert.cStatus!=200) ?
-            <Alert alert={alert} variations={[]} />
-        :
-            <Edit post={post} postImages={postImages} />
-        }</>
+        <CheckIfAlert alert={alert} variations={[]} content={
+            <Edit post={post} />
+        }/>
     );
 }

@@ -1,22 +1,22 @@
-import { useRef, useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
-
 import { Post } from '@prisma/client';
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, IMG_ACCEPTED_FILES, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, formatDate } from '@util/global';
+import { CLOTHING_SIZES, NO_SIZE_GENDER_CATEGORIES } from '@util/global';
 
-import { useMenuShadowContext } from '@components/providers/MenuShadow';
 import { Alert, AlertType } from '@components/Alert';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
-import { colorScheme } from '@styles/colors';
 import Loading from '@components/Loading';
 import { Category, Description, Gender, Images, Price, Size, Title } from './inputs/Inputs';
+import { makePostPicture } from '@util/photos/crop';
+import { urlToFile } from '@util/photos/urlToFile';
 
 
 
-export default function Edit({ post, postImages }: { post: Post, postImages: File[] }) {
+export default function Edit({ post }: { post: Post }) {
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [alert, setAlert] = useState<AlertType | null>(null);
@@ -27,21 +27,57 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
     const [size, setSize] = useState<string>(post.size);
     const [gender, setGender] = useState<string>(post.gender);
     const [price, setPrice] = useState<number>(Number(post.price));
-    const [images, setImages] = useState<File[]>(postImages);
+    const [images, setImages] = useState<File[]>([]);
 
 
-    const getData = () => {
-        const postData = new FormData();
-        postData.set('title', title);
-        postData.set('description', description);
-        postData.set('category', category);
-        postData.set('size', size);
-        postData.set('gender', gender);
-        postData.set('price', String(price));
-        for (let i=0; i<images.length; i++) postData.append('images', images[i]);
+    const getData = async () => {
+        const imageKeys = await uploadImages();
+        const postData = {
+            title,
+            description,
+            category,
+            size,
+            gender,
+            price: String(price),
+            images: imageKeys
+        }
         return postData;
     }
 
+    const uploadImages = async () => {
+        const imageKeys: string[] = [];
+        for (let i=0; i<images.length; i++) {
+            const imageFile = images[i];
+
+            const [resSignAndKey, croppedPostBlob] = await Promise.all([
+                fetch(`/api/s3`, {
+                    method: 'POST',
+                    body: JSON.stringify({ operation: 'UPLOAD_POST_PHOTO', fileType: imageFile.type, fileSize: imageFile.size }),
+                    headers: { 'Content-Type': 'application/json' }
+                }),
+                makePostPicture(imageFile)
+            ]);
+
+            if (croppedPostBlob == null) {
+                setAlert({cStatus: 400, msg: 'Something went wrong.'});
+                return;
+            }
+
+            const resSignAndKeyJson = await resSignAndKey.json();
+            if (resSignAndKeyJson.cStatus==200) {
+                await fetch(resSignAndKeyJson.signedUrl, {
+                    method: 'PUT',
+                    body: croppedPostBlob,
+                    headers: { 'Content-Type': 'webp' }
+                });
+                imageKeys.push(resSignAndKeyJson.key);
+            } else {
+                setAlert(resSignAndKeyJson);
+                return;
+            }
+        }
+        return imageKeys;
+    }
 
     const setCategoryField = (value: string) => {
         if (NO_SIZE_GENDER_CATEGORIES.includes(value)) {
@@ -59,10 +95,10 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
         const postData = getData();
         const res = await fetch(`/post/${post.id}/edit/api/`, {
             method: 'POST',
-            body: postData,
+            body: JSON.stringify({ postData }),
+            headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
-
         if (resJson.cStatus==200) {
             router.push(`/post/${post.id}`);
         } else {
@@ -70,6 +106,23 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
             setLoading(false);
         }
     }
+
+    const convertImageKeysToFiles = async () => {
+        setLoading(true);
+        const urlsToFilesPromises = post.images.map(key => urlToFile(key));
+        const imageFiles = await Promise.all(urlsToFilesPromises);
+        const nullFileExists = imageFiles.some((file) => file==null);
+        if (nullFileExists) {
+            setAlert({ cStatus: 400, msg: `Something went wrong while fetching past images.` });
+        } else {
+            setImages(imageFiles as any);
+        }
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        convertImageKeysToFiles();
+    }, []);
 
     return (
         <div className={createPostStyles.form}>
@@ -95,9 +148,11 @@ export default function Edit({ post, postImages }: { post: Post, postImages: Fil
                 
                 <Price value={price} setValue={setPrice} />
 
-                {/* <Images value={images} setValue={setImages} postId={post.id} /> */}
+                <Images value={images} setValue={setImages} />
 
-                <button onClick={attemptEditPost}>Save Updates</button>
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
+                    <button onClick={attemptEditPost}>Save Updates</button>
+                </div>
             </>}
         </div>
     );
