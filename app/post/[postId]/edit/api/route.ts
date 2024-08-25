@@ -40,6 +40,7 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
     try {
         const { inputData } = await req.json();
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
+        console.log(inputData)
 
         const postId = params.postId;
         if (!postId) return NextResponse.json({ cStatus: 101, msg: `No postId provided.` }, { status: 400 });
@@ -62,6 +63,7 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
 
 
         const resValidInput = isValidInputEditPostData(inputData);
+        console.log(resValidInput)
         if (!resValidInput.valid) return NextResponse.json({ cStatus: 102, msg: resValidInput.msg }, { status: 400 });
         const postData = editPostDataFromInputs(inputData);
 
