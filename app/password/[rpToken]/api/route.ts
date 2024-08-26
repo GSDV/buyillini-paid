@@ -13,10 +13,12 @@ export async function POST(req: NextRequest, { params }: { params: { rpToken: st
     try {
         const { newPassword } = await req.json();
         const rpToken = params.rpToken
+        console.log("Token: ", rpToken)
         if (!isValidPassword(newPassword)) return NextResponse.json({ cStatus: 102, msg: `Use a password with 5 to 50 characters, consisting only of letters, numbers, and the symbols #, $, %, and &.` }, { status: 400 });
         
         if (!rpToken) return NextResponse.json({ cStatus: 101, msg: `No reset password token provided.`}, { status: 400 });
         const rpTokenPrisma = await getRpToken(rpToken);
+        console.log("Token prisma: ", rpTokenPrisma)
         if (!rpTokenPrisma) return NextResponse.json({ cStatus: 501, msg: `Did not provide a real reset password token.` }, { status: 400 });
         if (isRPTokenExpired(rpTokenPrisma)) return NextResponse.json({ cStatus: 502, msg: `This reset password token has expired.` }, { status: 400 });
 
