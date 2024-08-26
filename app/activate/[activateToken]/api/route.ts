@@ -7,9 +7,9 @@ import { isActivationTokenExpired } from '@util/api/tokens';
 
 
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest, { params }: { params: { activateToken: string } }) {
     try {
-        const { activateToken } = await req.json();
+        const activateToken = params.activateToken;
         if (!activateToken) return NextResponse.json({ cStatus: 101, msg: `No token provided. Please click the link in your email.` }, { status: 400 });
 
         const tokenPrisma = await getActivateToken(activateToken);

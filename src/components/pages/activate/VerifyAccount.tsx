@@ -18,11 +18,9 @@ export default function VerifyAccount({ activateToken }: { activateToken: string
         {cStatus: 502, jsx: (<p>This activation link is expired. Please <a href='/activate/'>request a new one</a>.</p>)}
     ];
     
-    const attemptActivate = async (activateToken: string ) => {
-        const res = await fetch(`/activate/verify/api`, {
-            method: 'POST',
-            body: JSON.stringify({activateToken}),
-            headers: { 'Content-Type': 'application/json' }
+    const attemptActivate = async () => {
+        const res = await fetch(`/activate/${activateToken}/api`, {
+            method: 'POST'
         });
         const resJson = await res.json();
         setLoading(false);
@@ -31,7 +29,7 @@ export default function VerifyAccount({ activateToken }: { activateToken: string
     }
 
     useEffect(() => {
-        attemptActivate(activateToken);
+        attemptActivate();
     }, []);
 
     return (
