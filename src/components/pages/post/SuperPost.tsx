@@ -7,10 +7,11 @@ import { CATEGORIES, CLOTHING_SIZES, GENDERS, NO_SIZE_GENDER_CATEGORIES } from '
 
 import createPostStyles from '@styles/pages/create-post.module.css';
 import { Post } from '@prisma/client';
+import { makePostPicture } from '@util/photos/crop';
 
 
 
-export default function CreateSuperPost({ draftedPost }: { draftedPost: Post }) {
+export default function CreateSuperPost() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [title, setTitle] = useState<string>('');
@@ -18,9 +19,9 @@ export default function CreateSuperPost({ draftedPost }: { draftedPost: Post }) 
     const [category, setCategory] = useState<string>('');
     const [size, setSize] = useState<string>('');
     const [gender, setGender] = useState<string>('');
-    const [price, setPrice] = useState<number>(Number(0.00));
+    const [price, setPrice] = useState<string>('');
     const [images, setImages] = useState<File[]>([]);
-    const [duration, setDuration] = useState<number>(Number(0));
+    const [duration, setDuration] = useState<string>('');
 
 
     const getData = async () => {
@@ -34,9 +35,43 @@ export default function CreateSuperPost({ draftedPost }: { draftedPost: Post }) 
             price: String(price),
             images: imageKeys,
             duration: (duration=='' ? '1': duration),
-            freeMonthsUsed: (freeMonthsUsed=='' ? '0' : freeMonthsUsed)
         }
         return inputData;
+    }
+
+    const uploadImages = async () => {
+        const imageKeys: string[] = [];
+        for (let i=0; i<images.length; i++) {
+            const imageFile = images[i];
+
+            const [resSignAndKey, croppedPostBlob] = await Promise.all([
+                fetch(`/api/s3`, {
+                    method: 'POST',
+                    body: JSON.stringify({ operation: 'UPLOAD_POST_PHOTO', fileType: imageFile.type, fileSize: imageFile.size }),
+                    headers: { 'Content-Type': 'application/json' }
+                }),
+                makePostPicture(imageFile)
+            ]);
+
+            if (croppedPostBlob == null) {
+                // setAlert({cStatus: 400, msg: 'Something went wrong.'});
+                return;
+            }
+
+            const resSignAndKeyJson = await resSignAndKey.json();
+            if (resSignAndKeyJson.cStatus==200) {
+                await fetch(resSignAndKeyJson.signedUrl, {
+                    method: 'PUT',
+                    body: croppedPostBlob,
+                    headers: { 'Content-Type': 'webp' }
+                });
+                imageKeys.push(resSignAndKeyJson.key);
+            } else {
+                // setAlert(resSignAndKeyJson);/
+                return;
+            }
+        }
+        return imageKeys;
     }
 
 
@@ -54,7 +89,7 @@ export default function CreateSuperPost({ draftedPost }: { draftedPost: Post }) 
     const attemptSuperPost = async () => {
         setLoading(true);
         const postData = getData();
-        action(postData);
+        // action(postData);
         setLoading(false);
     }
 
@@ -79,7 +114,7 @@ export default function CreateSuperPost({ draftedPost }: { draftedPost: Post }) 
 
                 {/* <Images value={images} setValue={setImages} postId={draftedPost.id} /> */}
 
-                <SuperListingPeriod value={months} setValue={setMonths} />
+                <SuperListingPeriod value={duration} setValue={setDuration} />
 
                 <button onClick={attemptSuperPost}>Create</button>
             </>}
