@@ -50,11 +50,6 @@ body {
 
 
 textarea, input, select {
-    /* Removes the default styling in browsers */
-    appearance: none; 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
     padding: 5px;
     border: 0;
     border-radius: 5px;
@@ -62,6 +57,7 @@ textarea, input, select {
     letter-spacing: inherit;
     word-spacing: inherit;
     font-size: 100%;
+    color: var(--black);
 }
 
 
