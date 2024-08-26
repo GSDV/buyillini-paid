@@ -21,14 +21,12 @@ export default function Request() {
     ];
 
     const attemptRequest = async (formData: FormData) => {
-        const email = formData.get('email');
-
+        const userEmail = formData.get('email');
         const res = await fetch('password/api/', {
             method: 'POST',
-            body: JSON.stringify({email}),
+            body: JSON.stringify({ userEmail }),
             headers: { 'Content-Type': 'application/json' }
         });
-
         const resJSON = await res.json();
         setAlert(resJSON);
     }
