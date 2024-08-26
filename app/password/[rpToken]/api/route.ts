@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { changePassword, getUser } from '@util/prisma/actions/user';
-import { getRpToken } from '@util/prisma/actions/tokens';
+import { deleteAllusersRPTokens, getRpToken } from '@util/prisma/actions/tokens';
 
 import { hashPassword, isValidPassword } from '@util/api/user';
 import { isRPTokenExpired } from '@util/api/tokens';
@@ -30,6 +30,7 @@ export async function POST(req: NextRequest, { params }: { params: { rpToken: st
         if (userPrisma.password === hashedPassword) return NextResponse.json({ cStatus: 102, msg: `New password cannot be the same as current one.` }, { status: 400 });
 
         await changePassword(userPrisma.id, hashedPassword);
+        deleteAllusersRPTokens(userPrisma.id); // Asynchronous process, clean up rp tokens so that they are not reused.
 
         return NextResponse.json({ cStatus: 200, msg: `Password reset. You can now login.` }, { status: 200 });
     } catch (error) {

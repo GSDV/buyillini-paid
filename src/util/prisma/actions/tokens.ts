@@ -53,8 +53,13 @@ export const createRpToken = async (userId: string) => {
     return token;
 }
 export const getRpToken = async (token: string) => {
-    const tokenPrisma = prisma.rPToken.findFirst({
-        where: { token: token }
+    const tokenPrisma = await prisma.rPToken.findFirst({
+        where: { token }
     });
     return tokenPrisma;
+}
+export const deleteAllusersRPTokens = async (userId: string) => {
+    await prisma.rPToken.deleteMany({
+        where: { userId }
+    });
 }
