@@ -10,31 +10,35 @@ import { Post } from '@prisma/client';
 
 
 
-export default function CreateSuperPost({ draftedPost, action }: { draftedPost: Post, action: (data: FormData)=>void }) {
+export default function CreateSuperPost({ draftedPost }: { draftedPost: Post }) {
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [title, setTitle] = useState<string>(draftedPost.title);
-    const [description, setDescription] = useState<string>(draftedPost.description);
-    const [category, setCategory] = useState<string>(draftedPost.category);
-    const [size, setSize] = useState<string>(draftedPost.size);
-    const [gender, setGender] = useState<string>(draftedPost.gender);
-    const [price, setPrice] = useState<number>(Number(draftedPost.price));
-    const [images, setImages] = useState<string[]>(draftedPost.images);
-    const [months, setMonths] = useState<number>(Number(draftedPost.duration));
+    const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [category, setCategory] = useState<string>('');
+    const [size, setSize] = useState<string>('');
+    const [gender, setGender] = useState<string>('');
+    const [price, setPrice] = useState<number>(Number(0.00));
+    const [images, setImages] = useState<File[]>([]);
+    const [duration, setDuration] = useState<number>(Number(0));
 
 
-    const getData = () => {
-        const postData = new FormData();
-        postData.set('title', title);
-        postData.set('description', description);
-        postData.set('category', category);
-        postData.set('size', size);
-        postData.set('gender', gender);
-        postData.set('price', String(price));
-        for (let i=0; i<images.length; i++) postData.append('images', images[i]);
-        postData.set('months', String(months));
-        return postData;
+    const getData = async () => {
+        const imageKeys = await uploadImages();
+        const inputData = {
+            title,
+            description,
+            category,
+            size,
+            gender,
+            price: String(price),
+            images: imageKeys,
+            duration: (duration=='' ? '1': duration),
+            freeMonthsUsed: (freeMonthsUsed=='' ? '0' : freeMonthsUsed)
+        }
+        return inputData;
     }
+
 
     const setCategoryField = (value: string) => {
         if (NO_SIZE_GENDER_CATEGORIES.includes(value)) {
