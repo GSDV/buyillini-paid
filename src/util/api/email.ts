@@ -1,4 +1,3 @@
-import { Post, User } from '@prisma/client';
 import sgMail from '@sendgrid/mail';
 
 import { CONTACT_EMAIL, DOMAIN, EMAIL_FOOTER, formatPhoneNumber } from '@util/global';
@@ -10,7 +9,7 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
     const msgText = `BuyIllini Reset Password. Copy and past the following link into your browser to reset your account password: ${DOMAIN}/password/${token}.`;
     const msgHtml = `
         <h1>BuyIllini Reset Password</h1>
-        <p>Click <a href="${DOMAIN}/verification/${token}">here</a> to reset your BuyIllini password.</p>
+        <p>Click <a href="${DOMAIN}/reset/${token}">here</a> to reset your BuyIllini password.</p>
         <p>If the above link does not work, copy and past the following into your browser: ${DOMAIN}/password/${token}</p>
     `;
     const mail = {
