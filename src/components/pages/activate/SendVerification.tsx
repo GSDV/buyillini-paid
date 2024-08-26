@@ -21,7 +21,7 @@ export default function SendVerification() {
 
     const attemptSendVerification = async (formData: FormData) => {
         const email = formData.get('email');
-        const res = await fetch('/activate/api/', {
+        const res = await fetch(`/activate/api`, {
             method: 'POST',
             body: JSON.stringify({email}),
             headers: { 'Content-Type': 'application/json' }

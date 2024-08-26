@@ -22,7 +22,7 @@ export default function Request() {
 
     const attemptRequest = async (formData: FormData) => {
         const userEmail = formData.get('email');
-        const res = await fetch('/password/api/', {
+        const res = await fetch(`/password/api`, {
             method: 'POST',
             body: JSON.stringify({ userEmail }),
             headers: { 'Content-Type': 'application/json' }

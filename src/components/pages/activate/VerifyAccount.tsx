@@ -19,7 +19,7 @@ export default function VerifyAccount({ activateToken }: { activateToken: string
     ];
     
     const attemptActivate = async (activateToken: string ) => {
-        const res = await fetch('/activate/verify/api/', {
+        const res = await fetch(`/activate/verify/api`, {
             method: 'POST',
             body: JSON.stringify({activateToken}),
             headers: { 'Content-Type': 'application/json' }

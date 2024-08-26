@@ -32,7 +32,7 @@ export default function Login() {
             password: formData.get('password')
         };
 
-        const res = await fetch('login/api/', {
+        const res = await fetch(`/login/api`, {
             method: 'POST',
             body: JSON.stringify({userData}),
             headers: { 'Content-Type': 'application/json' }

@@ -39,7 +39,7 @@ export default function SignUp() {
             password: formData.get('password')
         };
 
-        const res = await fetch('/signup/api/', {
+        const res = await fetch(`/signup/api`, {
             method: 'POST',
             body: JSON.stringify({userData}),
             headers: { 'Content-Type': 'application/json' }

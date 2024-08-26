@@ -15,7 +15,7 @@ export default function Promo() {
 
     const attemptRedeem = async (formData: FormData) => {
         setLoading(true);
-        const res = await fetch('/promo/api/', {
+        const res = await fetch(`/promo/api`, {
             method: 'POST',
             body: JSON.stringify({promoCode: formData.get('code')}),
             headers: { 'Content-Type': 'application/json' }
