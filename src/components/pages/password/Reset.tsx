@@ -25,9 +25,9 @@ export default function Reset({ rpToken }: { rpToken: string }) {
             return;
         }
 
-        const res = await fetch('/password/token/api/', {
+        const res = await fetch(`/password/${rpToken}/api`, {
             method: 'POST',
-            body: JSON.stringify({ rpToken, newPassword }),
+            body: JSON.stringify({ newPassword }),
             headers: { 'Content-Type': 'application/json' }
         });
 
