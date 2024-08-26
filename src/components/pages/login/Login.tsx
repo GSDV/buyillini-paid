@@ -80,7 +80,8 @@ function LoginForm({ action, inputs }: FormType) {
 
             <div style={{ padding: '20px',  display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <button style={{ alignSelf: 'center' }} type='submit'>Login</button>
-                <h5 style={{ textAlign: 'center' }}>Click <a href='/signup/'>here</a> to sign up</h5>
+                <h5 style={{ textAlign: 'center' }}>Click <a href='/signup'>here</a> to sign up</h5>
+                <h5 style={{ textAlign: 'center' }}>Click <a href='/password'>here</a> to reset password</h5>
             </div>
         </form>
     );
