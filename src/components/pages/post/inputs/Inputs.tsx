@@ -256,7 +256,7 @@ export function Images({ value, setValue }: InputValue) {
         const newTempUrls = [...tempUrls];
         const tempUrl = newTempUrls.splice(idx, 1)[0];
         URL.revokeObjectURL(tempUrl);
-        setValue(newTempUrls);
+        setTempUrls(newTempUrls);
         console.log("Updated: ", newImages, newTempUrls);
         setLoading(false);
     }
