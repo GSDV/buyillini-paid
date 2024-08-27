@@ -37,14 +37,12 @@ export default function Request() {
     }
 
     return (
-        <CenterLayout>
-            <CheckIfLoading loading={loading} content={
-                <div className={formStyles.container}>
-                    <h2 className={formStyles.title}></h2>
-                    <Form action={attemptRequest} inputs={inputs} submitTitle='Send reset password email' />
-                    {alert && <Alert alert={alert} variations={alertVars} />}
-                </div>
-            }/>
-        </CenterLayout>
+        <CheckIfLoading loading={loading} content={
+            <div className={formStyles.container}>
+                <h2 className={formStyles.title}></h2>
+                <Form action={attemptRequest} inputs={inputs} submitTitle='Send reset password email' />
+                {alert && <Alert alert={alert} variations={alertVars} />}
+            </div>
+        }/>
     );
 }
