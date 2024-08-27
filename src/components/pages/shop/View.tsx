@@ -5,7 +5,6 @@ import CenterLayout from '@components/containers/CenterLayout';
 import { getPfpUrl, imgUrl } from '@util/global';
 
 import shopStyles from '@styles/pages/shop.module.css';
-import Arrows from '@components/Arrows';
 
 
 
