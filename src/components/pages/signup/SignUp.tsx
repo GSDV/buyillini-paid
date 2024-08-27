@@ -8,11 +8,13 @@ import { useAuthContext } from '@components/providers/Auth';
 import { Alert, AlertType, AlertVariation } from '@components/Alert';
 
 import formStyles from '@styles/ui/form.module.css';
+import { CheckIfLoading } from '@components/Loading';
 
 
 
 export default function SignUp() {
     const router = useRouter();
+    const [loading, setLoading] = useState<boolean>(false);
     const { fetchCookie } = useAuthContext();
 
     const inputs: FormInputType[] = [
@@ -28,6 +30,7 @@ export default function SignUp() {
     ];
 
     const attemptSignUp = async (formData: FormData) => {
+        setLoading(true);
         if (formData.get('password') !== formData.get('confirmPassword')) {
             setAlert({cStatus: 102, msg: `Passwords don't match.`})
             return;
@@ -48,16 +51,20 @@ export default function SignUp() {
         if (resJson.cStatus==200) {
             fetchCookie();
             router.push(`/signup/success/`);
+        } else {
+            setLoading(true);
+            setAlert(resJson);
         }
-        setAlert(resJson);
     }
 
     return (
-        <div className={formStyles.container}>
-            <h2 className={formStyles.title}>Sign up for BuyIllini</h2>
-            <SignUpForm action={attemptSignUp} inputs={inputs} />
-            {alert && <Alert alert={alert} variations={alertVars} />}
-        </div>
+        <CheckIfLoading loading={loading} content={
+            <div className={formStyles.container}>
+                <h2 className={formStyles.title}>Sign up for BuyIllini</h2>
+                <SignUpForm action={attemptSignUp} inputs={inputs} />
+                {alert && <Alert alert={alert} variations={alertVars} />}
+            </div>
+        }/>
     );
 }
 
