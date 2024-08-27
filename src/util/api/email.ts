@@ -88,7 +88,10 @@ export const sendEmail = async (mail: MailType) => {
 
     const msg = {
         to: mail.email,
-        from: CONTACT_EMAIL,
+        from: {
+            email: CONTACT_EMAIL,
+            name: 'BuyIllini'
+        },
         subject: mail.subject,
         text: mail.msgText,
         html: mail.msgHtml

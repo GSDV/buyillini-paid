@@ -13,6 +13,7 @@ import formStyles from '@styles/ui/form.module.css';
 
 export default function Login() {
     const router = useRouter();
+    const [loading, setLoading] = useState<boolean>(true);
     const { fetchCookie } = useAuthContext();
 
     const inputs: FormInputType[] = [
@@ -27,6 +28,7 @@ export default function Login() {
     ];
 
     const attemptLogin = async (formData: FormData) => {
+        setLoading(true)
         const userData = {
             email: formData.get('email'),
             password: formData.get('password')

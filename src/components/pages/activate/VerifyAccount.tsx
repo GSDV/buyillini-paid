@@ -19,13 +19,17 @@ export default function VerifyAccount({ activateToken }: { activateToken: string
     ];
     
     const attemptActivate = async () => {
+        setLoading(true);
         const res = await fetch(`/activate/${activateToken}/api`, {
             method: 'POST'
         });
         const resJson = await res.json();
-        setLoading(false);
-        setAlert(resJson);
-        if (resJson.cStatus==200 || resJson.cStatus==201) router.push(`/account/${resJson.netId}`);
+        if (resJson.cStatus==200 || resJson.cStatus==201) {
+            router.push(`/account/${resJson.netId}`);
+        } else {
+            setAlert(resJson);
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
