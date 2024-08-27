@@ -272,6 +272,7 @@ export function Images({ value, setValue }: InputValue) {
     }
 
     useEffect(() => {
+        console.log("USE EFFECT IMG")
         return () => {
             console.log("Deleting the urls");
             tempUrls.forEach(url => URL.revokeObjectURL(url));
