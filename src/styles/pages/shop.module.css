@@ -139,7 +139,8 @@
     object-fit: cover;
 }
 .post h4 {
-    height: 2.7em;
+    /* height: 2.7em; */
+    padding: 0px 5px;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
