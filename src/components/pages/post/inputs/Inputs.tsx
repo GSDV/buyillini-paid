@@ -239,7 +239,7 @@ export function Images({ value, setValue }: InputValue) {
         setValue(newImages);
         setAlert(null);
 
-        makeTempUrl(image);
+        setTempUrls([...tempUrls, URL.createObjectURL(image)]);
 
         if (imgRef.current) imgRef.current.value = '';
         setLoading(false);
@@ -247,7 +247,6 @@ export function Images({ value, setValue }: InputValue) {
 
 
     const handleDelete = async (idx: number) => {
-        console.log("DELETING PHOTO");
         setLoading(true);
         const newImages = [...value];
         newImages.splice(idx, 1)[0];
@@ -257,7 +256,6 @@ export function Images({ value, setValue }: InputValue) {
         const tempUrl = newTempUrls.splice(idx, 1)[0];
         URL.revokeObjectURL(tempUrl);
         setTempUrls(newTempUrls);
-        console.log("Updated: ", newImages, newTempUrls);
         setLoading(false);
     }
 
@@ -266,23 +264,15 @@ export function Images({ value, setValue }: InputValue) {
         msContext.openMenu();
     }
 
-    // THESE FILES 
-    const makeTempUrl = (image: File) => {
-        const url = URL.createObjectURL(image);
-        setTempUrls([...tempUrls, url]);
-        return url
-    }
 
     useEffect(() => {
         const urls = [];
         for (let i=0; i<value.length; i++) {
             urls.push(URL.createObjectURL(value[i]));
         }
-        setTempUrls(urls)
+        setTempUrls(urls);
         
-        console.log("USE EFFECT IMG")
         return () => {
-            console.log("Deleting the urls");
             tempUrls.forEach(url => URL.revokeObjectURL(url));
         }
     }, []);
