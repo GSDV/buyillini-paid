@@ -14,7 +14,7 @@ import { CheckIfLoading } from '@components/Loading';
 
 export default function Login() {
     const router = useRouter();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const { fetchCookie } = useAuthContext();
 
     const inputs: FormInputType[] = [
@@ -41,7 +41,6 @@ export default function Login() {
             headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
-        console.log(resJson);
         if (resJson.cStatus==200) {
             fetchCookie();
             router.push(`/account/${resJson.netId}`);
