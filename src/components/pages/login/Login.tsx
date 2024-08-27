@@ -41,6 +41,7 @@ export default function Login() {
             headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
+        console.log(resJson);
         if (resJson.cStatus==200) {
             fetchCookie();
             router.push(`/account/${resJson.netId}`);
