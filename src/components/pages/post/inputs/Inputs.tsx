@@ -272,13 +272,21 @@ export function Images({ value, setValue }: InputValue) {
         msContext.openMenu();
     }
 
-    const makeTempUrl = (image: File) => {
-        const url = URL.createObjectURL(image);
-        setTempUrls([...tempUrls, url]);
-        return url
-    }
+    // THESE FILES 
+    // const makeTempUrl = (image: File) => {
+    //     console.log();
+    //     const url = URL.createObjectURL(image);
+    //     setTempUrls([...tempUrls, url]);
+    //     return url
+    // }
 
     useEffect(() => {
+        const urls = [];
+        for (let i=0; i<value.length; i++) {
+            urls.push(URL.createObjectURL(value[i]));
+        }
+        setTempUrls(urls)
+        
         console.log("USE EFFECT IMG")
         return () => {
             console.log("Deleting the urls");
@@ -298,7 +306,7 @@ export function Images({ value, setValue }: InputValue) {
                     {value.map((img: any, i: any) => (
                         <div key={i} className={createPostStyles.imgWrapper}>
                             <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                            <img src={makeTempUrl(img)} onClick={() => openImage(i)} />
+                            <img src={tempUrls[i]} onClick={() => openImage(i)} />
                         </div>
                     ))}
 
