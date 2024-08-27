@@ -34,12 +34,10 @@ export function CheckIfAdmin({ content }: { content: React.ReactNode }) {
     }, []);
 
     return (
-        <>
-            <CheckIfLoading loading={loading} content={
-                <CheckIfAlert alert={alert}  content={content} />
-            }/>
-        </>
-    )
+        <CheckIfLoading loading={loading} content={
+            <CheckIfAlert alert={alert} content={content} />
+        } />
+    );
 }
 
 

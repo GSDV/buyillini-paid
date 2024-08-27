@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { PostWithRedactedUser } from '@util/prisma/types';
-import Loading from '@components/Loading';
+import Loading, { CheckIfLoading } from '@components/Loading';
 
 import VerticalLayout from '@components/containers/VerticalLayout';
 import { AlertType, CheckIfAlert } from '@components/Alert';
@@ -61,15 +61,11 @@ export default function CategoryPosts({ params }: { params: { category: string }
 
     return (
         <VerticalLayout>
-            {loading ? 
-                <Loading />
-            :
-                <CheckIfAlert 
-                    alert={alert}
-                    
-                    content={<Category posts={posts} filters={filters} setFilters={setFilters} page={page} maxPages={maxPages} setPage={setPage} />}
-                />
-            }
+            <CheckIfLoading loading={loading} content={
+                <CheckIfAlert alert={alert} content={
+                    <Category posts={posts} filters={filters} setFilters={setFilters} page={page} maxPages={maxPages} setPage={setPage} />
+                } />
+            } />
         </VerticalLayout>
     );
 }

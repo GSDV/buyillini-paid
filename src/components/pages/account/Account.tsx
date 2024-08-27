@@ -14,7 +14,7 @@ import { DEFAULT_PFP, IMG_ACCEPTED_FILES, imgUrl } from '@util/global';
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 
 import CenterLayout from '@components/containers/CenterLayout';
-import Loading from '@components/Loading';
+import Loading, { CheckIfLoading } from '@components/Loading';
 import { Alert, AlertType, CheckIfAlert } from '@components/Alert';
 
 import { formatPhoneNumber } from '@util/global';
@@ -278,11 +278,11 @@ function OwnPosts({ userId }: { userId: string }) {
             </div>
    
             <div className={accountStyles.postsContainer}>
-                {loading ?
-                    <Loading />
-                :
-                    <CheckIfAlert alert={alert}  content={<ActiveOrPastPosts active={active} posts={posts} page={page} max={maxPages} setPage={setPage} />} />
-                }
+                <CheckIfLoading loading={loading} content={
+                    <CheckIfAlert alert={alert}  content={
+                        <ActiveOrPastPosts active={active} posts={posts} page={page} max={maxPages} setPage={setPage} />
+                    } />
+                }/>
             </div>
 
         </div>
@@ -326,11 +326,11 @@ function OtherPosts({ userId }: { userId: string }) {
 
     return (
         <div className={accountStyles.postsContainer}>
-            {loading ?
-                <Loading />
-            :
-                <CheckIfAlert alert={alert}  content={<Posts noPosts='This account has no active posts.' posts={posts} page={page} max={maxPages} setPage={setPage} />} />
-            }
+            <CheckIfLoading loading={loading} content={
+                <CheckIfAlert alert={alert}  content={
+                    <Posts noPosts='This account has no active posts.' posts={posts} page={page} max={maxPages} setPage={setPage} />
+                } />
+            } />
         </div>
     );
 }

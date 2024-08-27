@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { RedactedUser, RedactedUserWithPosts } from '@util/prisma/types';
 
-import Loading from '@components/Loading';
+import Loading, { CheckIfLoading } from '@components/Loading';
 
 import { AlertType, CheckIfAlert } from '@components/Alert';
 import Account from '@components/pages/account/Account';
@@ -37,15 +37,12 @@ export default function Page({ params }: { params: { netId: string } }) {
     }, []);
 
     return (
-        <>
-            {loading ? 
-                <Loading />
-            :
-                
-                <VerticalLayout>
-                    <CheckIfAlert alert={alert}  content={<Account user={user as RedactedUser} ownAccount={ownAccount} />} />
-                </VerticalLayout>
-            }
-        </>
+        <CheckIfLoading loading={loading} content={
+            <VerticalLayout>
+                <CheckIfAlert alert={alert} content={
+                    <Account user={user as RedactedUser} ownAccount={ownAccount} />
+                } />
+            </VerticalLayout>
+        } />
     );
 }

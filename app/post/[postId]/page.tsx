@@ -47,9 +47,13 @@ export default function Page({ params }: { params: { postId: string } }) {
 
 
 function ChooseView({ post, cStatus, alert}: { post: PostWithRedactedUser, cStatus: number, alert: AlertType | null }) {
-    if (!post.deleted) return <CheckIfAlert alert={alert}  content={<DisplayPost post={post} cStatus={cStatus} />} />;
+    if (!post.deleted) return (
+        <CheckIfAlert alert={alert} content={
+            <DisplayPost post={post} cStatus={cStatus} />
+        } />
+    );
 
-    if (post.deleted && cStatus==202) return <CheckIfAlert alert={alert}  content={<DisplayPost post={post} cStatus={cStatus} />} />;
+    if (post.deleted && cStatus==202) return <DisplayPost post={post} cStatus={cStatus} />;
 
     return <Alert alert={{cStatus: 400, msg: 'This post has been deleted.'}}  />;
 }

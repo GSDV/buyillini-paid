@@ -32,7 +32,9 @@ export default function Page({ params }: { params: { postId: string } }) {
     return (
         <CenterLayout>
             <CheckIfLoading loading={loading} content={
-                <NeedsToBeLoggedIn content={<PostExists post={post as Post} alert={alert} />} />
+                <NeedsToBeLoggedIn content={
+                    <PostExists post={post as Post} alert={alert} />
+                } />
             } />
         </CenterLayout>
     )
@@ -42,10 +44,8 @@ export default function Page({ params }: { params: { postId: string } }) {
 
 function PostExists({ post, alert}: { post: Post, alert: AlertType | null }) {
     return (
-        <CheckIfAlert 
-            alert={alert}
-            
-            content={<ConfirmPaidPost post={post} />}
-        />
+        <CheckIfAlert alert={alert} content={
+            <ConfirmPaidPost post={post} />
+        } />
     );
 }
