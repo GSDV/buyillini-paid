@@ -227,20 +227,27 @@ export function Images({ value, setValue }: InputValue) {
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("UPLAODING PHOTO");
         const image = e.target.files?.[0];
+        console.log("AAA")
         if (value.length >= 5 || image==undefined) return;
+        console.log("BBB")
         if (!ACCEPTED_FILES.includes(image.type)) {
             setAlert({cStatus: 102, msg: `Please upload a png, jpg, or webp file.`});
             return;
         }
+        console.log("CCC")
         if (image.size > IMG_SIZE_LIMIT) {
             setAlert({cStatus: 102, msg: `Please upload an image smaller than ${IMG_SIZE_LIMIT_TXT}.`});
             return;
         }
+        console.log("DDD")
         const newImages = [...value, image];
+        console.log("EEE")
         setValue(newImages);
         setAlert(null);
+        console.log("FFF")
 
         if (imgRef.current) imgRef.current.value = '';
+        console.log("GGG")
         setLoading(false);
     }
 
