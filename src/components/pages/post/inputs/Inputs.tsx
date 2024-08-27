@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { BsPlusCircle, BsFillDashCircleFill } from 'react-icons/bs';
 
@@ -220,18 +220,20 @@ export function Price({ value, setValue }: InputValue) {
 export function Images({ value, setValue }: InputValue) {
     const msContext = useMenuShadowContext();
     const imgRef = useRef<HTMLInputElement | null>(null);
+    const [tempUrls, setTempUrls] = useState<string[]>([]);
     const [alert, setAlert] = useState<AlertType | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("UPLAODING PHOTO");
         const image = e.target.files?.[0];
         if (value.length >= 5 || image==undefined) return;
         if (!ACCEPTED_FILES.includes(image.type)) {
-            setAlert({cStatus: 102, msg: `Please upload a png, jpg, or webp file`});
+            setAlert({cStatus: 102, msg: `Please upload a png, jpg, or webp file.`});
             return;
         }
         if (image.size > IMG_SIZE_LIMIT) {
-            setAlert({cStatus: 102, msg: `Please upload an image smaller than ${IMG_SIZE_LIMIT_TXT}s`});
+            setAlert({cStatus: 102, msg: `Please upload an image smaller than ${IMG_SIZE_LIMIT_TXT}.`});
             return;
         }
         const newImages = [...value, image];
@@ -240,14 +242,21 @@ export function Images({ value, setValue }: InputValue) {
 
         if (imgRef.current) imgRef.current.value = '';
         setLoading(false);
-    };
+    }
 
 
     const handleDelete = async (idx: number) => {
+        console.log("DELETING PHOTO");
         setLoading(true);
         const newImages = [...value];
         newImages.splice(idx, 1)[0];
         setValue(newImages);
+
+        const newTempUrls = [...tempUrls];
+        const tempUrl = newTempUrls.splice(idx, 1)[0];
+        URL.revokeObjectURL(tempUrl);
+        setValue(newTempUrls);
+        console.log("Updated: ", newImages, newTempUrls);
         setLoading(false);
     }
 
@@ -255,6 +264,19 @@ export function Images({ value, setValue }: InputValue) {
         msContext.setContent(<DisplayImage img={value[idx]} />);
         msContext.openMenu();
     }
+
+    const makeTempUrl = (image: File) => {
+        const url = URL.createObjectURL(image);
+        setTempUrls([...tempUrls, url]);
+        return url
+    }
+
+    useEffect(() => {
+        return () => {
+            console.log("Deleting the urls");
+            tempUrls.forEach(url => URL.revokeObjectURL(url));
+        }
+    }, []);
 
     return (
         <div className={createPostStyles.formItem} style={{width: '100%'}}>
@@ -268,7 +290,7 @@ export function Images({ value, setValue }: InputValue) {
                     {value.map((img: any, i: any) => (
                         <div key={i} className={createPostStyles.imgWrapper}>
                             <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-                            <img src={URL.createObjectURL(img)} onClick={() => openImage(i)} />
+                            <img src={makeTempUrl(img)} onClick={() => openImage(i)} />
                         </div>
                     ))}
 

@@ -9,11 +9,10 @@ import { CheckIfLoading } from '@components/Loading';
 import adminStyles from '@styles/pages/admin.module.css';
 
 
+
 export interface AdminActionType {
     setAlert: React.Dispatch<React.SetStateAction<AlertType | null>>
 }
-
-
 
 
 
