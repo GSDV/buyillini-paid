@@ -15,6 +15,7 @@ export default function Page() {
     const checkIfAlreadyLoggedIn = async () => {
         const res = await fetch(`/login/api`, { method: 'GET' });
         const resJson = await res.json();
+        console.log("A", resJson)
         if (resJson.cStatus==201) router.push(`/account/${resJson.netId}`);
     }
 
