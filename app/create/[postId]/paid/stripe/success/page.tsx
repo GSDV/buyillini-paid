@@ -34,7 +34,7 @@ export default function Page({ params }: { params: { postId: string } }) {
             :
                 <>
                     <h3>Success!</h3>
-                    {alert && <Alert alert={alert} variations={[]}/>}
+                    {alert && <Alert alert={alert} />}
                 </>
             }
         </VerticalLayout>

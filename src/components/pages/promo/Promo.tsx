@@ -44,7 +44,7 @@ function PromoForm({ alert, attemptRedeem }: { alert: AlertType | null, attemptR
                 <h4>Get a few free months.</h4>
             </div>
             <Form action={attemptRedeem} inputs={inputs} submitTitle='Redeem Code' />
-            {alert && <Alert alert={alert} variations={[]} />}
+            {alert && <Alert alert={alert}  />}
         </div>
     );
 }

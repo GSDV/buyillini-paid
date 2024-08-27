@@ -37,7 +37,7 @@ export default function Page() {
                 <Loading />
             :
                 <>
-                {alert && <Alert alert={alert} variations={[]} />}
+                {alert && <Alert alert={alert}  />}
                     {postId!='' && <h4><b>LINK: </b> <Link href={postId}>postId</Link></h4>}
                     <h3>Create Super Post</h3>
                     {draftedPost && <CreateSuperPost />}

@@ -204,7 +204,7 @@ export function Price({ value, setValue }: InputValue) {
 //                     </>}
 //                 </div>
 //                 <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-//                     {alert && <Alert alert={alert} variations={[]} />}
+//                     {alert && <Alert alert={alert}  />}
 //                 </div>
 //             </>
 //             }
@@ -278,7 +278,7 @@ export function Images({ value, setValue }: InputValue) {
                     </>}
                 </div>
                 <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                    {alert && <Alert alert={alert} variations={[]} />}
+                    {alert && <Alert alert={alert}  />}
                 </div>
             </>
             }

@@ -43,7 +43,7 @@ export default function Page({ params }: { params: { netId: string } }) {
             :
                 
                 <VerticalLayout>
-                    <CheckIfAlert alert={alert} variations={[]} content={<Account user={user as RedactedUser} ownAccount={ownAccount} />} />
+                    <CheckIfAlert alert={alert}  content={<Account user={user as RedactedUser} ownAccount={ownAccount} />} />
                 </VerticalLayout>
             }
         </>

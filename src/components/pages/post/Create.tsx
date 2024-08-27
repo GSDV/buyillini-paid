@@ -156,7 +156,7 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
             :
             <>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {alert && <Alert alert={alert} variations={[]} />}
+                    {alert && <Alert alert={alert}  />}
                 </div>
 
                 <h2 className={createPostStyles.title}>Create a Post</h2>

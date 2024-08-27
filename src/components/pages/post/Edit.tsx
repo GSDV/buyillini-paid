@@ -131,7 +131,7 @@ export default function Edit({ post }: { post: Post }) {
             :
             <>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {alert && <Alert alert={alert} variations={[]} />}
+                    {alert && <Alert alert={alert}  />}
                 </div>
 
                 <h2 className={createPostStyles.title}>Edit Post</h2>

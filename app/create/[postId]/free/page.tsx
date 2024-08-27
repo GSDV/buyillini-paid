@@ -44,7 +44,7 @@ function PostExists({ post, alert}: { post: Post, alert: AlertType | null }) {
     return (
         <CheckIfAlert 
             alert={alert}
-            variations={[]}
+            
             content={<ConfirmFreePost post={post} />}
         />
     );

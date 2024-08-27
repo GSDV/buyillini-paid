@@ -66,7 +66,7 @@ export default function CategoryPosts({ params }: { params: { category: string }
             :
                 <CheckIfAlert 
                     alert={alert}
-                    variations={[]}
+                    
                     content={<Category posts={posts} filters={filters} setFilters={setFilters} page={page} maxPages={maxPages} setPage={setPage} />}
                 />
             }

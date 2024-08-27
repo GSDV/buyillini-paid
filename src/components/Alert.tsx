@@ -26,15 +26,20 @@ export interface AlertVariation {
 
 interface AlertComponentType {
     alert: AlertType,
-    variations: AlertVariation[]
+    variations?: AlertVariation[]
 }
 
 export function Alert({ alert, variations }: AlertComponentType) {
-    const variation = variations.find(alertVar => (alertVar.cStatus===alert.cStatus));
-
     const status = parseInt(alert.cStatus.toString()[0]);
     const classes = (status==2) ? successAlert: errorAlert;
 
+    if (variations==undefined) return (
+        <div className={classes}>
+            <p>{alert.msg}</p>
+        </div>
+    );
+
+    const variation = variations.find(alertVar => (alertVar.cStatus===alert.cStatus));
     return (
         <div className={classes}>
             {variation ? 
@@ -48,7 +53,7 @@ export function Alert({ alert, variations }: AlertComponentType) {
 
 interface CheckIfAlertType {
     alert: AlertType|null,
-    variations: AlertVariation[],
+    variations?: AlertVariation[],
     content: React.ReactNode
 }
 export function CheckIfAlert({ alert, variations, content }: CheckIfAlertType) {

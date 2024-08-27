@@ -29,7 +29,7 @@ function Actions() {
     return (
         <div className={adminStyles.dashboard}>
             <h1>User Actions</h1>
-                {alert && <Alert alert={alert} variations={[]} />}
+                {alert && <Alert alert={alert}  />}
                 <div className={adminStyles.actionsContainer}>
                     <GetPromo setAlert={setAlert} />
                     <MakePromo setAlert={setAlert} />

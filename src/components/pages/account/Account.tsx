@@ -149,7 +149,7 @@ function SettingsMenu({ user }: { user: RedactedUser }) {
                     <button onClick={redirectToResetPassword}>Reset Password</button>
                     <button className='bgRed' onClick={promptDeleteAccount}>Delete Account</button>
 
-                    {alert && <Alert alert={alert} variations={[]} />}
+                    {alert && <Alert alert={alert}  />}
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '20px' }}>
@@ -217,7 +217,7 @@ function DeleteAccount({ netId }: { netId: string }) {
                     <button onClick={deleteAccount} className='bgRed'>Yes, delete</button>
                 </div>
             </div>
-            {alert && <Alert alert={alert} variations={[]} />}
+            {alert && <Alert alert={alert}  />}
         </div>
     );
 }
@@ -281,7 +281,7 @@ function OwnPosts({ userId }: { userId: string }) {
                 {loading ?
                     <Loading />
                 :
-                    <CheckIfAlert alert={alert} variations={[]} content={<ActiveOrPastPosts active={active} posts={posts} page={page} max={maxPages} setPage={setPage} />} />
+                    <CheckIfAlert alert={alert}  content={<ActiveOrPastPosts active={active} posts={posts} page={page} max={maxPages} setPage={setPage} />} />
                 }
             </div>
 
@@ -329,7 +329,7 @@ function OtherPosts({ userId }: { userId: string }) {
             {loading ?
                 <Loading />
             :
-                <CheckIfAlert alert={alert} variations={[]} content={<Posts noPosts='This account has no active posts.' posts={posts} page={page} max={maxPages} setPage={setPage} />} />
+                <CheckIfAlert alert={alert}  content={<Posts noPosts='This account has no active posts.' posts={posts} page={page} max={maxPages} setPage={setPage} />} />
             }
         </div>
     );

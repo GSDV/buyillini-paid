@@ -50,7 +50,7 @@ export default function DisplayPost({ post, cStatus }: { post: PostWithRedactedU
                 {/* {post.deleted && <button onClick={()=>console.log('repost')}>Repost</button>} */}
             </div>
 
-            {alert && <Alert alert={alert} variations={[]} />}
+            {alert && <Alert alert={alert}  />}
         </div>
     );
 }
@@ -86,7 +86,7 @@ function DeletePost({ postId, sellerNetId }: { postId: string, sellerNetId: stri
                     <button onClick={attemptDeletePost} className='bgRed'>Yes, delete</button>
                 </div>
             </div>
-            {alert && <Alert alert={alert} variations={[]} />}
+            {alert && <Alert alert={alert}  />}
         </div>
     );
 }

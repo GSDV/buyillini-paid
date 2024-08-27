@@ -44,7 +44,7 @@ export default function Page({ params }: { params: { postId: string } }) {
 
 function ExisitngPost({ post, alert }: { post: Post, alert: AlertType | null }) {
     return (
-        <CheckIfAlert alert={alert} variations={[]} content={
+        <CheckIfAlert alert={alert}  content={
             <Edit post={post} />
         }/>
     );

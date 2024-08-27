@@ -59,7 +59,7 @@ export default function Page() {
             :
                 <CheckIfAlert 
                     alert={alert}
-                    variations={[]}
+                    
                     content={<AllCategories posts={posts} filters={filters} setFilters={setFilters} page={page} maxPages={maxPages} setPage={setPage} />}
                 />
             }

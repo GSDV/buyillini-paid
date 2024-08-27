@@ -39,7 +39,7 @@ export default function Reset({ rpToken }: { rpToken: string }) {
         <div className={formStyles.container}>
             <h2 className={formStyles.title}></h2>
             <Form action={attemptRequest} inputs={inputs} submitTitle='Reset password' />
-            {alert && <Alert alert={alert} variations={[]} />}
+            {alert && <Alert alert={alert}  />}
         </div>
     );
 }

@@ -20,7 +20,7 @@ export default function ConfirmPost({ post, confirmPostAction, alert }: ConfirmP
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', alignItems: 'center', gap: '5px' }} >
                 <h1>Confirm your post</h1>
                 <h2>You are allowed to edit later</h2>
-                {alert && <Alert alert={alert} variations={[]} />}
+                {alert && <Alert alert={alert}  />}
             </div>
             <ViewPost post={post} />
             <div style={{ display: 'flex', flexDirection: 'row', gap: '20px' }}>
