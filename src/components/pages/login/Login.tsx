@@ -44,9 +44,10 @@ export default function Login() {
         if (resJson.cStatus==200) {
             fetchCookie();
             router.push(`/account/${resJson.netId}`);
+        } else {
+            setAlert(resJson);
+            setLoading(false);
         }
-        setAlert(resJson);
-        setLoading(false);
     }
 
     return (
