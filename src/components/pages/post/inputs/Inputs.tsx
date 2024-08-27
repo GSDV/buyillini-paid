@@ -225,29 +225,23 @@ export function Images({ value, setValue }: InputValue) {
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("UPLAODING PHOTO");
         const image = e.target.files?.[0];
-        console.log("AAA")
         if (value.length >= 5 || image==undefined) return;
-        console.log("BBB")
         if (!ACCEPTED_FILES.includes(image.type)) {
             setAlert({cStatus: 102, msg: `Please upload a png, jpg, or webp file.`});
             return;
         }
-        console.log("CCC")
         if (image.size > IMG_SIZE_LIMIT) {
             setAlert({cStatus: 102, msg: `Please upload an image smaller than ${IMG_SIZE_LIMIT_TXT}.`});
             return;
         }
-        console.log("DDD")
         const newImages = [...value, image];
-        console.log("EEE")
         setValue(newImages);
         setAlert(null);
-        console.log("FFF")
+
+        makeTempUrl(image);
 
         if (imgRef.current) imgRef.current.value = '';
-        console.log("GGG")
         setLoading(false);
     }
 
@@ -273,12 +267,11 @@ export function Images({ value, setValue }: InputValue) {
     }
 
     // THESE FILES 
-    // const makeTempUrl = (image: File) => {
-    //     console.log();
-    //     const url = URL.createObjectURL(image);
-    //     setTempUrls([...tempUrls, url]);
-    //     return url
-    // }
+    const makeTempUrl = (image: File) => {
+        const url = URL.createObjectURL(image);
+        setTempUrls([...tempUrls, url]);
+        return url
+    }
 
     useEffect(() => {
         const urls = [];
