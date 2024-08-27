@@ -11,6 +11,10 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
         <h1>BuyIllini Reset Password</h1>
         <p>Click <a href="${DOMAIN}/reset/${token}">here</a> to reset your BuyIllini password.</p>
         <p>If the above link does not work, copy and past the following into your browser: ${DOMAIN}/password/${token}</p>
+
+        <br />
+
+        ${EMAIL_FOOTER}
     `;
     const mail = {
         email: email,
@@ -31,6 +35,10 @@ export const sendActivationEmail = async (email: string, token: string) => {
         <h1>BuyIllini Verification</h1>
         <p>Click <a href="${DOMAIN}/activate/${token}">here</a> to activate your BuyIllini account.</p>
         <p>If the above link does not work, copy and past the following into your browser: ${DOMAIN}/activate/${token}</p>
+
+        <br />
+
+        ${EMAIL_FOOTER}
     `;
     const mail = {
         email: email,

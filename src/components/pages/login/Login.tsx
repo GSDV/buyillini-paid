@@ -8,6 +8,7 @@ import { Alert, AlertType, AlertVariation } from '@components/Alert';
 import { useAuthContext } from '@components/providers/Auth';
 
 import formStyles from '@styles/ui/form.module.css';
+import { CheckIfLoading } from '@components/Loading';
 
 
 
@@ -48,11 +49,13 @@ export default function Login() {
     }
 
     return (
-        <div className={formStyles.container}>
-            <h2 className={formStyles.title}>Login</h2>
-            <LoginForm action={attemptLogin} inputs={inputs} />
-            {alert && <Alert alert={alert} variations={alertVars} />}
-        </div>
+        <CheckIfLoading loading={loading} content={
+            <div className={formStyles.container}>
+                <h2 className={formStyles.title}>Login</h2>
+                <LoginForm action={attemptLogin} inputs={inputs} />
+                {alert && <Alert alert={alert} variations={alertVars} />}
+            </div>
+        }/>
     );
 }
 
