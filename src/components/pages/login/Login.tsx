@@ -29,7 +29,7 @@ export default function Login() {
     ];
 
     const attemptLogin = async (formData: FormData) => {
-        setLoading(true)
+        setLoading(true);
         const userData = {
             email: formData.get('email'),
             password: formData.get('password')
@@ -46,6 +46,7 @@ export default function Login() {
             router.push(`/account/${resJson.netId}`);
         }
         setAlert(resJson);
+        setLoading(false);
     }
 
     return (
