@@ -155,12 +155,16 @@ export const superPostDataFromInputs = (data: InputSuperPostData) => {
         price: Number(price),
         duration: Number(duration),
     }
+    console.log("postData:", postData)
     return postData;
 }
 
 
 
 export const createSuperPost = async (postData: SuperPostData, adminId: string) => {
+    console.log(postData.duration)
+    console.log(typeof postData.duration)
+    console.log(postData.duration*MONTH_TO_MILLI)
     const expiration = new Date(Date.now() + postData.duration*MONTH_TO_MILLI);
     console.log("expiration", expiration)
     const { ...cleanedData } = postData;
