@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         console.log("GGG", resValidPost)
         console.log("HHH", typeof resValidPost)
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
-        const postData = await superPostDataFromInputs(inputData);
+        const postData = superPostDataFromInputs(inputData);
 
         console.log("III", postData)
         const postId = await createSuperPost(postData, adminPrisma.id);

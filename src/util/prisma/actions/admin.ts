@@ -130,7 +130,7 @@ export const isValidInputSuperPostData = (inputData: any) => {
         if (description.length>300) return `Description must be less than 300 characters.`;
 
         if (!CATEGORIES.some(c => c.link===category)) return `Specify category.`;
-        if (isRegCat(category) && !CLOTHING_SIZES.includes(size)) return `Specify clothing size.`;
+        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !CLOTHING_SIZES.includes(size)) return `Specify clothing size.`;
         if (!GENDERS.includes(gender)) return `Specify gender.`;
 
         if (Number(price)<0 || Number(price)>9999.99) return `Price must be between $0 and $9,999.99.`;
