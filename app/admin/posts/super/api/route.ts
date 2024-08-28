@@ -13,18 +13,21 @@ export async function POST(req: NextRequest) {
         const authTokenCookie = cookies().get('authtoken');
         console.log("BBB", authTokenCookie);
         const resPermissions = await isAdmin(authTokenCookie);
+        console.log("CCC", resPermissions)
         if (!resPermissions) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
 
+        console.log("DDD")
         // For TypeScript:
         const adminPrisma = await getRedactedUserFromAuth((authTokenCookie as any).value);
+        console.log("EEE", adminPrisma)
         if (!adminPrisma)return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
 
         const { inputData } = await req.json();
+        console.log("FFF", inputData)
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 
         const resValidPost = await isValidInputSuperPostData(inputData);
-        console.log(resValidPost.msg)
-        console.log(resValidPost)
+        console.log("GGG", resValidPost)
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
         const postData = superPostDataFromInputs(inputData);
 
