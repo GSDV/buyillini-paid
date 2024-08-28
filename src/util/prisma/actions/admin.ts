@@ -110,7 +110,9 @@ export interface InputSuperPostData {
 export const isValidInputSuperPostData = (inputData: any) => {
     const { title, description, category, size, gender, price, images, duration } = inputData;
 
+    console.log("A")
     const msg = function() {
+        console.log("B")
         if (!title) return `Missing title.`;
         if (!description) return `Missing description.`;
         if (!category) return `Missing category.`;
@@ -137,10 +139,12 @@ export const isValidInputSuperPostData = (inputData: any) => {
 
         if (Number(duration)<=0) return `Listing period must be above 0.`;
     
+        console.log("C")
         return ``;
     }();
 
-    console.log(msg);
+    console.log("D")
+    console.log("E", msg);
 
     return { valid: (msg===``), msg: msg };
 }
