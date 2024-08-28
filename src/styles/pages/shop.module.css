@@ -140,10 +140,11 @@
 }
 .post h4 {
     /* height: 2.7em; */
-    padding: 0px 5px;
+    padding: 3px 5px;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-align: center;
+    font-size: clamp(0.7em, 2vw, 1em);
 }
