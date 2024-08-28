@@ -83,7 +83,7 @@ export default function Edit({ post }: { post: Post }) {
         if (NO_SIZE_GENDER_CATEGORIES.includes(value)) {
             setSize('');
             setGender('Unisex');
-        } else if (NO_SIZE_GENDER_CATEGORIES.includes(category) && NO_SIZE_GENDER_CATEGORIES.includes(value)) {
+        } else if (NO_SIZE_GENDER_CATEGORIES.includes(category) && !NO_SIZE_GENDER_CATEGORIES.includes(value)) {
             setSize(CLOTHING_SIZES[0]);
             setGender('Unisex');
         }

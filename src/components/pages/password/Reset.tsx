@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Form, { FormInputType } from '@components/Form';
 import formStyles from '@styles/ui/form.module.css';
 
-import { Alert, AlertType, AlertVariation } from '@components/Alert';
+import { Alert, AlertType } from '@components/Alert';
 import { useRouter } from 'next/navigation';
 import { CheckIfLoading } from '@components/Loading';
 
@@ -37,7 +37,7 @@ export default function Reset({ rpToken }: { rpToken: string }) {
         });
 
         const resJSON = await res.json();
-        if (resJSON.cStatus==200) router.push(`/account/${resJSON.netId}`);
+        if (resJSON.cStatus==200) router.push(`/login`);
         setAlert(resJSON);
         setLoading(false);
     }

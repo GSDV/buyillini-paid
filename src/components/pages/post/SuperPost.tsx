@@ -1,18 +1,22 @@
 import { useState } from 'react';
 
 import { Category, Description, Gender, Images, Price, Size, SuperListingPeriod, Title } from './inputs/Inputs';
-import Loading from '@components/Loading';
+import Loading, { CheckIfLoading } from '@components/Loading';
 
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, NO_SIZE_GENDER_CATEGORIES } from '@util/global';
+import { CLOTHING_SIZES, NO_SIZE_GENDER_CATEGORIES, isRegCat } from '@util/global';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
-import { Post } from '@prisma/client';
 import { makePostPicture } from '@util/photos/crop';
+import { Alert, AlertType } from '@components/Alert';
+import Link from 'next/link';
 
 
 
 export default function CreateSuperPost() {
     const [loading, setLoading] = useState<boolean>(false);
+    const [alert, setAlert] = useState<AlertType | null>(null);
+    const [postId, setPostId] = useState<string>('');
+
 
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -54,7 +58,7 @@ export default function CreateSuperPost() {
             ]);
 
             if (croppedPostBlob == null) {
-                // setAlert({cStatus: 400, msg: 'Something went wrong.'});
+                setAlert({cStatus: 400, msg: 'Something went wrong.'});
                 return;
             }
 
@@ -67,7 +71,7 @@ export default function CreateSuperPost() {
                 });
                 imageKeys.push(resSignAndKeyJson.key);
             } else {
-                // setAlert(resSignAndKeyJson);/
+                setAlert(resSignAndKeyJson);
                 return;
             }
         }
@@ -76,10 +80,10 @@ export default function CreateSuperPost() {
 
 
     const setCategoryField = (value: string) => {
-        if (NO_SIZE_GENDER_CATEGORIES.includes(value)) {
+        if (!isRegCat(value)) {
             setSize('');
             setGender('Unisex');
-        } else if (NO_SIZE_GENDER_CATEGORIES.includes(category) && NO_SIZE_GENDER_CATEGORIES.includes(value)) {
+        } else if (!isRegCat(category) && isRegCat(value)) {
             setSize(CLOTHING_SIZES[0]);
             setGender('Unisex');
         }
@@ -88,36 +92,49 @@ export default function CreateSuperPost() {
 
     const attemptSuperPost = async () => {
         setLoading(true);
-        const postData = getData();
-        // action(postData);
+        const inputData = await getData();
+        const res = await fetch(`/admin/posts/super/api`, {
+            method: 'POST',
+            body: JSON.stringify({ inputData }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const resJson = await res.json();
+        if (resJson.cStatus==200) setPostId(resJson.postId);
+        setAlert(resJson);
         setLoading(false);
     }
 
 
     return (
         <div className={createPostStyles.form}>
-            {loading ? 
-                <Loading />
-            :
-            <>
-                <Title value={title} setValue={setTitle} />
+            <CheckIfLoading loading={loading} content={
+                <>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        {alert && <Alert alert={alert}  />}
+                    </div>
 
-                <Description value={description} setValue={setDescription} />
+                    {postId!='' && <h4><b>LINK: </b> <Link href={postId}>postId</Link></h4>}
+                    <h3>Create Super Post</h3>
 
-                <Category value={category} setValue={setCategoryField} />
+                    <Title value={title} setValue={setTitle} />
 
-                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} />}
+                    <Description value={description} setValue={setDescription} />
 
-                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Gender value={gender} setValue={setGender} />}
+                    <Category value={category} setValue={setCategoryField} />
 
-                <Price value={price} setValue={setPrice} />
+                    {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} />}
 
-                {/* <Images value={images} setValue={setImages} postId={draftedPost.id} /> */}
+                    {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Gender value={gender} setValue={setGender} />}
 
-                <SuperListingPeriod value={duration} setValue={setDuration} />
+                    <Price value={price} setValue={setPrice} />
 
-                <button onClick={attemptSuperPost}>Create</button>
-            </>}
+                    <Images value={images} setValue={setImages} />
+
+                    <SuperListingPeriod value={duration} setValue={setDuration} />
+
+                    <button onClick={attemptSuperPost}>Create</button>
+                </>
+            } />
         </div>
     );
 }

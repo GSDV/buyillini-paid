@@ -200,14 +200,13 @@ export const editPostDataFromInputs = (data: InputEditPostData) => {
 
 
 
-/////
-/////
-/////
-////
-
 export const hasBuyerInterestExpired = (buyerInterest: BuyerInterest) => {
     const currentTime = new Date();
     const timeDifference = currentTime.getTime() - buyerInterest.createdAt.getTime();
     const minutesDifference = timeDifference / (1000 * 60);
     return minutesDifference > BUYER_INTEREST_EXPIRATION;
 }
+
+
+
+

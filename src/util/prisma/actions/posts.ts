@@ -266,3 +266,6 @@ export const addImageKeyToPost = async (postId: string, imgKey: string) => {
         data: { images: { push: imgKey } }
     });
 }
+
+
+
