@@ -162,6 +162,7 @@ export const superPostDataFromInputs = (data: InputSuperPostData) => {
 
 export const createSuperPost = async (postData: SuperPostData, adminId: string) => {
     const expiration = new Date(Date.now() + postData.duration*MONTH_TO_MILLI);
+    console.log("expiration", expiration)
     const { ...cleanedData } = postData;
     const createData = { sellerId: adminId, ...cleanedData, freeMonthsUsed: 0, isPaid: false, expireDate: expiration, active: true };
 
