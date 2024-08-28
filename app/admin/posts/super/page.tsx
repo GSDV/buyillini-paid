@@ -1,3 +1,5 @@
+'use client';
+
 import VerticalLayout from '@components/containers/VerticalLayout';
 import CreateSuperPost from '@components/pages/post/SuperPost';
 
