@@ -26,9 +26,11 @@ export async function POST(req: NextRequest) {
         console.log("FFF", inputData)
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 
-        const resValidPost = isValidInputSuperPostData(inputData);
+        const resValidPost = await isValidInputSuperPostData(inputData);
+        const againresValidPost = isValidInputSuperPostData(inputData);
         console.log("GGG", resValidPost)
         console.log("HHH", typeof resValidPost)
+        console.log("againresValidPost", againresValidPost)
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
         const postData = superPostDataFromInputs(inputData);
 
