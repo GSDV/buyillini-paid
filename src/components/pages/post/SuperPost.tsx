@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Category, Description, Gender, Images, Price, Size, SuperListingPeriod, Title } from './inputs/Inputs';
 import Loading, { CheckIfLoading } from '@components/Loading';
 
-import { CLOTHING_SIZES, NO_SIZE_GENDER_CATEGORIES, isRegCat } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, NO_SIZE_GENDER_CATEGORIES, isRegCat } from '@util/global';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
 import { makePostPicture } from '@util/photos/crop';
@@ -20,9 +20,9 @@ export default function CreateSuperPost() {
 
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
-    const [category, setCategory] = useState<string>('');
-    const [size, setSize] = useState<string>('');
-    const [gender, setGender] = useState<string>('');
+    const [category, setCategory] = useState<string>(CATEGORIES[0].link);
+    const [size, setSize] = useState<string>(CLOTHING_SIZES[0]);
+    const [gender, setGender] = useState<string>(GENDERS[0]);
     const [price, setPrice] = useState<string>('');
     const [images, setImages] = useState<File[]>([]);
     const [duration, setDuration] = useState<string>('');
