@@ -132,13 +132,11 @@
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    cursor: pointer;
 }
 .postImgWrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    cursor: pointer;
 }
 .post h4 {
     padding: 3px 5px;

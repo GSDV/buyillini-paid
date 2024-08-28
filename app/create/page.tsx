@@ -35,9 +35,11 @@ export default function Page() {
         <CenterLayout>
             <CheckIfLoading loading={loading} content={
                 <NeedsToBeLoggedIn content={
-                    <NeedsToBeLoggedIn content={<Create freeMonths={freeMonths} draftedPost={pastPost as Post} />} />
-                }/>
-            }/>
+                    <NeedsToBeLoggedIn content={
+                        <Create freeMonths={freeMonths} draftedPost={pastPost as Post} />
+                    } />
+                } />
+            } />
         </CenterLayout>
     );
 }
