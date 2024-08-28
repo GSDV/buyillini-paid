@@ -9,7 +9,9 @@ import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 
 export async function POST(req: NextRequest) {
     try {
+        console.log("AAA");
         const authTokenCookie = cookies().get('authtoken');
+        console.log("BBB", authTokenCookie);
         const resPermissions = await isAdmin(authTokenCookie);
         if (!resPermissions) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
 

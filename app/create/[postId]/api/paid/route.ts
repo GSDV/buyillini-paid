@@ -19,8 +19,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // Used for storing paid post data before the post is confirmed.
 export async function POST(req: NextRequest) {
     try {
-        const inputData = await req.json();
-
+        const { inputData } = await req.json();
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 
         const authTokenCookie = cookies().get('authtoken');
