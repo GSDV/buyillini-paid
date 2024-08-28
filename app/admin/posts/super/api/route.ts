@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
         console.log("HHH", postData)
         const postId = await createSuperPost(postData, adminPrisma.id);
-        console.log("III", postId)
+        console.log("III", postId);
         
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {
