@@ -107,7 +107,7 @@ model Post {
 
     // Post info:
     title               String              @db.VarChar(50)
-    description         String              @db.VarChar(500)
+    description         String              @db.VarChar(300)
 
     category            String
     price               Decimal             @db.Decimal(6, 2)
