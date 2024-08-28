@@ -99,6 +99,7 @@ export default function CreateSuperPost() {
             headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
+        console.log(resJson);
         if (resJson.cStatus==200) setPostId(resJson.postId);
         setAlert(resJson);
         setLoading(false);
