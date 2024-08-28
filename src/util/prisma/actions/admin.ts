@@ -162,6 +162,7 @@ export const superPostDataFromInputs = (data: InputSuperPostData) => {
 
 export const createSuperPost = async (postData: SuperPostData, adminId: string) => {
     console.log("createSuperPost postData:", postData)
+    console.log("typeof postData:", typeof postData)
     console.log(postData.duration)
     console.log(postData.title)
     console.log(postData.description)
