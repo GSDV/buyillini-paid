@@ -49,7 +49,7 @@ function SlideShow({ images }: { images: string[] }) {
     };
 
     const openImage = (img: string) => {
-        msContext.setContent(<DisplayImage img={imgUrl(img)} />);
+        msContext.setContent(<DisplayImage imgUrl={imgUrl(img)} />);
         msContext.openMenu();
     }
 
