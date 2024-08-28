@@ -27,13 +27,14 @@ export async function POST(req: NextRequest) {
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 
         const resValidPost = isValidInputSuperPostData(inputData);
-        console.log("GGG", resValidPost, typeof resValidPost)
+        console.log("GGG", resValidPost)
+        console.log("HHH", typeof resValidPost)
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
         const postData = superPostDataFromInputs(inputData);
 
-        console.log("HHH", postData)
+        console.log("III", postData)
         const postId = await createSuperPost(postData, adminPrisma.id);
-        console.log("III", postId);
+        console.log("JJJ", postId);
         
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {
