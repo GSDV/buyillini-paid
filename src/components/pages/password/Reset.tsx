@@ -7,6 +7,7 @@ import formStyles from '@styles/ui/form.module.css';
 
 import { Alert, AlertType, AlertVariation } from '@components/Alert';
 import { useRouter } from 'next/navigation';
+import { CheckIfLoading } from '@components/Loading';
 
 
 
@@ -42,10 +43,12 @@ export default function Reset({ rpToken }: { rpToken: string }) {
     }
 
     return (
-        <div className={formStyles.container}>
-            <h2 className={formStyles.title}></h2>
-            <Form action={attemptRequest} inputs={inputs} submitTitle='Reset password' />
-            {alert && <Alert alert={alert}  />}
-        </div>
+        <CheckIfLoading loading={loading} content={
+            <div className={formStyles.container}>
+                <h2 className={formStyles.title}></h2>
+                <Form action={attemptRequest} inputs={inputs} submitTitle='Reset password' />
+                {alert && <Alert alert={alert}  />}
+            </div>
+        } />
     );
 }
