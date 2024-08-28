@@ -260,7 +260,7 @@ export function Images({ value, setValue }: InputValue) {
     }
 
     const openImage = (idx: number) => {
-        msContext.setContent(<DisplayImage img={tempUrls[idx]} />);
+        msContext.setContent(<DisplayImage imgUrl={tempUrls[idx]} />);
         msContext.openMenu();
     }
 
