@@ -169,8 +169,8 @@ export const isValidInputEditPostData = (inputData: any) => {
             return `Something went wrong (incorrect input field types).`;
         }
 
-        if (title.length==50) return `Title must be less than 50 characters.`;
-        if (description.length==300) return `Description must be less than 300 characters.`;
+        if (title.length>50) return `Title must be less than 50 characters.`;
+        if (description.length>500) return `Description must be less than 300 characters.`;
 
         if (!CATEGORIES.some(c => c.link===category)) return `Specify category.`;
         if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !CLOTHING_SIZES.includes(size)) return `Specify clothing size.`;
