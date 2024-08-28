@@ -32,7 +32,7 @@ export async function POST(req: NextRequest, { params }: { params: { rpToken: st
         await changePassword(userPrisma.id, hashedPassword);
         deleteAllusersRPTokens(userPrisma.id); // Asynchronous process, clean up rp tokens so that they are not reused.
 
-        return NextResponse.json({ cStatus: 200, msg: `Password reset. You can now login.` }, { status: 200 });
+        return NextResponse.json({ cStatus: 200, msg: `Password successfully reset.`, netId: userPrisma.netId }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${error}` }, { status: 400 });
     }

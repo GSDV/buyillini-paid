@@ -6,18 +6,22 @@ import Form, { FormInputType } from '@components/Form';
 import formStyles from '@styles/ui/form.module.css';
 
 import { Alert, AlertType, AlertVariation } from '@components/Alert';
+import { useRouter } from 'next/navigation';
 
 
 
 export default function Reset({ rpToken }: { rpToken: string }) {
+    const router = useRouter();
+    const [alert, setAlert] = useState<AlertType | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+
     const inputs: FormInputType[] = [
         {title: 'New Password', type: 'password', name: 'password'},
         {title: 'Confirm New Password', type: 'password', name: 'confirm'},
     ];
 
-    const [alert, setAlert] = useState<AlertType | null>(null);
-
     const attemptRequest = async (formData: FormData) => {
+        setLoading(true);
         const newPassword = formData.get('password');
         const confirm = formData.get('confirm');
         if (newPassword != confirm) {
@@ -32,7 +36,9 @@ export default function Reset({ rpToken }: { rpToken: string }) {
         });
 
         const resJSON = await res.json();
+        if (resJSON.cStatus==200) router.push(`/account/${resJSON.netId}`);
         setAlert(resJSON);
+        setLoading(false);
     }
 
     return (
