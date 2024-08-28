@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Category, Description, Gender, Images, Price, Size, SuperListingPeriod, Title } from './inputs/Inputs';
-import Loading, { CheckIfLoading } from '@components/Loading';
+import { CheckIfLoading } from '@components/Loading';
 
 import { CATEGORIES, CLOTHING_SIZES, GENDERS, NO_SIZE_GENDER_CATEGORIES, isRegCat } from '@util/global';
 
