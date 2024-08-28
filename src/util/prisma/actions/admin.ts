@@ -140,6 +140,8 @@ export const isValidInputSuperPostData = (inputData: any) => {
         return ``;
     }();
 
+    console.log(msg);
+
     return { valid: (msg===``), msg: msg };
 }
 export const superPostDataFromInputs = (data: InputSuperPostData) => {
