@@ -9,7 +9,7 @@ import { CLOTHING_SIZES, NO_SIZE_GENDER_CATEGORIES } from '@util/global';
 import { Alert, AlertType } from '@components/Alert';
 
 import createPostStyles from '@styles/pages/create-post.module.css';
-import Loading from '@components/Loading';
+import { CheckIfLoading } from '@components/Loading';
 import { Category, Description, Images, Gender, ListingPeriod, Price, Size, Title, UseFreeMonths } from './inputs/Inputs';
 import { makePostPicture } from '@util/photos/crop';
 import { urlToFile } from '@util/photos/urlToFile';
@@ -151,39 +151,38 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
     return (
         <div className={createPostStyles.form}>
-            {loading ? 
-                <Loading />
-            :
-            <>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {alert && <Alert alert={alert}  />}
-                </div>
+            <CheckIfLoading loading={loading} content={
+                <>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        {alert && <Alert alert={alert}  />}
+                    </div>
 
-                <h2 className={createPostStyles.title}>Create a Post</h2>
+                    <h2 className={createPostStyles.title}>Create a Post</h2>
 
-                <Title value={title} setValue={setTitle} />
+                    <Title value={title} setValue={setTitle} />
 
-                <Description value={description} setValue={setDescription} />
+                    <Description value={description} setValue={setDescription} />
 
-                <Category value={category} setValue={setCategoryField} />
+                    <Category value={category} setValue={setCategoryField} />
 
-                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} /> }
+                    {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Size value={size} setValue={setSize} /> }
 
-                {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Gender value={gender} setValue={setGender} /> }
+                    {!NO_SIZE_GENDER_CATEGORIES.includes(category) && <Gender value={gender} setValue={setGender} /> }
 
-                <Price value={price} setValue={setPrice} />
+                    <Price value={price} setValue={setPrice} />
 
-                <Images value={images} setValue={setImages} />
+                    <Images value={images} setValue={setImages} />
 
-                <ListingPeriod value={duration} setValue={setDuration} />
+                    <ListingPeriod value={duration} setValue={setDuration} />
 
-                {freeMonths!=0 && <UseFreeMonths iv={{value: freeMonthsUsed, setValue: setFreeMonthsUsed}} freeMonths={freeMonths} />}
+                    {freeMonths!=0 && <UseFreeMonths iv={{value: freeMonthsUsed, setValue: setFreeMonthsUsed}} freeMonths={freeMonths} />}
 
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
-                    {numMonths(duration) <= numFreeMonths(freeMonthsUsed) && <button onClick={attemptFreePost}>Create Post (Use {duration} free {numFreeMonths(duration)==1 ? 'month' : 'months'})</button>}
-                    {numMonths(duration) > numFreeMonths(freeMonthsUsed) && <button onClick={attemptPaidPost}>Create Post (Pay ${numMonths(duration)-numFreeMonths(freeMonthsUsed)})</button>}
-                </div>
-            </>}
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px'}}>
+                        {numMonths(duration) <= numFreeMonths(freeMonthsUsed) && <button onClick={attemptFreePost}>Create Post (Use {duration} free {numFreeMonths(duration)==1 ? 'month' : 'months'})</button>}
+                        {numMonths(duration) > numFreeMonths(freeMonthsUsed) && <button onClick={attemptPaidPost}>Create Post (Pay ${numMonths(duration)-numFreeMonths(freeMonthsUsed)})</button>}
+                    </div>
+                </>
+            } />
         </div>
     );
 }
