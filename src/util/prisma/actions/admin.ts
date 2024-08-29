@@ -116,7 +116,7 @@ export const isValidInputSuperPostData = (inputData: any) => {
         if (!title) return `Missing title.`;
         if (!description) return `Missing description.`;
         if (!category) return `Missing category.`;
-        if (isRegCat(category) && !size) return `Missing size.`;
+        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !size) return `Missing size.`;
         if (!gender) return `Missing gender.`;
         if (!price) return `Missing price.`;
         if (!images) return `Missing images.`;
