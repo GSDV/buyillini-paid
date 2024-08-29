@@ -23,9 +23,9 @@ export default function CreateSuperPost() {
     const [category, setCategory] = useState<string>(CATEGORIES[0].link);
     const [size, setSize] = useState<string>(CLOTHING_SIZES[0]);
     const [gender, setGender] = useState<string>(GENDERS[0]);
-    const [price, setPrice] = useState<string>('');
+    const [price, setPrice] = useState<string>('0');
     const [images, setImages] = useState<File[]>([]);
-    const [duration, setDuration] = useState<string>('');
+    const [duration, setDuration] = useState<string>('1');
 
 
     const getData = async () => {

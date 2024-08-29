@@ -28,7 +28,10 @@ export const getPfpUrl = (key: string) => (key==='') ? DEFAULT_PFP : imgUrl(key)
 
 
 export const formatPhoneNumber = (phoneStr: string) => `(${phoneStr.substring(0, 3)}) ${phoneStr.substring(3, 6)}-${phoneStr.substring(6, 10)}`;
-export const formatDate = (d: Date) => d.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+export const formatDate = (d: Date | undefined) => {
+    if (d==undefined) return '';
+    return d.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+}
 export const formatPrice = (p: number) => `$${p.toFixed(2)}`;
 
 export const getCategoryTitle = (link: string) => CATEGORIES.find(cat => cat.link === link)?.title;

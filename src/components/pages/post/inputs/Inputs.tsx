@@ -349,7 +349,7 @@ export function ListingPeriod({ value, setValue }: InputValue) {
 
 
 export function SuperListingPeriod({ value, setValue }: InputValue) {
-    const [expires, setExpires] = useState<Date>(new Date(Date.now() + MONTH_TO_MILLI));
+    const [expires, setExpires] = useState<Date>();
 
     const calcExpiration = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -367,12 +367,18 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
         setExpires(expiration);
     }
 
+    // Cannot directly call Date.now() in the init of useState,
+    // or else Server and Client are out of sync
+    useEffect(() => {
+        setExpires(new Date(Date.now() + MONTH_TO_MILLI));
+    }, []);
+
     return (
         <div className={createPostStyles.formItem}>
             <h4>Super Listing Period</h4>
             
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
-                <input type='number' placeholder='1' min='1' step='1' max={MAX_LISTING_PERIOD} style={{width: '100px'}} value={value} onChange={calcExpiration} />
+                <input type='number' placeholder='1' min='1' step='1' style={{width: '100px'}} value={value} onChange={calcExpiration} />
             </div>
             
             <h5 className={createPostStyles.subText}>Post will expire {formatDate(expires)}</h5>

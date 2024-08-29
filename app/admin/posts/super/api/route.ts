@@ -9,17 +9,12 @@ import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 
 export async function POST(req: NextRequest) {
     try {
-        console.log("AAA");
         const authTokenCookie = cookies().get('authtoken');
-        console.log("BBB", authTokenCookie);
         const resPermissions = await isAdmin(authTokenCookie);
-        console.log("CCC", resPermissions)
         if (!resPermissions) return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
 
-        console.log("DDD")
         // For TypeScript:
         const adminPrisma = await getRedactedUserFromAuth((authTokenCookie as any).value);
-        console.log("EEE", adminPrisma)
         if (!adminPrisma)return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
 
         const { inputData } = await req.json();
@@ -27,13 +22,15 @@ export async function POST(req: NextRequest) {
 
         // This is a synchronous operation, but deployment with Vercel somehow makes it return a promise.
         // Hence the unnecessary "await"
-        const resValidPost = await isValidInputSuperPostData(inputData);
+        const resValidPost = isValidInputSuperPostData(inputData);
+        console.log("resValidPost", resValidPost)
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
 
         // Also a synchronous process, same problem as above.
-        const postData = await superPostDataFromInputs(inputData);
+        const postData = superPostDataFromInputs(inputData);
 
         const postId = await createSuperPost(postData, adminPrisma.id);
+        console.log("postId", postId)
         
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {
