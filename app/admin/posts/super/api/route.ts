@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
         // This is a synchronous operation, but deployment with Vercel somehow makes it return a promise.
         // Hence the unnecessary "await"
         const resValidPost = await isValidInputSuperPostData(inputData);
-        if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, TESTING: "HELLO", msg: resValidPost.msg }, { status: 400 });
+        if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, inputData:inputData, inputDatamsg: resValidPost.msg }, { status: 400 });
 
         // Also a synchronous process, same problem as above.
         const postData = await superPostDataFromInputs(inputData);
