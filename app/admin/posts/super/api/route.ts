@@ -23,20 +23,17 @@ export async function POST(req: NextRequest) {
         if (!adminPrisma)return NextResponse.json({ cStatus: 400, msg: `Unauthorized.` }, { status: 400 });
 
         const { inputData } = await req.json();
-        console.log("FFF", inputData)
         if (!inputData) return NextResponse.json({ cStatus: 101, msg: `No inputData provided.` }, { status: 400 });
 
+        // This is a synchronous operation, but deployment with Vercel somehow makes it return a promise.
+        // Hence the unnecessary "await"
         const resValidPost = await isValidInputSuperPostData(inputData);
-        const againresValidPost = isValidInputSuperPostData(inputData);
-        console.log("GGG", resValidPost)
-        console.log("HHH", typeof resValidPost)
-        console.log("againresValidPost", againresValidPost)
         if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
-        const postData = superPostDataFromInputs(inputData);
 
-        console.log("III", postData)
+        // Also a synchronous process, same problem as above.
+        const postData = await superPostDataFromInputs(inputData);
+
         const postId = await createSuperPost(postData, adminPrisma.id);
-        console.log("JJJ", postId);
         
         return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
     } catch(err) {
