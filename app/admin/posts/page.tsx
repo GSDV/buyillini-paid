@@ -43,9 +43,9 @@ function DeletePost({ setAlert }: AdminActionType) {
     ];
 
     const deletePost = async (formData: FormData) => {
-        const netId = formData.get('netId');
+        const postId = formData.get('postId');
     
-        const data = { netId };
+        const data = { postId };
         const operation = 'DELETE_POST';
 
         const res = await fetch(`/admin/posts/api/`, {
@@ -73,8 +73,8 @@ function MarkDeletePost({ setAlert }: AdminActionType) {
     ];
 
     const markDeletePost = async (formData: FormData) => {
-        const netId = formData.get('netId');
-        const data = { netId };
+        const postId = formData.get('postId');
+        const data = { postId };
         const operation = 'MARK_DELETE_POST';
 
         const res = await fetch(`/admin/users/api/`, {
