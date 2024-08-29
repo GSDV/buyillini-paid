@@ -6,6 +6,7 @@ import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { RedactedUser } from '@util/prisma/types';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { CATEGORIES, CLOTHING_SIZES, GENDERS, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, isRegCat } from '@util/global';
+import { deleteFromS3 } from '@util/s3/aws';
 // import { uploadPostPicture } from '@util/s3/aws';
 
 
@@ -155,15 +156,7 @@ export const superPostDataFromInputs = (data: InputSuperPostData) => {
 
 
 export const createSuperPost = async (postData: SuperPostData, adminId: string) => {
-    console.log("createSuperPost postData:", postData)
-    console.log("typeof postData:", typeof postData)
-    console.log(postData.duration)
-    console.log(postData.title)
-    console.log(postData.description)
-    console.log(typeof postData.duration)
-    console.log(postData.duration*MONTH_TO_MILLI)
     const expiration = new Date(Date.now() + postData.duration*MONTH_TO_MILLI);
-    console.log("expiration", expiration)
     const { ...cleanedData } = postData;
     const createData = { sellerId: adminId, ...cleanedData, freeMonthsUsed: 0, isPaid: false, expireDate: expiration, active: true };
 
@@ -174,6 +167,16 @@ export const createSuperPost = async (postData: SuperPostData, adminId: string) 
 }
 
 
+
+
+export const deletePost = async (postId: string) => {
+    const postPrisma = await prisma.post.delete({
+        where: { id: postId }
+    });
+    if (!postPrisma) return null;
+    for (let i=0; i<postPrisma.images.length; i++) deleteFromS3(postPrisma.images[i]);
+    return postPrisma;
+}
 
 // export const markDeleteAllUsersPost = async (sellerId: string) => {
 //     await prisma.post.updateMany({

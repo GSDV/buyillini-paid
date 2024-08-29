@@ -137,14 +137,6 @@ export const deleteDraftedPosts = async (id: string) => {
 
 
 
-export const deletePost = async (postId: string) => {
-    const postPrisma = await prisma.post.delete({
-        where: { id: postId }
-    });
-    if (!postPrisma) return null;
-    for (let i=0; i<postPrisma.images.length; i++) deleteFromS3(postPrisma.images[i]);
-    return postPrisma;
-}
 
 export const markPostAsDeleted = async (postId: string) => {
     const res = await prisma.post.update({
@@ -238,21 +230,6 @@ export const didUserBuyPostRecently = async (buyerId: string, postId: string) =>
 
 
 
-
-// export const deletePostImage = async (postId: string, imageKey: string) => {
-//     const updatedPost = await prisma.post.update({
-//         where: { id: postId },
-//         data: {
-//             images: {
-//                 set: { images: { array_remove: imageKey } }
-//             }
-//         }
-//     })
-  
-// }
-
-
-
 export const updatePostImagesArr = async (postId: string, images: string[]) => {
     await prisma.post.update({
         where: { id: postId }, 
@@ -269,3 +246,10 @@ export const addImageKeyToPost = async (postId: string, imgKey: string) => {
 
 
 
+
+export const markDeletePost = async (postId: string) => {
+    const res = await prisma.post.update({
+        where: { id: postId },
+        data: { deleted: true }
+    });
+}

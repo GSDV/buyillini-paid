@@ -86,7 +86,7 @@ function DeleteUser({ setAlert }: AdminActionType) {
         { title: 'NetId', name: 'netId', type: 'text' }
     ];
 
-    const banUser = async (formData: FormData) => {
+    const deleteUser = async (formData: FormData) => {
         const netId = formData.get('netId');
     
         const data = { netId };
@@ -104,7 +104,7 @@ function DeleteUser({ setAlert }: AdminActionType) {
     return (
         <div className={adminStyles.actionContainer}>
             <h3>Delete User</h3>
-            <Form action={banUser} inputs={inputs} submitTitle='Delete User' />
+            <Form action={deleteUser} inputs={inputs} submitTitle='Delete User' />
         </div>
     );
 }
