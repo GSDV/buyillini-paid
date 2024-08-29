@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import CenterLayout from '@components/containers/CenterLayout';
-import Loading from '@components/Loading';
+import Loading, { CheckIfLoading } from '@components/Loading';
 import DisplayPost from '@components/pages/post/Display';
 import { Alert, AlertType, CheckIfAlert } from '@components/Alert';
 import { PostWithRedactedUser } from '@util/prisma/types';
@@ -35,11 +35,9 @@ export default function Page({ params }: { params: { postId: string } }) {
 
     return (
         <CenterLayout>
-            {loading ?
-                <Loading />
-            :
+            <CheckIfLoading loading={loading} content={
                 <ChooseView post={post as PostWithRedactedUser} cStatus={cStatus} alert={alert} />
-            }
+            } />
         </CenterLayout>
     )
 }

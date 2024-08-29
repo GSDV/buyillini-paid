@@ -102,121 +102,6 @@ export function Price({ value, setValue }: InputValue) {
 
 
 
-// export function Images({ value, setValue, postId }: { value: any, setValue: (v: any)=>void, postId: string }) {
-//     const msContext = useMenuShadowContext();
-//     const imgRef = useRef<HTMLInputElement | null>(null);
-//     const [alert, setAlert] = useState<AlertType | null>(null);
-//     const [loading, setLoading] = useState<boolean>(false);
-
-
-//     // const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-//     //     const img = e.target.files?.[0];
-//     //     setLoading(true);
-//     //     if (value.length >= 5 || img==undefined) return;
-//     //     const res = await fetch(`/api`, {
-//     //         method: 'POST',
-//     //         body: JSON.stringify({ postId, fileType: img.type, fileSize: img.size }),
-//     //         headers: { 'Content-Type': 'application/json' }
-//     //     });
-//     //     const resJson = await res.json();
-//     //     if (resJson.cStatus==200) {
-//     //         await fetch(resJson.signedUrl, {
-//     //             method: 'PUT',
-//     //             body: img,
-//     //             headers: { 'Content-Type': img.type },
-//     //         });
-//     //         await fetch(`/account/netId/settings/api`, {
-//     //             method: 'PUT',
-//     //             body: JSON.stringify({ operation: 'CROP_POST', key: resJson.key, postId: postId })
-//     //         });
-//     //         const newImages = [...value, resJson.key];
-//     //         setValue(newImages);
-//     //         setAlert(null);
-//     //     } else {
-//     //         setAlert(resJson);
-//     //     }
-//     //     if (imgRef.current) imgRef.current.value = '';
-//     //     setLoading(false);
-//     // };
-//     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-//         setLoading(true);
-//         const image = e.target.files?.[0];
-//         if (value.length >= 5 || image==undefined) return;
-//         const postData = new FormData();
-//         postData.set('operation', 'UPLOAD_POST');
-//         postData.set('image', image);
-//         postData.set('postId', postId);
-
-//         const res = await fetch(`/api`, {
-//             method: 'POST',
-//             body: postData
-//         });
-//         const resJson = await res.json();
-//         if (resJson.cStatus==200) {
-//             const newImages = [...value, resJson.key];
-//             setValue(newImages);
-//             setAlert(null);
-//         } else {
-//             setAlert(resJson);
-//         }
-//         if (imgRef.current) imgRef.current.value = '';
-//         setLoading(false);
-//     };
-
-
-//     const handleDelete = async (idx: number) => {
-//         setLoading(true);
-//         const newImages = [...value];
-//         const deletedImgKey = newImages.splice(idx, 1)[0];
-//         await fetch(`/api`, {
-//             method: 'DELETE',
-//             body: JSON.stringify({ deletedImgKey, postId }),
-//             headers: { 'Content-Type': 'application/json' }
-//         });
-//         setValue(newImages);
-//         setLoading(false);
-//     }
-
-//     const openImage = (idx: number) => {
-//         msContext.setContent(<DisplayImage img={value[idx]} />);
-//         msContext.openMenu();
-//     }
-
-//     return (
-//         <div className={createPostStyles.formItem} style={{width: '100%'}}>
-//             <h4>Images</h4>
-
-//             {loading ?
-//                 <LoadingIconBlack />
-//             :
-//             <>
-//                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
-//                     {value.map((img: any, i: any) => (
-//                         <div key={i} className={createPostStyles.imgWrapper}>
-//                             <BsFillDashCircleFill onClick={() => handleDelete(i)} size={20} color={colorScheme.red} className={createPostStyles.imgDelete} />
-//                             <img src={imgUrl(img)} onClick={() => openImage(i)} />
-//                         </div>
-//                     ))}
-
-//                     {value.length<5 && <>
-//                         <BsPlusCircle onClick={(e: React.MouseEvent<SVGElement>) => imgRef.current?.click()} size={35} color={colorScheme.orangePrimary} style={{ cursor: 'pointer'}} />
-//                         <input ref={imgRef} type='file' accept={IMG_ACCEPTED_FILES} onChange={handleUpload} style={{display: 'none'}} />
-//                     </>}
-//                 </div>
-//                 <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-//                     {alert && <Alert alert={alert}  />}
-//                 </div>
-//             </>
-//             }
-//         </div>
-//     );
-// }
-
-
-
-
-
-
 export function Images({ value, setValue }: InputValue) {
     const msContext = useMenuShadowContext();
     const imgRef = useRef<HTMLInputElement | null>(null);
@@ -264,7 +149,6 @@ export function Images({ value, setValue }: InputValue) {
         msContext.openMenu();
     }
 
-
     useEffect(() => {
         const urls = [];
         for (let i=0; i<value.length; i++) {
@@ -306,11 +190,6 @@ export function Images({ value, setValue }: InputValue) {
         </div>
     );
 }
-
-
-
-
-
 
 
 
@@ -367,8 +246,6 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
         setExpires(expiration);
     }
 
-    // Cannot directly call Date.now() in the init of useState,
-    // or else Server and Client are out of sync
     useEffect(() => {
         setExpires(new Date(Date.now() + MONTH_TO_MILLI));
     }, []);
@@ -385,7 +262,6 @@ export function SuperListingPeriod({ value, setValue }: InputValue) {
         </div>
     );
 }
-
 
 
 

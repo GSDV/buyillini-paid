@@ -1,7 +1,7 @@
 'use client'
 
 import { Alert, AlertType } from '@components/Alert';
-import Loading from '@components/Loading';
+import { CheckIfLoading } from '@components/Loading';
 import VerticalLayout from '@components/containers/VerticalLayout';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -29,14 +29,12 @@ export default function Page({ params }: { params: { postId: string } }) {
 
     return (
         <VerticalLayout>
-            {loading ?
-                <Loading />
-            :
+            <CheckIfLoading loading={loading} content={
                 <>
                     <h3>Success!</h3>
                     {alert && <Alert alert={alert} />}
                 </>
-            }
+            } />
         </VerticalLayout>
     );
 }
