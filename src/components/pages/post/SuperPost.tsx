@@ -115,7 +115,7 @@ export default function CreateSuperPost() {
                     </div>
 
                     {postId!='' && <h4><b>LINK: </b> <Link href={postId}>postId</Link></h4>}
-                    <h3>Create Super Post</h3>
+                    <h3>CCreate Super Post</h3>
 
                     <Title value={title} setValue={setTitle} />
 
