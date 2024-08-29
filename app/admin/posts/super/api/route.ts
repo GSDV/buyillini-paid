@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         // Hence the unnecessary "await"
         const resValidPost = isValidInputSuperPostData(inputData);
         console.log("FFF resValidPost:", resValidPost)
-        if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, msg: resValidPost.msg }, { status: 400 });
+        if (!resValidPost.valid) return NextResponse.json({ cStatus: 102, TESTING: "HELLO", msg: resValidPost.msg }, { status: 400 });
 
         // Also a synchronous process, same problem as above.
         const postData = superPostDataFromInputs(inputData);
