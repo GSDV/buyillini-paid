@@ -110,13 +110,11 @@ export interface InputSuperPostData {
 export const isValidInputSuperPostData = (inputData: any) => {
     const { title, description, category, size, gender, price, images, duration } = inputData;
 
-    console.log("A")
     const msg = function() {
-        console.log("B")
         if (!title) return `Missing title.`;
         if (!description) return `Missing description.`;
         if (!category) return `Missing category.`;
-        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !size) return `Missing size.`;
+        if (isRegCat(category) && !size) return `Missing size.`;
         if (!gender) return `Missing gender.`;
         if (!price) return `Missing price.`;
         if (!images) return `Missing images.`;
@@ -130,7 +128,7 @@ export const isValidInputSuperPostData = (inputData: any) => {
         if (description.length>300) return `Description must be less than 300 characters.`;
 
         if (!CATEGORIES.some(c => c.link===category)) return `Specify category.`;
-        if (!NO_SIZE_GENDER_CATEGORIES.includes(category) && !CLOTHING_SIZES.includes(size)) return `Specify clothing size.`;
+        if (isRegCat(category) && !CLOTHING_SIZES.includes(size)) return `Specify clothing size.`;
         if (!GENDERS.includes(gender)) return `Specify gender.`;
 
         if (Number(price)<0 || Number(price)>9999.99) return `Price must be between $0 and $9,999.99.`;
@@ -139,12 +137,8 @@ export const isValidInputSuperPostData = (inputData: any) => {
 
         if (Number(duration)<=0) return `Listing period must be above 0.`;
     
-        console.log("C")
         return ``;
     }();
-
-    console.log("D")
-    console.log("E", msg);
 
     return { valid: (msg===``), msg: msg };
 }
