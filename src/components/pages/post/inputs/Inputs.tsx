@@ -89,12 +89,22 @@ export function Size({ value, setValue }: InputValue) {
 
 
 export function Price({ value, setValue }: InputValue) {
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        if (e.target.value==='') {
+            setValue('');
+        } else {
+            const val = Math.min(Math.max(0, Number(e.target.value)), 9999.99);
+            setValue(val.toString());
+        }
+    }
+
     return (
         <div className={createPostStyles.formItem}>
             <h4>Price</h4>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
                 <h4>$</h4>
-                <input type='number' min='0.00' step='0.01' max='9999.99' value={value} onChange={(e)=>setValue(Number(e.target.value))} />
+                <input type='number' min='0.00' step='0.01' max='9999.99' value={value} onChange={handleInput} />
             </div>
         </div>
     );
