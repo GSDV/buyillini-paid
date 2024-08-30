@@ -173,56 +173,10 @@ export const deletePost = async (postId: string) => {
     const postPrisma = await prisma.post.delete({
         where: { id: postId }
     });
-    console.log(postPrisma);
     if (!postPrisma) return null;
-    console.log(postPrisma.images.length);
-    for (let i=0; i<postPrisma.images.length; i++) deleteFromS3(postPrisma.images[i]);
+    for (let i=0; i<postPrisma.images.length; i++) deleteFromS3(postPrisma.images[i]); // Asynchronous process
     return postPrisma;
 }
-
-// export const markDeleteAllUsersPost = async (sellerId: string) => {
-//     await prisma.post.updateMany({
-//         where: { sellerId: sellerId },
-//         data: { deleted: true }
-//     });
-// }
-
-// export const e = async (netId: string) => {
-//     const result = await prisma.user.update({
-//         where: { netId: netId },
-//         data: {
-//             posts: {
-//                 updateMany: {
-//                     where: { deleted: false },
-//                     data: { deleted: true }
-//                 }
-//             }
-//         }
-//     });
-    
-// }
-
-
-// export const updateAllUsersPost = async (netId: string, data: any) => {
-//     await prisma.user.update({
-//         where: { seller: { netId: netId} },
-//         data
-//     });
-// }
-
-
-
-// export const markUserAsDeleted = async (id: string) => {
-//     await prisma.user.update({
-//         where: { id: id },
-//         data: { deleted: true }
-//     });
-//     await prisma.post.updateMany({
-//         where: { sellerId: id },
-//         data: { deleted: true }
-//     });
-// }
-
 
 
 

@@ -97,7 +97,6 @@ export const deleteFromS3 = async (key: string) => {
     }
     const cmd = new DeleteObjectCommand(params);
     const res = await s3Client.send(cmd);
-    console.log("Res: ", res)
 }
 
 
