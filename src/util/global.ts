@@ -76,6 +76,7 @@ export const CATEGORIES = [
     {title: 'Hats', link: 'hats', img: '/categories/hats.png'},
     {title: 'Accessories', link: 'accessories', img: '/categories/accessories.png'},
     {title: 'Apartment', link: 'apartment', img: '/categories/apartment.png'},
+    {title: 'School', link: 'school', img: '/categories/school.png'},
     {title: 'Other', link: 'other', img: '/categories/other.png'}
 ] as const;
 export type CategoryType = typeof CATEGORIES[number];
@@ -84,6 +85,7 @@ export const NO_SIZE_GENDER_CATEGORIES = [
     'hats',
     'accessories',
     'apartment',
+    'school',
     'other'
 ];
 
