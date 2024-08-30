@@ -25,7 +25,6 @@ export default function ConfirmPaidPost({ post }: { post: Post }) {
         const resJson = await res.json();
         if (resJson.cStatus==200 || resJson==201) {
             // Send user to stripe checkout
-            console.log(resJson.sessionUrl)
             router.push(resJson.sessionUrl);
         }
         else {

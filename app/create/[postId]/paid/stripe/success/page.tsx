@@ -16,7 +16,7 @@ export default function Page({ params }: { params: { postId: string } }) {
     
     const checkIfPaid = async () => {
         setLoading(true);
-        const res = await fetch(`/create/paid/${params.postId}/stripe/api`, { method: 'POST' });
+        const res = await fetch(`/create/${params.postId}/api/stripe`, { method: 'POST' });
         const resJson = await res.json();
         setAlert(resJson);
         if (resJson.cStatus==200) router.push(`/post/${params.postId}/`);
