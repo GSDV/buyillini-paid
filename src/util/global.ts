@@ -12,7 +12,7 @@ export const IMG_SIZE_LIMIT = 15 * 1000000; // 15mb
 export const IMG_SIZE_LIMIT_TXT = `15mb`;
 
 export const POST_IMG_PREFIX = `post-f-`;
-export const PFP_IMG_PREFIX = `post-f-`;
+export const PFP_IMG_PREFIX = `pfp-f-`;
 
 
 export const POST_WIDTH = 1200;
