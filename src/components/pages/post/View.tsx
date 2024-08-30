@@ -26,7 +26,7 @@ export default function ViewPost({ post }: { post: Post }) {
                 {!NO_SIZE_GENDER_CATEGORIES.includes(post.category) && <h3>Size: {post.size}</h3>}
                 {!NO_SIZE_GENDER_CATEGORIES.includes(post.category) && <h3>Gender: {post.gender}</h3>}
                 
-                {(new Date()) > (new Date(post.expireDate)) ?
+                {(Date.now() > post.expireDate.getMilliseconds()) ?
                     <h3>Expires on {formatDate(new Date(post.expireDate))}</h3>
                 :
                     <h3>Expired on {formatDate(new Date(post.expireDate))}</h3>
