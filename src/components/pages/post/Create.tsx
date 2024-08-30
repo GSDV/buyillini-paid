@@ -13,6 +13,7 @@ import { CheckIfLoading } from '@components/Loading';
 import { Category, Description, Images, Gender, ListingPeriod, Price, Size, Title, UseFreeMonths } from './inputs/Inputs';
 import { makePostPicture } from '@util/photos/crop';
 import { urlToFile } from '@util/photos/urlToFile';
+import { clientUploadImagesAndGetKeys } from '@util/photos/clientUpload';
 
 
 
@@ -33,7 +34,11 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
 
     const getData = async () => {
-        const imageKeys = await uploadImages();
+        const imageKeys = await clientUploadImagesAndGetKeys(images);
+        if (imageKeys === null) {
+            setAlert({cStatus: 400, msg: 'Something went wrong.'});
+            return null;
+        }
         const inputData = {
             title,
             description,
@@ -46,41 +51,6 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
             freeMonthsUsed: (freeMonthsUsed=='' ? '0' : freeMonthsUsed)
         }
         return inputData;
-    }
-
-    const uploadImages = async () => {
-        const imageKeys: string[] = [];
-        for (let i=0; i<images.length; i++) {
-            const imageFile = images[i];
-
-            const [resSignAndKey, croppedPostBlob] = await Promise.all([
-                fetch(`/api/s3`, {
-                    method: 'POST',
-                    body: JSON.stringify({ operation: 'UPLOAD_POST_PHOTO', fileType: imageFile.type, fileSize: imageFile.size }),
-                    headers: { 'Content-Type': 'application/json' }
-                }),
-                makePostPicture(imageFile)
-            ]);
-
-            if (croppedPostBlob == null) {
-                setAlert({cStatus: 400, msg: 'Something went wrong.'});
-                return;
-            }
-
-            const resSignAndKeyJson = await resSignAndKey.json();
-            if (resSignAndKeyJson.cStatus==200) {
-                await fetch(resSignAndKeyJson.signedUrl, {
-                    method: 'PUT',
-                    body: croppedPostBlob,
-                    headers: { 'Content-Type': 'webp' }
-                });
-                imageKeys.push(resSignAndKeyJson.key);
-            } else {
-                setAlert(resSignAndKeyJson);
-                return;
-            }
-        }
-        return imageKeys;
     }
 
     const setCategoryField = (value: string) => {
@@ -98,6 +68,8 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
     const attemptFreePost = async () => {
         setLoading(true);
         const inputData = await getData();
+        if (inputData === null) return;
+
         const res = await fetch(`/create/postId/api/free`, {
             method: 'POST',
             body: JSON.stringify({ inputData }),
@@ -115,15 +87,17 @@ export default function Create({ draftedPost, freeMonths }: { draftedPost: Post,
 
     const attemptPaidPost = async () => {
         setLoading(true);
-        const postData = await getData();
+        const inputData = await getData();
+        if (inputData === null) return;
+
         const res = await fetch(`/create/postId/api/paid`, {
             method: 'POST',
-            body: JSON.stringify({ postData }),
+            body: JSON.stringify({ inputData }),
             headers: { 'Content-Type': 'application/json' }
         });
         const resJson = await res.json();
         if (resJson.cStatus==200) {
-            router.push(`/create/paid/${resJson.postId}`);
+            router.push(`/create/${resJson.postId}/paid`);
         }
         else {
             setAlert(resJson);

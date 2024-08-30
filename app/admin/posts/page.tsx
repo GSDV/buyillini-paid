@@ -77,7 +77,7 @@ function MarkDeletePost({ setAlert }: AdminActionType) {
         const data = { postId };
         const operation = 'MARK_DELETE_POST';
 
-        const res = await fetch(`/admin/users/api/`, {
+        const res = await fetch(`/admin/posts/api/`, {
             method: 'DELETE',
             body: JSON.stringify({ operation, data }),
             headers: { 'Content-Type': 'application/json' }

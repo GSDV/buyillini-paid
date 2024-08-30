@@ -13,6 +13,7 @@ import { CheckIfLoading } from '@components/Loading';
 import { Category, Description, Gender, Images, Price, Size, Title } from './inputs/Inputs';
 import { makePostPicture } from '@util/photos/crop';
 import { urlToFile } from '@util/photos/urlToFile';
+import { clientUploadImagesAndGetKeys } from '@util/photos/clientUpload';
 
 
 
@@ -31,7 +32,11 @@ export default function Edit({ post }: { post: Post }) {
 
 
     const getData = async () => {
-        const imageKeys = await uploadImages();
+        const imageKeys = await clientUploadImagesAndGetKeys(images);
+        if (imageKeys === null) {
+            setAlert({cStatus: 400, msg: 'Something went wrong.'});
+            return null;
+        }
         const inputData = {
             title,
             description,
@@ -42,41 +47,6 @@ export default function Edit({ post }: { post: Post }) {
             images: imageKeys
         }
         return inputData;
-    }
-
-    const uploadImages = async () => {
-        const imageKeys: string[] = [];
-        for (let i=0; i<images.length; i++) {
-            const imageFile = images[i];
-
-            const [resSignAndKey, croppedPostBlob] = await Promise.all([
-                fetch(`/api/s3`, {
-                    method: 'POST',
-                    body: JSON.stringify({ operation: 'UPLOAD_POST_PHOTO', fileType: imageFile.type, fileSize: imageFile.size }),
-                    headers: { 'Content-Type': 'application/json' }
-                }),
-                makePostPicture(imageFile)
-            ]);
-
-            if (croppedPostBlob == null) {
-                setAlert({cStatus: 400, msg: 'Something went wrong.'});
-                return;
-            }
-
-            const resSignAndKeyJson = await resSignAndKey.json();
-            if (resSignAndKeyJson.cStatus==200) {
-                await fetch(resSignAndKeyJson.signedUrl, {
-                    method: 'PUT',
-                    body: croppedPostBlob,
-                    headers: { 'Content-Type': 'webp' }
-                });
-                imageKeys.push(resSignAndKeyJson.key);
-            } else {
-                setAlert(resSignAndKeyJson);
-                return;
-            }
-        }
-        return imageKeys;
     }
 
     const setCategoryField = (value: string) => {
@@ -93,6 +63,8 @@ export default function Edit({ post }: { post: Post }) {
     const attemptEditPost = async () => {
         setLoading(true);
         const inputData = await getData();
+        if (inputData === null) return;
+
         const res = await fetch(`/post/${post.id}/edit/api/`, {
             method: 'PUT',
             body: JSON.stringify({ inputData }),
