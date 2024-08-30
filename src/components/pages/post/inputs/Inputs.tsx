@@ -104,7 +104,7 @@ export function Price({ value, setValue }: InputValue) {
             <h4>Price</h4>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10px'}}>
                 <h4>$</h4>
-                <input type='number' min='0.00' step='0.01' max='9999.99' value={value} onChange={handleInput} />
+                <input type='number' placeholder='0.00' min='0.00' step='0.01' max='9999.99' value={value} onChange={handleInput} />
             </div>
         </div>
     );
