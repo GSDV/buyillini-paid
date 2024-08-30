@@ -21,6 +21,7 @@ export default function ConfirmPaidPost({ post }: { post: Post }) {
             body: post.id,
             headers: { 'Content-Type': 'application/json' }
         });
+        console.log(res)
         const resJson = await res.json();
         if (resJson.cStatus==200 || resJson==201) {
             // Send user to stripe checkout
