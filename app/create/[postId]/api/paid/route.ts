@@ -113,7 +113,7 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
         await deleteAllFailedPostPayments(postPrisma.id);
         await addPaymentToPost(postPrisma.id, session.id, months);
 
-        return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId, sessionUrl: session.id }, { status: 200 });
+        return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId, sessionUrl: session.sessionUrl }, { status: 200 });
     } catch(err) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
     }
