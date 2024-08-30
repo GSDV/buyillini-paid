@@ -78,7 +78,7 @@ export async function GET(req: NextRequest, { params }: { params: { postId: stri
 
 
 // 3) USER CONFIRMS POST
-// After confirming free post, mark it active and redirect to newly created post.
+// After confirming paid post, mark it active and redirect to newly created post.
 export async function PUT(req: NextRequest, { params }: { params: { postId: string } }) {
     try {
         const postId = params.postId;
@@ -97,7 +97,7 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
         if (!postPrisma) return NextResponse.json({ cStatus: 430, msg: `This post does not exist.` }, { status: 400 });
         if (postPrisma.sellerId != userPrisma.id) return NextResponse.json({ cStatus: 414, msg: `This is not your post.` }, { status: 400 });
         if (postPrisma.active) return NextResponse.json({ cStatus: 201, msg: `This post is already active.`, postId: postId }, { status: 400 });
-        if (postPrisma.isPaid) return NextResponse.json({ cStatus: 431, msg: `This post is a paid post.` }, { status: 400 });
+        if (!postPrisma.isPaid) return NextResponse.json({ cStatus: 431, msg: `This post is a free post.` }, { status: 400 });
         if (userPrisma.freeMonths < postPrisma.freeMonthsUsed) return NextResponse.json({ cStatus: 102, msg: `Not enough free months.` }, { status: 400 });
 
         
