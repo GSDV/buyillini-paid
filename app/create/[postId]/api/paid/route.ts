@@ -81,7 +81,6 @@ export async function GET(req: NextRequest, { params }: { params: { postId: stri
 // After confirming paid post, mark it active and redirect to newly created post.
 export async function PUT(req: NextRequest, { params }: { params: { postId: string } }) {
     try {
-        console.log("AAAA")
         const postId = params.postId;
 
         if (!postId) return NextResponse.json({ cStatus: 101, msg: `No postId provided.` }, { status: 400 });
@@ -100,12 +99,8 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
         if (postPrisma.active) return NextResponse.json({ cStatus: 201, msg: `This post is already active.`, postId: postId }, { status: 400 });
         if (!postPrisma.isPaid) return NextResponse.json({ cStatus: 431, msg: `This post is a free post.` }, { status: 400 });
         if (userPrisma.freeMonths < postPrisma.freeMonthsUsed) return NextResponse.json({ cStatus: 102, msg: `Not enough free months.` }, { status: 400 });
-
-        console.log("AAA")
         
         const months = postPrisma.duration - postPrisma.freeMonthsUsed;
-
-        console.log("BBB")
 
         const session = await stripe.checkout.sessions.create({
             line_items: [ { price: process.env.STRIPE_BUYILLINI_ONE_MONTH_PRICE_ID, quantity: months } ],
@@ -114,13 +109,11 @@ export async function PUT(req: NextRequest, { params }: { params: { postId: stri
             cancel_url: `${DOMAIN}/create/${postPrisma.id}/paid/stripe/error`,
             automatic_tax: { enabled: true }
         });
-        console.log("CCC", session)
         
         await deleteAllFailedPostPayments(postPrisma.id);
         await addPaymentToPost(postPrisma.id, session.id, months);
-        console.log("DDD")
 
-        return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId }, { status: 200 });
+        return NextResponse.json({ cStatus: 200, msg: `Success.`, postId: postId, sessionUrl: session.id }, { status: 200 });
     } catch(err) {
         return NextResponse.json({ cStatus: 900, msg: `Server error: ${err}` }, { status: 400 });
     }
