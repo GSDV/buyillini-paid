@@ -92,7 +92,7 @@ function SignUpForm({ action, inputs }: FormType) {
                 );
             })}
 
-            <h5 style={{ width: '250px', textAlign: 'center' }}>By signing up, you agree to the <a href='/terms-and-condition/' target='_blank'>Terms</a> and <a href='/privacy-policy/' target='_blank'>Privacy Policy</a> of BuyIllini.</h5>
+            <h5 style={{ width: '250px', textAlign: 'center' }}>By signing up, you agree to the <a href='/terms-and-conditions/' target='_blank'>Terms</a> and <a href='/privacy-policy/' target='_blank'>Privacy Policy</a> of BuyIllini.</h5>
 
             <div style={{ padding: '20px',  display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <button style={{ alignSelf: 'center' }} type='submit'>Sign up</button>
