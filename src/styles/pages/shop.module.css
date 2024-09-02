@@ -82,10 +82,10 @@
 @media (max-width: 1200px) {
     .postsWrapper { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
-@media (max-width: 1000px) {
+@media (max-width: 900px) {
     .postsWrapper { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-@media (max-width: 800px) {
+@media (max-width: 700px) {
     .postsWrapper { grid-template-columns: repeat(2, minmax(0, 1fr));  }
 }
 
@@ -148,5 +148,5 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-align: center;
-    font-size: clamp(0.7em, 2vw, 1em);
+    font-size: clamp(0.8em, 2vw, 1em);
 }
