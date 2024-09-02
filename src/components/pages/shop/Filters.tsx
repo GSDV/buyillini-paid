@@ -3,6 +3,8 @@
 import { CATEGORIES, CLOTHING_SIZES, GENDERS } from '@util/global';
 
 import shopStyles from '@styles/pages/shop.module.css';
+import { useMenuShadowContext } from '@components/providers/MenuShadow';
+import { useState } from 'react';
 
 export interface UserFiltersType {
     categories: string[],
@@ -18,10 +20,24 @@ interface FiltersType {
     setFilters: React.Dispatch<React.SetStateAction<UserFiltersType>>
 }
 
-export function Filters({ filters, setFilters }: FiltersType ) {
+export function Filters({ filters, setFilters }: FiltersType) {
+    const msContext = useMenuShadowContext();
+
+    const openPopUp = () => {
+        msContext.setContent(<FilterPopUp filters={filters} setFilters={setFilters} />);
+        msContext.openMenu();
+    }
+
+    return <button onClick={openPopUp}>Filters</button>;
+}
+
+export function FilterPopUp({ filters, setFilters }: FiltersType) {
+    const [popUpFilters, setPopUpFilters] = useState<UserFiltersType>(filters);
+    const msContext = useMenuShadowContext();
+
     const updateCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = event.target;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             const categories = prevFilters.categories;
             const newCategoriesArr = checked ? [...categories, value] : categories.filter(val => val !== value);
             return { ...prevFilters, categories: newCategoriesArr };
@@ -30,7 +46,7 @@ export function Filters({ filters, setFilters }: FiltersType ) {
 
     const updateSizes = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = event.target;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             const sizes = prevFilters.sizes;
             const newSizesArr = checked ? [...sizes, value] : sizes.filter(val => val !== value);
             return { ...prevFilters, sizes: newSizesArr };
@@ -39,7 +55,7 @@ export function Filters({ filters, setFilters }: FiltersType ) {
 
     const updateGender = (event: React.ChangeEvent<HTMLInputElement>) => {
         const gender = event.target.value;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             return { ...prevFilters, gender: gender };
         });
     }
@@ -48,7 +64,7 @@ export function Filters({ filters, setFilters }: FiltersType ) {
         const userMaxPrice = Number(event.target.value);
         let maxPrice = (userMaxPrice>9999.99) ? 9999.99 : userMaxPrice;
         maxPrice = (maxPrice<0) ? 0 : maxPrice;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             return { ...prevFilters, maxPrice: maxPrice };
         });
     }
@@ -57,31 +73,56 @@ export function Filters({ filters, setFilters }: FiltersType ) {
         const userMinPrice = Number(event.target.value);
         let minPrice = (userMinPrice>9999.99) ? 9999.99 : userMinPrice;
         minPrice = (minPrice<0) ? 0 : minPrice;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             return { ...prevFilters, minPrice: minPrice };
         });
+    }
+
+    const updateFilters = () => {
+        setFilters(popUpFilters);
+        msContext.closeMenu();
     }
 
     return (
         <div className={shopStyles.filtersContainer}>
             <h3 style={{fontWeight: 500}}>Filters</h3>
             <div className={shopStyles.filter}>
-                <SizeFilter filters={filters} update={updateSizes} />
-                <GenderFilter filters={filters} update={updateGender} />
-                <Categories filters={filters} update={updateCategory} />
-                <MaxPrice filters={filters} update={updateMaxPrice} />
-                <MinPrice filters={filters} update={updateMinPrice} />
+                <div style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
+                    <SizeFilter filters={popUpFilters} update={updateSizes} />
+                    <GenderFilter filters={popUpFilters} update={updateGender} />
+                </div>
+                    <Categories filters={popUpFilters} update={updateCategory} />
+                <div style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
+                    <MaxPrice filters={popUpFilters} update={updateMaxPrice} />
+                    <MinPrice filters={popUpFilters} update={updateMinPrice} />
+                </div>
+                
             </div>
+            <button onClick={updateFilters}>Update Filters</button>
         </div>
     );
 }
 
 
 
-export function CategoryFilters({ filters, setFilters }: FiltersType ) {
+export function CategoryFilters({ filters, setFilters }: FiltersType) {
+    const msContext = useMenuShadowContext();
+
+    const openPopUp = () => {
+        msContext.setContent(<CategoryFiltersPopUp filters={filters} setFilters={setFilters} />);
+        msContext.openMenu();
+    }
+
+    return <button onClick={openPopUp}>Filters</button>;
+}
+
+export function CategoryFiltersPopUp({ filters, setFilters }: FiltersType ) {
+    const [popUpFilters, setPopUpFilters] = useState<UserFiltersType>(filters);
+    const msContext = useMenuShadowContext();
+
     const updateSizes = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = event.target;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             const sizes = prevFilters.sizes;
             const newSizesArr = checked ? [...sizes, value] : sizes.filter(val => val !== value);
             return { ...prevFilters, sizes: newSizesArr };
@@ -90,7 +131,7 @@ export function CategoryFilters({ filters, setFilters }: FiltersType ) {
 
     const updateGender = (event: React.ChangeEvent<HTMLInputElement>) => {
         const gender = event.target.value;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             return { ...prevFilters, gender: gender };
         });
     }
@@ -99,7 +140,7 @@ export function CategoryFilters({ filters, setFilters }: FiltersType ) {
         const userMaxPrice = Number(event.target.value);
         let maxPrice = (userMaxPrice>9999.99) ? 9999.99 : userMaxPrice;
         maxPrice = (maxPrice<0) ? 0 : maxPrice;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             return { ...prevFilters, maxPrice: maxPrice };
         });
     }
@@ -108,20 +149,26 @@ export function CategoryFilters({ filters, setFilters }: FiltersType ) {
         const userMinPrice = Number(event.target.value);
         let minPrice = (userMinPrice>9999.99) ? 9999.99 : userMinPrice;
         minPrice = (minPrice<0) ? 0 : minPrice;
-        setFilters(prevFilters => {
+        setPopUpFilters(prevFilters => {
             return { ...prevFilters, minPrice: minPrice };
         });
+    }
+
+    const updateFilters = () => {
+        setFilters(popUpFilters);
+        msContext.closeMenu();
     }
 
     return (
         <div className={shopStyles.filtersContainer}>
             <h3 style={{fontWeight: 500}}>Filters</h3>
             <div className={shopStyles.filter}>
-                <SizeFilter filters={filters} update={updateSizes} />
-                <GenderFilter filters={filters} update={updateGender} />
-                <MaxPrice filters={filters} update={updateMaxPrice} />
-                <MinPrice filters={filters} update={updateMinPrice} />
+                <SizeFilter filters={popUpFilters} update={updateSizes} />
+                <GenderFilter filters={popUpFilters} update={updateGender} />
+                <MaxPrice filters={popUpFilters} update={updateMaxPrice} />
+                <MinPrice filters={popUpFilters} update={updateMinPrice} />
             </div>
+            <button onClick={updateFilters}>Update Filters</button>
         </div>
     );
 }

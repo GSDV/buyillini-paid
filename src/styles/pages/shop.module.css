@@ -36,20 +36,23 @@
 
 
 .filtersContainer {
-    padding: min(1.5vw, 10px);
+    padding: 20px;
     height: fit-content;
-    background-color: var(--greyLight);
+    background-color: var(--white);
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    gap: 30px;
 }
 .filtersContainer h3 {
     font-size: min(3.5vw, 1.3rem);
 }
 .filter {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: row;
+    /* gap: 30px; */
+    gap: min(3.5vw, 30px);
 }
 .filterItem {
     display: flex;
