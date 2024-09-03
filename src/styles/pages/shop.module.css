@@ -117,10 +117,9 @@
     height: 40px;
 }
 .postHeader h4 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post {
@@ -143,10 +142,9 @@
 }
 .post h4 {
     padding: 3px 5px;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
     text-align: center;
     font-size: clamp(0.8em, 2vw, 1em);
 }
