@@ -25,12 +25,15 @@ export async function GET(req: NextRequest, { params }: { params: { netId: strin
             const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
             // If logged in user is looking at own account
             if (userPrisma!=null && userPrisma.netId==accountNetId) return NextResponse.json({ cStatus: 202, msg: `Success (own account).`, userData: accountPrisma }, { status: 200 });
+            
+            accountPrisma.posts = accountPrisma.posts.filter(post => post.active);
+            return NextResponse.json({ cStatus: 200, msg: `Success (other account, viewer is logged in).`, userData: accountPrisma }, { status: 200 });
         }
-
-        // Should never run, but for TypeScript
-        if (!accountPrisma) return NextResponse.json({ cStatus: 404, msg: `This is account does not exist.` }, { status: 400 });
         
+        // Hide phone number of an account from a non-logged-in user.
         accountPrisma.posts = accountPrisma.posts.filter(post => post.active);
+        accountPrisma.phoneNumber = '';
+        
         return NextResponse.json({ cStatus: 200, msg: `Success (other account).`, userData: accountPrisma }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
