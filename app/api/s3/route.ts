@@ -5,6 +5,7 @@ import { deleteFromS3, getSignedS3Url } from '@util/s3/aws';
 import { cookies } from 'next/headers';
 import { getPost, updatePostImagesArr } from '@util/prisma/actions/posts';
 import { getRedactedUserFromAuth, updateUser } from '@util/prisma/actions/user';
+import { isValidUser } from '@util/api/auth';
 
 
 
@@ -14,6 +15,13 @@ export async function POST(req: NextRequest) {
     try {
         const { operation, fileType, fileSize } = await req.json();
         if (!operation || !fileType || !fileSize) return NextResponse.json({ cStatus: 101, msg: `Some fields missing.` }, { status: 400 });
+
+        const authTokenCookie = cookies().get(`authtoken`);
+        if (!authTokenCookie) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+        const userPrisma = await getRedactedUserFromAuth(authTokenCookie.value);
+        if (!userPrisma) return NextResponse.json({ cStatus: 401, msg: `You are not logged in.` }, { status: 400 });
+        const resValidUser = isValidUser(userPrisma);
+        if (!resValidUser.valid) return NextResponse.json(resValidUser.nextres, { status: 400 });
 
 
         if (!ACCEPTED_FILES.includes(fileType)) return NextResponse.json({ cStatus: 102, msg: `Upload only png, jpg, or webp images.` }, { status: 400 });
