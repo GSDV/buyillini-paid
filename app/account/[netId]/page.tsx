@@ -23,7 +23,7 @@ export default function Page({ params }: { params: { netId: string } }) {
         const res = await fetch(`/account/${params.netId}/api/`, { method: 'GET' });
         const resJson = await res.json();
 
-        if (resJson.cStatus==200 || resJson.cStatus==202) {
+        if (resJson.cStatus==200 || resJson.cStatus==202 || resJson.cStatus==205) {
             setUser(resJson.userData);
             setOwnAccount(resJson.cStatus==202);
         } else {
