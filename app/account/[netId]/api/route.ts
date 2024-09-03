@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, { params }: { params: { netId: strin
         
         // Hide phone number of an account from a non-logged-in user.
         accountPrisma.posts = accountPrisma.posts.filter(post => post.active);
-        accountPrisma.phoneNumber = '';
+        // accountPrisma.phoneNumber = '';
         
         return NextResponse.json({ cStatus: 205, msg: `Success (other account, viewer is logged out).`, userData: accountPrisma }, { status: 200 });
     } catch (err) {
