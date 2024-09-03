@@ -2,7 +2,6 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } fro
 import { v4 as uuidv4 } from 'uuid';
 import sharp from 'sharp';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { POST_IMG_PREFIX, delay } from '@util/global';
 
 
 
@@ -17,8 +16,6 @@ export const s3Client = new S3Client({
 
 
 
-
-// export const generatePostKey = () => POST_IMG_PREFIX+uuidv4();
 
 
 export const uploadPostPicture = async (file: File) => {
@@ -51,20 +48,6 @@ export const cropPfpBuffer = async (buffer: Buffer) => {
     return croppedBuffer;
 }
 
-// export const uploadPostPicture = async (buffer: Buffer, type: string) => {
-//     const croppedBuffer = await sharp(buffer).resize({ width: 1200, height: 2100, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 1 } }).webp({ quality: 80, effort: 6 }).toBuffer();
-//     const key = `post-f-${uuidv4()}`;
-//     const res = await uploadToS3(croppedBuffer, key, type);
-//     return key;
-// }
-
-
-// export const uploadPfp = async (buffer: Buffer, type: string) => {
-//     const croppedBuffer = await sharp(buffer).resize({ width: 250, height: 250, fit: 'cover' }).toBuffer();
-//     const key = `pfp-f-${uuidv4()}`;
-//     const res = await uploadToS3(croppedBuffer, key, type);
-//     return key;
-// }
 
 
 export const uploadToS3 = async (buffer: Buffer, key: string, type: string) => {

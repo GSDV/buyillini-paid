@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, { params }: { params: { netId: strin
         accountPrisma.posts = accountPrisma.posts.filter(post => post.active);
         accountPrisma.phoneNumber = '';
         
-        return NextResponse.json({ cStatus: 200, msg: `Success (other account).`, userData: accountPrisma }, { status: 200 });
+        return NextResponse.json({ cStatus: 205, msg: `Success (other account, viewer is logged out).`, userData: accountPrisma }, { status: 200 });
     } catch (err) {
         return NextResponse.json({ cStatus: 905, msg: `Server error: ${err}` }, { status: 400 });
     }

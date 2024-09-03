@@ -16,6 +16,7 @@ Custom Status Codes (cStatus)
 - 202: User is loading own account info instead of another account.
 - 203: User is loading other account info while logged in (as opposed to logged out).
 - 204: User performed an extra action.
+- 205: User is trying to load info while logged out.
 - 210: Account not found, but a guest can perform this action.
 
 

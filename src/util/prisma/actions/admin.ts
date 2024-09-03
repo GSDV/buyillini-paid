@@ -5,9 +5,8 @@ import { prisma } from '@util/prisma/client';
 import { getRedactedUserFromAuth } from '@util/prisma/actions/user';
 import { RedactedUser } from '@util/prisma/types';
 import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-import { CATEGORIES, CLOTHING_SIZES, GENDERS, MONTH_TO_MILLI, NO_SIZE_GENDER_CATEGORIES, isRegCat } from '@util/global';
+import { CATEGORIES, CLOTHING_SIZES, GENDERS, MONTH_TO_MILLI, isRegCat } from '@util/global';
 import { deleteFromS3 } from '@util/s3/aws';
-// import { uploadPostPicture } from '@util/s3/aws';
 
 
 
