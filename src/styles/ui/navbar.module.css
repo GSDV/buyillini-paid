@@ -61,7 +61,6 @@
 }
 
 .miniNavbarItem {
-    /* width: 100%; */
     padding: 15px;
     text-decoration: none;
     text-align: center;
@@ -71,9 +70,6 @@
 .miniNavbarItem h1 {
     color: var(--white);
 }
-/* .miniNavbarItem:hover {
-    background-color: var(--orangePrimaryShadow);
-} */
 
 @media (max-width: 700px) {    
     .menuIcon {

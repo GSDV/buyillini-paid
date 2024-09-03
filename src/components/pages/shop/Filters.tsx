@@ -1,10 +1,12 @@
-'use client'
+'use client';
 
 import { CATEGORIES, CLOTHING_SIZES, GENDERS } from '@util/global';
 
 import shopStyles from '@styles/pages/shop.module.css';
 import { useMenuShadowContext } from '@components/providers/MenuShadow';
 import { useState } from 'react';
+
+
 
 export interface UserFiltersType {
     categories: string[],
@@ -22,12 +24,10 @@ interface FiltersType {
 
 export function Filters({ filters, setFilters }: FiltersType) {
     const msContext = useMenuShadowContext();
-
     const openPopUp = () => {
         msContext.setContent(<FilterPopUp filters={filters} setFilters={setFilters} />);
         msContext.openMenu();
     }
-
     return <button onClick={openPopUp}>Filters</button>;
 }
 
@@ -91,7 +91,9 @@ export function FilterPopUp({ filters, setFilters }: FiltersType) {
                     <SizeFilter filters={popUpFilters} update={updateSizes} />
                     <GenderFilter filters={popUpFilters} update={updateGender} />
                 </div>
-                    <Categories filters={popUpFilters} update={updateCategory} />
+
+                <Categories filters={popUpFilters} update={updateCategory} />
+
                 <div style={{display: 'flex', flexDirection: 'column', gap: '30px'}}>
                     <MaxPrice filters={popUpFilters} update={updateMaxPrice} />
                     <MinPrice filters={popUpFilters} update={updateMinPrice} />
@@ -107,12 +109,10 @@ export function FilterPopUp({ filters, setFilters }: FiltersType) {
 
 export function CategoryFilters({ filters, setFilters }: FiltersType) {
     const msContext = useMenuShadowContext();
-
     const openPopUp = () => {
         msContext.setContent(<CategoryFiltersPopUp filters={filters} setFilters={setFilters} />);
         msContext.openMenu();
     }
-
     return <button onClick={openPopUp}>Filters</button>;
 }
 

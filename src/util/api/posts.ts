@@ -105,39 +105,6 @@ export const getEditPostData = (formData: FormData) => {
 
 
 
-// export const getPostData = (formData: FormData) => {
-//     const title = formData.get('title');
-//     const description = formData.get('description');
-//     const category = formData.get('category');
-//     const size = formData.get('size');
-//     const gender = formData.get('gender');
-//     const price = formData.get('price');
-//     const images = formData.getAll('images') as string[];
-//     const months = formData.get('months');
-//     const userFreeMonths = formData.get('userFreeMonths');
-
-//     if (!title || !description || !category || (!NO_SIZE_GENDER_CATEGORIES.includes(category as string) && (!size || !gender)) || !price || !images || !months) return null;
-
-//     const postData: PostData = {
-//         title: title as string,
-//         description: description as string,
-//         category: category as string,
-//         size: size as any,
-//         gender: gender as string,
-//         price: Math.round(Number(price)*100)/100,
-//         images: images,
-//         duration: Math.floor(Number(months)),
-//         userFreeMonths: Math.floor(Number(userFreeMonths))
-//     }
-//     return postData;
-// }
-
-
-////
-////
-////
-////
-
 
 
 

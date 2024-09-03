@@ -14,10 +14,7 @@ import { getPost } from '@util/prisma/actions/posts';
 
 
 // Get a signed AWS S3 URL to use for a profile picture upload
-
-// do not fetch this route right after user upoads. Wait until they hit submit
-
-// CHECK OTHER TIME WE DO FILE UPLOAD FROM CLIENT. NEED TO SEE IF THE ACCOUNT IS ACTIVE, UNBANNED, and NOT DELETED
+// Settings update form
 export async function POST(req: NextRequest) {
     try {
         const { displayName, phoneNumber, fileType, fileSize } = await req.json();
